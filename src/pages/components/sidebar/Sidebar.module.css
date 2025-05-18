@@ -1,0 +1,77 @@
+.sidebar {
+  position: fixed;
+  top: 60px;
+  right: -250px; 
+  width: 250px;
+  height: calc(100vh - 60px);
+  background-color: black;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  transform: translateX(-250px); 
+}
+
+.nav ul {
+  list-style: none;
+  padding: 20px;
+}
+
+.nav li {
+  margin-bottom: 15px;
+  color: #fff;
+  font-family: 'Belleza', sans-serif;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px;
+}
+
+.toggleButton {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  padding: 10px 15px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.logout{
+  width: 70px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: navy;
+  color: white;
+  font-size: 17px;
+  text-align: center;
+
+  outline: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: none;
+
+  position: absolute;
+  bottom: 50px;
+  right: 20px;
+}
+
+
+
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}

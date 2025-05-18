@@ -1,0 +1,205 @@
+*{       
+    box-sizing: border-box; 
+} 
+
+body{     
+    margin: 60px 0 0 0; 
+    background-color: black;
+}    
+
+/* 검색바 스타일 */
+.search_container {
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    margin-top: 250px;
+}
+
+.search_bar {
+    display: flex;
+    align-items: center;
+    background-color: #2a2a2a;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 45px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.search_bar input {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 0 15px;
+    font-size: 16px;
+    height: 100%;
+}
+
+.search_bar input::placeholder {
+    color: #888;
+}
+
+.search_bar input:focus {
+    outline: none;
+}
+
+.search_button {
+    background-color: #e50914;
+    border: none;
+    color: white;
+    height: 100%;
+    width: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.search_button:hover {
+    background-color: #f40612;
+}
+
+/* 넷플릭스 앱 스타일 */
+.netflix_app {       
+    background-color: #000;     
+    color: #fff;       
+    min-height: 100vh;       
+    font-family: 'Helvetica Neue', Arial, sans_serif;     
+    padding: 0 0 60px 0;
+}   
+
+.content {       
+    padding: 10px 0; 
+}   
+
+.category {     
+    margin-bottom: 25px; 
+}   
+
+.category_title {     
+    padding: 0 20px;       
+    margin-bottom: 10px;       
+    font-size: 30px;       
+    font-weight: 500; 
+}   
+
+.movie_slider {     
+    width: 100%;       
+    padding: 0 10px; 
+}   
+
+.movie_card {     
+    border-radius: 5px;     
+    overflow: hidden;     
+    width: 100%;       
+    height: 0;       
+    padding-bottom: 150%;     
+    position: relative;     
+    transition: transform 0.3s ease; 
+}   
+
+.movie_card:hover {     
+    transform: scale(1.05);     
+    z-index: 1; 
+}   
+
+.movie_poster {     
+    position: absolute;     
+    top: 0;     
+    left: 0;       
+    width: 100%;       
+    height: 100%;     
+    background-size: contain;     
+    background-position: center;       
+    background-repeat: no-repeat;     
+    background-color: #000;   
+}   
+
+.movie_overlay {       
+    position: absolute;     
+    bottom: 0;       
+    left: 0;       
+    width: 100%;       
+    /* background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));      */
+    padding: 10px;       
+    opacity: 0;     
+    transition: opacity 0.3s ease; 
+}   
+
+.movie_card:hover .movie_overlay {       
+    opacity: 1; 
+}   
+
+.movie_overlay h3 {     
+    margin: 0;       
+    font-size: 14px;       
+    font-weight: normal; 
+}   
+
+.bottom_nav {     
+    position: fixed;       
+    bottom: 0;       
+    left: 0;       
+    width: 100%;       
+    background-color: #121212;       
+    display: flex;       
+    justify-content: space-around;       
+    padding: 10px 0;       
+    z-index: 10000; 
+}   
+
+.nav_item {     
+    display: flex;       
+    flex-direction: column;     
+    align-items: center;       
+    color: #777;       
+    font-size: 10px; 
+}   
+
+.nav_item svg {     
+    font-size: 18px;       
+    margin-bottom: 5px; 
+}   
+
+.nav_item.active {       
+    color: #fff; 
+}   
+
+:global(.swiper-button-next),
+:global(.swiper-button-prev) {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 40px;
+    height: 100%;
+    top: 0;
+    margin-top: 0;
+    border-radius: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+:global(.swiper-button-next) {
+    right: 0 !important;
+}
+
+:global(.swiper-button-prev) {
+    left: 0 !important;
+}
+
+:global(.swiper-button-next)::after,
+:global(.swiper-button-prev)::after {
+    font-size: 20px !important;
+}
+
+/* .movie_slider 는 CSS 모듈 클래스니까 내부에선 그냥 클래스명 */
+/* Swiper 화살표는 전역이니 :global() 써서 조합 */
+.movie_slider:hover :global(.swiper-button-next),
+.movie_slider:hover :global(.swiper-button-prev) {
+    opacity: 1;
+}
