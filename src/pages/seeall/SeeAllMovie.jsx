@@ -51,6 +51,8 @@ const categories = [
 ];
 
 function SeeAllMovie() {
+    const [searchTerm, setSearchTerm] = useState('');
+
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
