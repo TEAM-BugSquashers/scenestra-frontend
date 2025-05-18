@@ -5,8 +5,6 @@ import { FaHome, FaSearch, FaPlay, FaUserAlt } from 'react-icons/fa';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import classes from './SeeAllMovie.module.css';
-import Header from '../components/header/Header';
-import Sidebar from '../components/sidebar/Sidebar'
 import { useState } from 'react';
 
 
@@ -53,12 +51,6 @@ const categories = [
 ];
 
 function SeeAllMovie() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const toggleMenu = () => {
-        setIsMenuOpen(prevState => !prevState);
-    };
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -66,16 +58,14 @@ function SeeAllMovie() {
 
     return (
         <>
-            <Header toggleMenu={toggleMenu} isMenuOpen={isMenuOpen} />
-            <Sidebar isOpen={isMenuOpen} toggleSidebar={toggleMenu} />
 
             <div className={classes["netflix_app"]}>
                 {/* 검색바 */}
                 <div className={classes["search_container"]}>
                     <div className={classes["search_bar"]}>
-                        <input 
-                            type="text" 
-                            placeholder="영화나 시리즈를 검색하세요" 
+                        <input
+                            type="text"
+                            placeholder="영화나 시리즈를 검색하세요"
                             value={searchTerm}
                             onChange={handleSearchChange}
                         />
@@ -106,8 +96,8 @@ function SeeAllMovie() {
                         {category.movies.map((movie) => (
                         <SwiperSlide key={movie.id}>
                             <div className={classes["movie_card"]}>
-                            <div 
-                                className={classes["movie_poster"]} 
+                            <div
+                                className={classes["movie_poster"]}
                                 style={{ backgroundImage: `url(${movie.image})` }}
                             >
                                 <div className={classes["movie_overlay"]}>

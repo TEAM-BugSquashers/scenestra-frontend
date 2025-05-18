@@ -28,15 +28,14 @@
 
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from './components/header/Header';
-import Sidebar from './components/sidebar/Sidebar';
-import Footer from './components/footer/Footer';
+import Header from './pages/components/header/Header.jsx';
+import Sidebar from './pages/components/sidebar/Sidebar.jsx';
 
 // 페이지 컴포넌트들 import (아직 만들지 않았다면 생성 필요)
-// import Home from './pages/Home';
-// import About from './pages/About';
-// import Contact from './pages/Contact';
-// import NotFound from './NotFound/NotFound';
+import SeeAllMovie from './pages/seeall/SeeAllMovie.jsx';
+import RoomSelect from './pages/reviewSelect/ReviewSelect.jsx';
+import Review from './pages/review/Review.jsx';
+import NotFound from './pages/NotFound/NotFound.jsx';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,14 +50,14 @@ function App() {
       
       <Sidebar isOpen={isMenuOpen} toggleSidebar={toggleMenu} />
       
-      {/* <main>
+      <main>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/SeeAllMoive" element={<SeeAllMovie />} />
+          <Route path="/RoomSelect" element={<RoomSelect />} />
+          <Route path="/Review" element={<Review />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </main> */}
+      </main>
       
       {/* <Footer /> */}
     </BrowserRouter>
