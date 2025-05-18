@@ -52,7 +52,7 @@ function App() {
       
       <main>
         <Routes>
-          <Route path="/SeeAllMoive" element={<SeeAllMovie />} />
+          <Route path="/SeeAllMovie" element={<SeeAllMovie />} />
           <Route path="/RoomSelect" element={<RoomSelect />} />
           <Route path="/Review" element={<Review />} />
           <Route path="*" element={<NotFound />} />
