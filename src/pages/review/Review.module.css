@@ -4,7 +4,7 @@
     z-index: 1;
 }
 body{
-    background-color: #32271e;
+    background-color: #32271e !important;
     position: relative;
 }
 
