@@ -4,7 +4,7 @@
 
 body{     
     margin: 60px 0 0 0; 
-    background-color: black;
+    background-color: black !important;
 }    
 
 /* 검색바 스타일 */
@@ -13,8 +13,8 @@ body{
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    margin-bottom: 1rem;
-    margin-top: 250px;
+    margin-bottom: 110px;
+    margin-top: 200px;
 }
 
 .search_bar {
@@ -78,13 +78,14 @@ body{
     padding: 10px 0; 
 }   
 
-.category {     
+.category {
+    margin-top: 30px;
     margin-bottom: 25px; 
 }   
 
 .category_title {     
     padding: 0 20px;       
-    margin-bottom: 10px;       
+    margin-bottom: 20px;
     font-size: 30px;       
     font-weight: 500; 
 }   
