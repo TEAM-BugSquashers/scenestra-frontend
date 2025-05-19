@@ -2,9 +2,10 @@
     padding: 60px 60px 0;
     position: relative;
     z-index: 1;
-}
-main{
     background-color: #32271e !important;
+}
+.main{
+    /*background-color: #32271e !important;*/
     position: relative;
 }
 
@@ -13,14 +14,18 @@ main{
     text-align: center;
     margin-top: 120px;
     margin-bottom: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
 .section_header div{
     display: inline-block;
-    width: 20px;
+    width: 35px;
     height: 3px;
     background-color: #fff;
-    transform: translateY(-180%);
+    /*transform: translateY(-180%);*/
 }
 
 .section_header h2{
@@ -55,7 +60,7 @@ section{
     font-size: 18px;
 }
 
-main h2{
+.main h2{
     text-align: center;
 }
 
@@ -118,10 +123,9 @@ main h2{
 }
 
 .board_row:hover {
-    background-color: darkblue;
+    background-color: #725035;
     cursor: pointer;
 }
-
 
 .pan {
     position: fixed;

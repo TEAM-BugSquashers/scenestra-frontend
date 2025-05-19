@@ -131,7 +131,7 @@ function Review(){
                     </figcaption>
                 </section>
 
-                <main>
+                <main className={classes.main}>
                     <div className={classes["section_header"]}>
                         <div></div>
                         <h2>Review</h2>
