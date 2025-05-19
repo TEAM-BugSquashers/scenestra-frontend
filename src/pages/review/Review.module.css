@@ -87,6 +87,28 @@ main h2{
     align-items: center;
 }
 
+.board_header div span{
+    display: none;
+}
+
+.board_header div{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.board_header div:nth-child(1),
+.board_header div:nth-child(2),
+.board_header div:nth-child(5),
+.board_header div:nth-child(6){
+    cursor: pointer;
+}
+
+
+.board_header div:hover span{
+    display: block;
+}
+
 .board_row {
     display: grid;
     grid-template-columns: 1fr 1fr 2fr 1fr 1fr 1fr;
@@ -131,6 +153,7 @@ main h2{
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
     margin-bottom: 15px;
+    color: #000;
 }
 
 .postInfo {
@@ -146,6 +169,7 @@ main h2{
     line-height: 1.6;
     margin-bottom: 25px;
     white-space: pre-line;
+    color: #000;
 }
 
 .postActions {

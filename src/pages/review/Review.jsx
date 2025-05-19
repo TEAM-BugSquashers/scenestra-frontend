@@ -55,35 +55,27 @@ function Review(){
         }
     ];
 
-    // 선택된 게시물을 저장할 상태 추가
     const [selectedPost, setSelectedPost] = useState(null);
 
-        // panHandler 함수를 수정하여 선택된 게시물 정보를 저장
     const panHandler = (post) => {
         setSelectedPost(post);
         setPan(prevState => !prevState);
     }
         const [pan,setPan] = useState(false);
-        // const [posts] = useState(initialPosts);
-        // const [searchTerm, setSearchTerm] = useState('');
+        const [posts] = useState(initialPosts);
         const [sortBy, setSortBy] = useState('date');
         const [sortDirection, setSortDirection] = useState('desc');
-        // const [expandedPostId, setExpandedPostId] = useState(null);
 
         // 게시글 정렬 함수
-        // const sortPosts = (posts, sortBy, direction) => {
-        //     return [...posts].sort((a, b) => {
-        //         if (direction === 'asc') {
-        //             return a[sortBy] > b[sortBy] ? 1 : -1;
-        //         } else {
-        //             return a[sortBy] < b[sortBy] ? 1 : -1;
-        //         }
-        //     });
-        // };
-
-    //     const panHandler = ()=>{
-    //         setPan(prevState => !prevState);
-    // }
+        const sortPosts = (posts, sortBy, direction) => {
+            return [...posts].sort((a, b) => {
+                if (direction === 'asc') {
+                    return a[sortBy] > b[sortBy] ? 1 : -1;
+                } else {
+                    return a[sortBy] < b[sortBy] ? 1 : -1;
+                }
+            });
+        };
 
         // 정렬 변경 핸들러
         const handleSort = (column) => {
@@ -95,21 +87,29 @@ function Review(){
             }
         };
 
-        // 검색 기능
-        // const filteredPosts = posts.filter(post =>
-        //     post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //     post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //     post.author.toLowerCase().includes(searchTerm.toLowerCase())
-        // );
-
         // 정렬된 게시글
-        // const sortedPosts = sortPosts(filteredPosts, sortBy, sortDirection);
+        const sortedPosts = sortPosts(posts, sortBy, sortDirection);
 
-        // 게시글 확장/축소 토글
-        // const togglePost = (id) => {
-        //     setExpandedPostId(expandedPostId === id ? null : id);
-        // };
 
+    const renderStars = (rating) => {
+        const stars = [];
+
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                // 채워진 별
+                stars.push(
+                    <span key={i}>★</span>
+                );
+            } else {
+                // 빈 별
+                stars.push(
+                    <span key={i}>☆</span>
+                );
+            }
+        }
+
+        return <div className={classes.starRating}>{stars}</div>;
+    };
 
         return (
         <>
@@ -139,18 +139,42 @@ function Review(){
                     </div>
 
                     <div className={classes["board_header"]}>
-                        <div  onClick={() => handleSort('title')}>글번호</div>
-                        <div  onClick={() => handleSort('rating')}>별점</div>
-                        <div  onClick={() => handleSort('title')}>제목</div>
-                        <div  onClick={() => handleSort('author')}>작성자</div>
-                        <div  onClick={() => handleSort('date')}>날짜</div>
-                        <div  onClick={() => handleSort('views')}>조회수</div>
+                        <div  onClick={() => handleSort('id')}>글번호
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div  onClick={() => handleSort('rating')}>별점
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div >제목</div>
+                        <div>작성자</div>
+                        <div  onClick={() => handleSort('date')}>날짜
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div  onClick={() => handleSort('views')}>조회수
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
+                                </svg>
+                            </span>
+                        </div>
                     </div>
 
-                    {initialPosts.map((post) => (
+                    {sortedPosts.map((post) => (
                         <div className={classes['board_row']} key={post.id}  onClick={() => panHandler(post)}>
                             <div>{post.id}</div>
-                            <div>{post.rating}</div>
+                            <div>{renderStars(post.rating)}</div>
                             <div>{post.title}</div>
                             <div>{post.author}</div>
                             <div>{post.date}</div>
