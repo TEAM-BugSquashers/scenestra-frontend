@@ -1,31 +1,3 @@
-
-// import { useState } from 'react';
-// import Header from './components/header/Header';
-// import Sidebar from './components/sidebar/Sidebar';
-// import Footer from './components/footer/Footer'
-
-// function App() {
-//   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-//   const toggleMenu = () => {
-//     setIsMenuOpen(prevState => !prevState);
-//   };
-
-//   return (
-//     <>
-//       <Header toggleMenu={toggleMenu} isMenuOpen={isMenuOpen} />
-      
-//       <Sidebar isOpen={isMenuOpen} toggleSidebar={toggleMenu} />
-      
-//       <main>
-//       </main>
-//       {/* <Footer /> */}
-//     </>
-//   );
-// }
-
-// export default App;
-
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './pages/components/header/Header.jsx';
