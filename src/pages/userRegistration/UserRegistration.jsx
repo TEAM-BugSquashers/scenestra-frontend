@@ -1,5 +1,5 @@
 import './UserRegistration.css'
-import {useState, useEffect} from "react";
+import {useState, useRef} from "react";
 
 function UserRegistration() {
     // State for form fields
@@ -18,19 +18,11 @@ function UserRegistration() {
     // State for tracking hovered checkbox
     const [hoveredGenre, setHoveredGenre] = useState(null);
 
-    // State to track the most recently unselected genre (for temporary hover override)
-    const [recentlyUnselected, setRecentlyUnselected] = useState(null);
-
-    // Clear the recently unselected state after a brief timeout
-    useEffect(() => {
-        if (recentlyUnselected) {
-            const timer = setTimeout(() => {
-                setRecentlyUnselected(null);
-            }, 100); // Short delay to ensure the white color shows even during hover
-
-            return () => clearTimeout(timer);
-        }
-    }, [recentlyUnselected]);
+    // Track if a genre was just unselected
+    const justUnselectedRef = useRef({
+        id: null,
+        mouseLeft: false
+    });
 
     // Available genres
     const genres = [
@@ -67,18 +59,38 @@ function UserRegistration() {
         } else {
             // Remove from selected if unchecked
             setSelectedGenres(selectedGenres.filter(genre => genre !== id));
-            // Mark this genre as recently unselected to override hover state
-            setRecentlyUnselected(id);
+
+            // Mark this genre as just unselected
+            justUnselectedRef.current = {
+                id: id,
+                mouseLeft: false
+            };
+
+            // Reset hover state to force the label to turn white
+            if (hoveredGenre === id) {
+                setHoveredGenre(null);
+            }
         }
     };
 
     // Handle mouse enter on genre label
     const handleMouseEnter = (id) => {
+        // If this is a re-entry after unselecting, clear the unselected flag
+        if (justUnselectedRef.current.id === id && justUnselectedRef.current.mouseLeft) {
+            justUnselectedRef.current = { id: null, mouseLeft: false };
+        }
+
+        // Update hover state
         setHoveredGenre(id);
     };
 
     // Handle mouse leave on genre label
-    const handleMouseLeave = () => {
+    const handleMouseLeave = (id) => {
+        // Track that mouse has left the just unselected item
+        if (justUnselectedRef.current.id === id) {
+            justUnselectedRef.current.mouseLeft = true;
+        }
+
         setHoveredGenre(null);
     };
 
@@ -91,8 +103,8 @@ function UserRegistration() {
                 color: 'white',
                 borderColor: '#32271e'
             };
-        } else if (id === recentlyUnselected) {
-            // Recently unselected - force white regardless of hover
+        } else if (justUnselectedRef.current.id === id && !justUnselectedRef.current.mouseLeft) {
+            // Just unselected with mouse still on it - force white
             return {
                 backgroundColor: 'white',
                 color: '#32271e',
@@ -101,11 +113,8 @@ function UserRegistration() {
         } else if (hoveredGenre === id) {
             // Hover state - dark background
             return {
-                // backgroundColor: '#32271e',
-                // color: 'white',
-                // borderColor: '#32271e'
-                backgroundColor: 'white',
-                color: '#32271e',
+                backgroundColor: '#32271e',
+                color: 'white',
                 borderColor: '#32271e'
             };
         } else {
@@ -266,7 +275,7 @@ function UserRegistration() {
                                         htmlFor={genre.id}
                                         style={getGenreLabelStyle(genre.id)}
                                         onMouseEnter={() => handleMouseEnter(genre.id)}
-                                        onMouseLeave={handleMouseLeave}
+                                        onMouseLeave={() => handleMouseLeave(genre.id)}
                                     >
                                         {genre.label}
                                     </label>
