@@ -55,6 +55,14 @@ function Review(){
         }
     ];
 
+    // 선택된 게시물을 저장할 상태 추가
+    const [selectedPost, setSelectedPost] = useState(null);
+
+        // panHandler 함수를 수정하여 선택된 게시물 정보를 저장
+    const panHandler = (post) => {
+        setSelectedPost(post);
+        setPan(prevState => !prevState);
+    }
         const [pan,setPan] = useState(false);
         // const [posts] = useState(initialPosts);
         // const [searchTerm, setSearchTerm] = useState('');
@@ -73,9 +81,9 @@ function Review(){
         //     });
         // };
 
-        const panHandler = ()=>{
-            setPan(prevState => !prevState);
-    }
+    //     const panHandler = ()=>{
+    //         setPan(prevState => !prevState);
+    // }
 
         // 정렬 변경 핸들러
         const handleSort = (column) => {
@@ -140,7 +148,7 @@ function Review(){
                     </div>
 
                     {initialPosts.map((post) => (
-                        <div className={classes['board_row']} key={post.id}  onClick={panHandler}>
+                        <div className={classes['board_row']} key={post.id}  onClick={() => panHandler(post)}>
                             <div>{post.id}</div>
                             <div>{post.rating}</div>
                             <div>{post.title}</div>
@@ -152,27 +160,32 @@ function Review(){
                 </main>
 
 
-                {/*{expandedPostId === post.id && (*/}
-                {/*    <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 animate-fade-in">*/}
-                {/*        <div className="mb-4 text-gray-800">{post.content}</div>*/}
-                {/*        <div className="flex justify-end">*/}
-                {/*            <button className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors text-sm">*/}
-                {/*                답글 작성*/}
-                {/*            </button>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*)}*/}
 
                 <footer></footer>
             </div>
 
-            {pan &&
-                (
-                    <div className={classes.pan} onClick={panHandler}>
-
+            {pan && selectedPost && (
+                <div className={classes.pan} onClick={() => setPan(false)}>
+                    <div className={classes.popup} onClick={(e) => e.stopPropagation()}>
+                        <h3>{selectedPost.title}</h3>
+                        <div className={classes.postDetails}>
+                            <div className={classes.postInfo}>
+                                <span>글번호: {selectedPost.id}</span>
+                                <span>별점: {selectedPost.rating}</span>
+                                <span>작성자: {selectedPost.author}</span>
+                                <span>날짜: {selectedPost.date}</span>
+                                <span>조회수: {selectedPost.views}</span>
+                            </div>
+                            <div className={classes.postContent}>
+                                {selectedPost.content}
+                            </div>
+                            <div className={classes.postActions}>
+                                <button onClick={() => setPan(false)}>닫기</button>
+                            </div>
+                        </div>
                     </div>
-                )}
-
+                </div>
+            )}
         </>
     );
 }
