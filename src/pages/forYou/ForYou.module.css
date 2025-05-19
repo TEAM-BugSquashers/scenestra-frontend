@@ -3,16 +3,6 @@
     height: 100vh;
     width: 100%;
 }
-
-/*body {*/
-/*    background: #eee;*/
-/*    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;*/
-/*    font-size: 14px;*/
-/*    color: #000;*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*}*/
-
 .forYouSwiper {
     width: 100%;
     height: 100%;
@@ -22,14 +12,6 @@
     position: relative;
     height: 100%;
     width: 100%;
-    /*text-align: center;*/
-    /*font-size: 18px;*/
-    /*background: #fff;*/
-
-    /*!* Center slide text vertically *!*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
 }
 
 .forYouSlide img {
@@ -53,7 +35,9 @@
     height: 100%;
     object-fit: cover;
 }
+.bottomContainer {
 
+}
 .movieContent {
     position: absolute;
     width: 100%;
@@ -63,6 +47,7 @@
     color: #fff;
     display: flex;
     align-items: center;
+    transition: bottom 0.3s ease;
 }
 .line1 {
     background-color: #fff;
@@ -75,10 +60,70 @@
     width: 100%;
 }
 h1 {
-    font-family: "Noto Serif KR";
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
     margin: 0 20px;
+    cursor: pointer;
 }
+
 
 .forYouSwiper :global(.swiper-pagination) {
     display: none;
+}
+
+/*하단 top5 무비포스터*/
+.topMovies {
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    padding: 0 20px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+.postersContainer {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding-bottom: 10px;
+}
+.posterItem {
+    flex: 0 0 auto;
+    /*width: 18%;*/
+    text-align: center;
+}
+.posterImage {
+    max-width: 160px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.5s;
+}
+.posterImage:hover {
+    transform: scale(1.05);
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/*영화 전체보기 속성*/
+.allMovieShowBtn {
+    border: 1px solid;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    color: #fff;
+    bottom: -30px;
+    background-color: transparent;
+    cursor: pointer;
+}
+.allMovieShowBtn:hover {
+    background-color: rgba(178,166,155, 0.4);
+    color: #fff;
 }
