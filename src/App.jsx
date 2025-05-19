@@ -37,6 +37,7 @@ import RoomSelect from './pages/reviewSelect/ReviewSelect.jsx';
 import Review from './pages/review/Review.jsx';
 import NotFound from './pages/NotFound/NotFound.jsx';
 import Login from "./pages/login/Login.jsx";
+import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,7 +57,8 @@ function App() {
           <Route path="/SeeAllMovie" element={<SeeAllMovie />} />
           <Route path="/RoomSelect" element={<RoomSelect />} />
           <Route path="/Review" element={<Review />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/UserRegistration" element={<UserRegistration />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

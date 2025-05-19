@@ -47,12 +47,14 @@ body {
 }
 .videoBox video {
     width: 100%;
+    user-select: none;
 }
 .imgBox {
     width: 100%;
     height: 100%;
     overflow: hidden;
     position: relative;
+    user-select: none;
 }
 /* sectionRight */
 .rightContentWrap {
@@ -74,6 +76,8 @@ body {
 /* imgBoxGen */
 .imgBox > img {
     transition: opacity 1s ease-in-out;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 .imgEight {
     width: 110%;
