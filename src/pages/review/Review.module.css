@@ -87,10 +87,11 @@ section{
     font-weight: bold;
     background-color: black;
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.3fr 1fr 2fr 1fr 1fr 1fr;
     padding: 12px;
     border-bottom: 1px solid #ddd;
     align-items: center;
+    text-align: center;
 }
 
 .board_header div span{
@@ -101,6 +102,7 @@ section{
     display: flex;
     gap: 5px;
     align-items: center;
+    justify-content: center;
 }
 
 .board_header div:nth-child(1),
@@ -117,7 +119,7 @@ section{
 
 .board_row {
     display: grid;
-    grid-template-columns: 1fr 1fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.3fr 1fr 2fr 1fr 1fr 1fr;
     padding: 12px;
     border-bottom: 1px solid #ddd;
     align-items: center;
@@ -126,6 +128,10 @@ section{
 .board_row:hover {
     background-color: #725035;
     cursor: pointer;
+}
+
+.board_row div{
+    text-align: center;
 }
 
 

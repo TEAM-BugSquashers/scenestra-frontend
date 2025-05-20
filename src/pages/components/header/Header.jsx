@@ -3,7 +3,7 @@ import classes from './Header.module.css';
 
 function Header({ toggleMenu, isMenuOpen }) {
   return (
-    <header>
+    <header className={classes.header}>
       <div className={classes.logo}>
         <a href="#">SCENESTRA</a>
       </div>
