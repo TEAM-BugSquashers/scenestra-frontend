@@ -53,6 +53,7 @@ function UserRegistration() {
         if (checked) {
             // Don't allow more than 3 selections
             if (selectedGenres.length >= 3) {
+                alert('선호하는 장르는 3개까지만 선택할 수 있습니다.');
                 return; // Ignore new selection if already 3 are selected
             }
             setSelectedGenres([...selectedGenres, id]);
