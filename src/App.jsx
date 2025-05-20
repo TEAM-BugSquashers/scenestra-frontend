@@ -38,6 +38,7 @@ import Review from './pages/review/Review.jsx';
 import NotFound from './pages/NotFound/NotFound.jsx';
 import ForYou from "./pages/forYou/ForYou.jsx";
 import Login from "./pages/login/Login.jsx";
+import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,13 +55,12 @@ function App() {
       
       <main>
         <Routes>
-
           <Route path="/seeAllMoive" element={<SeeAllMovie />} />
           <Route path="/roomSelect" element={<RoomSelect />} />
           <Route path="/review" element={<Review />} />
           <Route path="/forYou" element={<ForYou />} />
-          <Route path="/login" element={<Login />} />
-
+          <Route path="/" element={<Login />} />
+          <Route path="/join" element={<UserRegistration />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
