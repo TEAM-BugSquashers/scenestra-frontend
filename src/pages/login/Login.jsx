@@ -54,16 +54,6 @@ function Login() {
         <div className="sectionWrap">
             {/* Section Left */}
             <div className="sectionLeft">
-                {/* Movie Video */}
-                <div className="videoBox">
-                    <video
-                        src="./img/casablanca.mp4"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                    ></video>
-                </div>
 
                 {/* Theater Images */}
                 <div className="imgBox">
@@ -109,6 +99,16 @@ function Login() {
                         className="imgEleven"
                         style={getImageStyle(6)}
                     />
+                    {/* Movie Video */}
+                    <div className="videoBox">
+                        <video
+                            src="./img/casablanca.mp4"
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                        ></video>
+                    </div>
                 </div>
             </div>
 
