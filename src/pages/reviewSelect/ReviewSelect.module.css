@@ -34,14 +34,14 @@ h2{
     font-weight: normal;
 }
 
-nav{
+.nav{
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
 }
 
-nav a div{
+.nav a div{
     width: 300px;
     height: 450px;
     display: flex;
@@ -52,6 +52,6 @@ nav a div{
     text-align: center;
 }
 
-nav a div div{
+.nav a div div{
     background-color: #fff;
 }

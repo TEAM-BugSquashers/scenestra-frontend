@@ -12,36 +12,36 @@ function ReviewSelect(){
                     <div></div>
                 </div>
 
-                <nav>
-                    <a href="Room.html">
+                <div className={classes.nav}>
+                    <a href="">
                         {/* <img src="" alt="A관" /> */}
                         <div>
                             <div></div>
                             <span>상영관이름</span>
                         </div>
                     </a>
-                    <a href="Room.html">
+                    <a href="">
                         {/* <img src="" alt="B관" /> */}
                         <div>
                             <div></div>
                             <span>상영관이름</span>
                         </div>
                     </a>
-                    <a href="Room.html">
+                    <a href="">
                         {/* <img src="" alt="C관" /> */}
                         <div>
                             <div></div>
                             <span>상영관이름</span>
                         </div>
                     </a>
-                    <a href="Room.html">
+                    <a href="">
                         {/* <img src="" alt="D관" /> */}
                         <div>
                             <div></div>
                             <span>상영관이름</span>
                         </div>
                     </a>
-                </nav>
+                </div>
             </div>
 
             

@@ -8,7 +8,7 @@ function Header({ toggleMenu, isMenuOpen }) {
         <a href="#">SCENESTRA</a>
       </div>
       <button 
-        className={`${classes.hamburgerBtn} ${isMenuOpen ? classes.open : ''}`}
+        className={`${classes.hamburgerBtn} ${classes.btn2} ${isMenuOpen ? classes.open : ''}`}
         onClick={toggleMenu}
         aria-label="메뉴"
       >

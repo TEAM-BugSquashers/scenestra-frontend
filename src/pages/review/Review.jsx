@@ -55,9 +55,9 @@ function Review(){
         }
     ];
 
-    const pageNum= [
-        {pn:1},{pn:2},{pn:3},{pn:4},{pn:5},{pn:6},{pn:7}
-    ]
+    // const pageNum= [
+    //     {pn:1},{pn:2},{pn:3},{pn:4},{pn:5},{pn:6},{pn:7}
+    // ]
 
     const [selectedPost, setSelectedPost] = useState(null);
 

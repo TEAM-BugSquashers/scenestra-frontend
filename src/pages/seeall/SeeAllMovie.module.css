@@ -70,7 +70,7 @@ body{
     background-color: #32271e;
     color: #fff;       
     min-height: 100vh;       
-    font-family: 'Helvetica Neue', Arial, sans_serif;     
+    /*font-family: 'Helvetica Neue', Arial, sans_serif;     */
     padding: 0 0 60px 0;
 }   
 

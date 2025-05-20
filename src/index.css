@@ -19,6 +19,58 @@
 
 body {
   margin: 0;
-  color: #e6ddf9;
+  color: #b2a69b;
+  font-family: 'Pretendard-Regular', sans-serif;
+  font-size: 1rem;
   background-color: #32271e;
 }
+
+
+
+/*==============================================================================*/
+.bBg{ background-color: #32271e }
+
+.bPri{ background-color: #b2a69b; }
+
+.bSec{ background-color: #32271e}
+
+.bMain{ background-color: #b2a69b;}
+
+.bMainLight{ opacity: 0.6 }
+
+.bSub{ background-color: #726254; }
+
+.bTitle{ background-color: #ebdfce; }
+
+/*==============================================================================*/
+.wBg{ background-color: white; }
+
+.wPri{ background-color: #32271e }
+
+.wSec{ background-color: #b2a69b; }
+
+.wMain{ background-color: #32271e }
+
+.wMainLight{ opacity: 0.6 }
+
+.wSub{ background-color: #b2a69b; }
+
+.wTitle{background-color: #32271e }
+/*==============================================================================*/
+
+h1{ font-size: 1.875rem;}
+
+h2{ font-size: 1.5rem;}
+
+.subtitle{ font-size: 1.25rem;}
+
+.btn1{ font-size: 1rem; }
+
+.btn2{ font-size: 0.875rem; }
+
+.btn3{ font-size: 0.75rem }
+
+.body1{ font-size: 1rem; }
+
+.body2{ font-size: 0.875rem; }
+
