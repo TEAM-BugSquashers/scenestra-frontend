@@ -9,14 +9,86 @@ import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
 import {Route, useNavigate} from "react-router-dom";
 import {axiosTest} from "../api/axios.js";
 
-const MovieSlide = ({movieSrc, genre, isActive }) => {
+const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => {
     const movieRef = useRef(null);
     const navigate = useNavigate();
     const [isClicked, setIsClicked] = useState(false);
-    const [selectedMovieId, setSelectedMovieId] = useState(null);
-    const handlePosterClick = (id) => {
-        setSelectedMovieId(id);
+
+    useEffect(() => {
+        if(movieRef.current) {
+            if(isActive) {
+                movieRef.current.play();
+            }
+            else {
+                movieRef.current.pause();
+            }
+        }
+    }, [isActive]);
+
+    const showMovieHandler = () => {
+        setIsClicked(!isClicked);
+    }
+    const contentStyle = {
+        bottom: isClicked ? '34%' : '10%'
     };
+
+    return (
+        <div className={classes.movieContainer}>
+            <video
+                ref={movieRef}
+                className={classes.backgroundMovie}
+                loop
+                muted
+                playsInline
+            >
+                <source src={movieSrc} type="video/mp4" />
+            </video>
+            <div className={classes.bottomContainer}>
+                <div className={classes.movieContent} style={contentStyle}>
+                    <div className={classes.line1} />
+                    <h1 onClick={showMovieHandler}>{genre}</h1>
+                    <div className={classes.line2} />
+                </div>
+                {isClicked && (
+                    <div className={classes.topMovies}>
+                        <div className={classes.postersContainer}>
+                            {topPostData.map(poster => (
+                                <div
+                                    key={poster.id}
+                                    className={classes.posterItem}
+                                    onClick={() => onSelectMovie(poster.id)}
+                                >
+                                    <img
+                                        src={poster.image}
+                                        alt={poster.title}
+                                        className={classes.posterImage}
+                                    />
+                                </div>
+                            ))}
+                            <button className={classes.allMovieShowBtn} onClick={()=>navigate("/seeAllMoive")}>전체영화보기</button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+function ForYou(){
+    const [activeIndex, setActiveIndex ] = useState(0);
+    const [selectedMovieData, setSelectedMovieData] = useState(null);
+    useEffect(() => {
+        axiosTest()
+    }, []);
+
+    //영화정보 넣을때 사용자가 선호장르 설정하지 않으면 4(Best),5(New) 만 보여주게 해야됩니다.
+    const movies = [
+        {id: 1, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/WarNapoleon.mp4', genre: 'WAR' },
+        {id: 2, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/CrimeNightmare+Alley.mp4', genre: 'CRIME' },
+        {id: 3, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/FantasyTheLordOfTheRings.mp4', genre: 'FANTASY' },
+        {id: 4, url:'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/WarNapoleon.mp4', genre: 'BEST'},
+        {id: 5, url:'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/CrimeNightmare+Alley.mp4', genre: 'NEW' }
+    ];
     const topPostData = [
         {
             id: 1,
@@ -65,92 +137,20 @@ const MovieSlide = ({movieSrc, genre, isActive }) => {
         }
     ]
 
-    useEffect(() => {
-        if(movieRef.current) {
-            if(isActive) {
-                movieRef.current.play();
-            }
-            else {
-                movieRef.current.pause();
-            }
-        }
-    }, [isActive]);
-
-    const showMovieHandler = () => {
-        setIsClicked(!isClicked);
-    }
-    const contentStyle = {
-        bottom: isClicked ? '34%' : '10%'
-    };
-
-    return (
-        <div className={classes.movieContainer}>
-            <video
-                ref={movieRef}
-                className={classes.backgroundMovie}
-                loop
-                muted
-                playsInline
-            >
-                <source src={movieSrc} type="video/mp4" />
-            </video>
-            <MoviePopUp movieData={topPostData} selectedId={selectedMovieId} />
-            <div className={classes.bottomContainer}>
-                <div className={classes.movieContent} style={contentStyle}>
-                    <div className={classes.line1} />
-                    <h1 onClick={showMovieHandler}>{genre}</h1>
-                    <div className={classes.line2} />
-                </div>
-                {isClicked && (
-                    <div className={classes.topMovies}>
-                        <div className={classes.postersContainer}>
-                            {topPostData.map(poster => (
-                                <div
-                                    key={poster.id}
-                                    className={classes.posterItem}
-                                    onClick={() => handlePosterClick(poster.id)}
-                                >
-                                    <img
-                                        src={poster.image}
-                                        alt={poster.title}
-                                        className={classes.posterImage}
-                                    />
-                                </div>
-                            ))}
-                            <button className={classes.allMovieShowBtn} onClick={()=>navigate("/seeAllMoive")}>전체영화보기</button>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
-
-function ForYou(){
-
-
-    const [activeIndex, setActiveIndex ] = useState(0);
-
-    useEffect(() => {
-        axiosTest()
-    }, []);
-
-    //영화정보 넣을때 사용자가 선호장르 설정하지 않으면 4(Best),5(New) 만 보여주게 해야됩니다.
-    const movies = [
-        {id: 1, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/WarNapoleon.mp4', genre: 'WAR' },
-        {id: 2, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/CrimeNightmare+Alley.mp4', genre: 'CRIME' },
-        {id: 3, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/FantasyTheLordOfTheRings.mp4', genre: 'FANTASY' },
-        {id: 4, url:'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/WarNapoleon.mp4', genre: 'BEST'},
-        {id: 5, url:'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/CrimeNightmare+Alley.mp4', genre: 'NEW' }
-    ];
-
-
     const handleSlideChange = (swiper) => {
         setActiveIndex(swiper.activeIndex);
     }
+    const handleSelectMovie = (movieId) => {
+        const selectedMovie = topPostData.find(movie => movie.id === movieId);
+        setSelectedMovieData(selectedMovie)
+    };
     return (
         <>
             <div className={classes.pageContainer}>
+                <MoviePopUp
+                    movie={selectedMovieData}
+                    onClose={() => setSelectedMovieData(null)}
+                />
                 <Swiper
                     direction={'vertical'}
                     slidesPerView={1}
@@ -170,6 +170,8 @@ function ForYou(){
                                 movieSrc={movie.url}
                                 genre={movie.genre}
                                 isActive={index === activeIndex}
+                                topPostData={topPostData}
+                                onSelectMovie={handleSelectMovie}
                             />
                         </SwiperSlide>
                     ))}

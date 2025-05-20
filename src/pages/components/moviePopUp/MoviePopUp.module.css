@@ -1,20 +1,25 @@
 .moviePopUp {
     position: fixed;
     width: 850px;
-    height: 450px;
+    height: 480px;
     background-color: #fff;
     border-radius: 30px;
-    top: 10%;
+    top: 8%;
     left: 50%;
     transform: translate(-50%, 0%);
     display: flex;
     padding: 30px;
     gap: 30px;
+    z-index: 999;
 }
 .movieDetailImg {
-    border: 1px solid;
+    border-radius: 10px;
     width: 40%;
     height: 100%;
+    overflow: hidden;
+}
+.movieDetailImg img {
+    width: 100%;
 }
 .movieDetail {
     border: 1px solid;
@@ -22,9 +27,42 @@
     height: 100%;
     position: relative;
 }
-.movieDetailDesc {
-
-}
 .movieDetailTitle {
-
+    display: flex;
+    gap: 10px;
+}
+.movieTitle {
+    margin-top: 20px;
+}
+.releaseYear {
+    display: inline;
+    margin-top: 20px;
+}
+.popXBox {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+}
+.xLeft {
+    width: 20px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: left;
+    transform: rotateZ(45deg) translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+.xRight{
+    width: 20px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: left;
+    transform: rotateZ(-45deg) translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
 }
