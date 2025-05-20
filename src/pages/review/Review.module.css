@@ -35,6 +35,7 @@
     display: inline-block;
     font-family: 'Belleza', sans-serif !important;
     font-weight: normal;
+    font-size: 50px;
 }
 
 section{
@@ -126,6 +127,38 @@ section{
     background-color: #725035;
     cursor: pointer;
 }
+
+
+
+.pagenation {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto; /* 또는 원하는 비율로 조정 */
+    gap: 10px;
+    align-items: center;
+    width: max-content; /* 컨텐츠 크기에 맞게 조정 */
+    margin: 20px auto; /* 가운데 정렬 */
+}
+
+.pagenation svg {
+    width: 27px; /* SVG 크기 조정 */
+    height: 27px;
+    cursor: pointer;
+}
+
+.pagenation div{
+    width: 27px;
+    height: 27px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 9px;
+    border: #32271e 1px solid;
+    text-align: center;
+    line-height: 27px;
+    color: black;
+}
+
+
+
 
 .pan {
     position: fixed;

@@ -3,8 +3,8 @@
 } 
 
 body{     
-    margin: 60px 0 0 0; 
-    background-color: black !important;
+    /*margin: 60px 0 0 0; */
+    /*background-color: black !important;*/
 }    
 
 /* 검색바 스타일 */
@@ -67,7 +67,7 @@ body{
 
 /* 넷플릭스 앱 스타일 */
 .netflix_app {       
-    background-color: #000;     
+    background-color: #32271e;
     color: #fff;       
     min-height: 100vh;       
     font-family: 'Helvetica Neue', Arial, sans_serif;     

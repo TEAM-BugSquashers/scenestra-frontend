@@ -55,40 +55,42 @@ function Review(){
         }
     ];
 
+    const pageNum= [
+        {pn:1},{pn:2},{pn:3},{pn:4},{pn:5},{pn:6},{pn:7}
+    ]
+
     const [selectedPost, setSelectedPost] = useState(null);
 
     const panHandler = (post) => {
         setSelectedPost(post);
         setPan(prevState => !prevState);
     }
-        const [pan,setPan] = useState(false);
-        const [posts] = useState(initialPosts);
-        const [sortBy, setSortBy] = useState('date');
-        const [sortDirection, setSortDirection] = useState('desc');
+    const [pan,setPan] = useState(false);
+    const [posts] = useState(initialPosts);
+    const [sortBy, setSortBy] = useState('date');
+    const [sortDirection, setSortDirection] = useState('desc');
 
-        // 게시글 정렬 함수
-        const sortPosts = (posts, sortBy, direction) => {
-            return [...posts].sort((a, b) => {
-                if (direction === 'asc') {
-                    return a[sortBy] > b[sortBy] ? 1 : -1;
-                } else {
-                    return a[sortBy] < b[sortBy] ? 1 : -1;
-                }
-            });
-        };
-
-        // 정렬 변경 핸들러
-        const handleSort = (column) => {
-            if (sortBy === column) {
-                setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    // 게시글 정렬 함수
+    const sortPosts = (posts, sortBy, direction) => {
+        return [...posts].sort((a, b) => {
+            if (direction === 'asc') {
+                return a[sortBy] > b[sortBy] ? 1 : -1;
             } else {
-                setSortBy(column);
-                setSortDirection('desc');
+                return a[sortBy] < b[sortBy] ? 1 : -1;
             }
-        };
-
-        // 정렬된 게시글
-        const sortedPosts = sortPosts(posts, sortBy, sortDirection);
+        });
+    };
+    // 정렬 변경 핸들러
+    const handleSort = (column) => {
+        if (sortBy === column) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' :'asc');
+        } else {
+            setSortBy(column);
+            setSortDirection('desc');
+        }
+    };
+    // 정렬된 게시글
+    const sortedPosts = sortPosts(posts, sortBy, sortDirection);
 
 
     const renderStars = (rating) => {
@@ -108,7 +110,7 @@ function Review(){
             }
         }
 
-        return <div className={classes.starRating}>{stars}</div>;
+        return <span className={classes.starRating}>{stars}</span>;
     };
 
         return (
@@ -131,7 +133,7 @@ function Review(){
                     </figcaption>
                 </section>
 
-                <main className={classes.main}>
+                <div className={classes.main}>
                     <div className={classes["section_header"]}>
                         <div></div>
                         <h2>Review</h2>
@@ -181,10 +183,27 @@ function Review(){
                             <div>{post.views}</div>
                         </div>
                     ))}
-                </main>
 
-
-
+                    {/*<div className={classes.pagenation}>*/}
+                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
+                    {/*        <path d="M0,-12 L-12,0 L0,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                    {/*        <path d="M12,-12 L0,0 L12,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                    {/*    </svg>*/}
+                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
+                    {/*        <path d="M5,-12 L-7,0 L5,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                    {/*    </svg>*/}
+                    {/*    {pageNum.map((num) => (*/}
+                    {/*        <div key={num}>{num}</div>*/}
+                    {/*    ))}*/}
+                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
+                    {/*        <path d="M-5,-12 L7,0 L-5,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                    {/*    </svg>*/}
+                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
+                    {/*        <path d="M0,-12 L12,0 L0,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                    {/*        <path d="M-12,-12 L0,0 L-12,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+                    {/*    </svg>*/}
+                    {/*</div>*/}
+                </div>
                 <footer></footer>
             </div>
 

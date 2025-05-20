@@ -27,7 +27,7 @@ function App() {
       <main>
         <Routes>
 
-          <Route path="/seeAllMoive" element={<SeeAllMovie />} />
+          <Route path="/seeAllMovie" element={<SeeAllMovie />} />
           <Route path="/roomSelect" element={<RoomSelect />} />
           <Route path="/review" element={<Review />} />
           <Route path="/forYou" element={<ForYou />} />
