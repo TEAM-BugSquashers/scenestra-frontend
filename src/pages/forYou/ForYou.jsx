@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Mousewheel, Pagination } from 'swiper/modules';
+import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
 import {Route, useNavigate} from "react-router-dom";
 import {axiosTest} from "../api/axios.js";
 
@@ -12,12 +13,56 @@ const MovieSlide = ({movieSrc, genre, isActive }) => {
     const movieRef = useRef(null);
     const navigate = useNavigate();
     const [isClicked, setIsClicked] = useState(false);
+    const [selectedMovieId, setSelectedMovieId] = useState(null);
+    const handlePosterClick = (id) => {
+        setSelectedMovieId(id);
+    };
     const topPostData = [
-        {id: 1, image: '/posterimage/더랍스터.jpg', title:'더랍스터' },
-        {id: 2, image: '/posterimage/엑시트.jpg', title:'엑시트' },
-        {id: 3, image: '/posterimage/파묘.jpg', title:'파묘' },
-        {id: 4, image: '/posterimage/CallMeByYourName.jpg', title:'CallMeByYourName' },
-        {id: 5, image: '/posterimage/하얼빈.jpg', title:'하얼빈' }
+        {
+            id: 1,
+            image: '/posterimage/더랍스터.jpg',
+            title:'더랍스터',
+            director: '감독이름',
+            genre: '장르',
+            runtime: '상영시간',
+            releaseYear: '개봉연도'
+        },
+        {
+            id: 2,
+            image: '/posterimage/엑시트.jpg',
+            title:'엑시트',
+            director: '감독이름',
+            genre: '장르',
+            runtime: '상영시간',
+            releaseYear: '개봉연도'
+        },
+        {
+            id: 3,
+            image: '/posterimage/파묘.jpg',
+            title:'파묘',
+            director: '감독이름',
+            genre: '장르',
+            runtime: '상영시간',
+            releaseYear: '개봉연도'
+        },
+        {
+            id: 4,
+            image: '/posterimage/CallMeByYourName.jpg',
+            title:'CallMeByYourName',
+            director: '감독이름',
+            genre: '장르',
+            runtime: '상영시간',
+            releaseYear: '개봉연도'
+        },
+        {
+            id: 5,
+            image: '/posterimage/하얼빈.jpg',
+            title:'하얼빈',
+            director: '감독이름',
+            genre: '장르',
+            runtime: '상영시간',
+            releaseYear: '개봉연도'
+        }
     ]
 
     useEffect(() => {
@@ -49,6 +94,7 @@ const MovieSlide = ({movieSrc, genre, isActive }) => {
             >
                 <source src={movieSrc} type="video/mp4" />
             </video>
+            <MoviePopUp movieData={topPostData} selectedId={selectedMovieId} />
             <div className={classes.bottomContainer}>
                 <div className={classes.movieContent} style={contentStyle}>
                     <div className={classes.line1} />
@@ -59,7 +105,11 @@ const MovieSlide = ({movieSrc, genre, isActive }) => {
                     <div className={classes.topMovies}>
                         <div className={classes.postersContainer}>
                             {topPostData.map(poster => (
-                                <div key={poster.id} className={classes.posterItem}>
+                                <div
+                                    key={poster.id}
+                                    className={classes.posterItem}
+                                    onClick={() => handlePosterClick(poster.id)}
+                                >
                                     <img
                                         src={poster.image}
                                         alt={poster.title}

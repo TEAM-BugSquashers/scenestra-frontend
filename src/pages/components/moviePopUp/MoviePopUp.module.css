@@ -1,0 +1,30 @@
+.moviePopUp {
+    position: fixed;
+    width: 850px;
+    height: 450px;
+    background-color: #fff;
+    border-radius: 30px;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    display: flex;
+    padding: 30px;
+    gap: 30px;
+}
+.movieDetailImg {
+    border: 1px solid;
+    width: 40%;
+    height: 100%;
+}
+.movieDetail {
+    border: 1px solid;
+    width: 60%;
+    height: 100%;
+    position: relative;
+}
+.movieDetailDesc {
+
+}
+.movieDetailTitle {
+
+}
