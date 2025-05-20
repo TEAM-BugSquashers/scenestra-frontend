@@ -123,7 +123,7 @@ function Login() {
                     {/* Movie Video */}
                     <div className="videoBox">
                         <video
-                            src="./img/casablanca.mp4"
+                            src="https://scenestra.s3.ap-northeast-2.amazonaws.com/video/casablanca.mp4"
                             autoPlay
                             muted
                             loop
