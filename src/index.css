@@ -30,32 +30,32 @@ body {
 /*==============================================================================*/
 .bBg{ background-color: #32271e }
 
-.bPri{ background-color: #b2a69b; }
+.bPri{ color: #b2a69b; }
 
-.bSec{ background-color: #32271e}
+.bSec{ color: #32271e}
 
-.bMain{ background-color: #b2a69b;}
+.bMain{ color: #b2a69b;}
 
 .bMainLight{ opacity: 0.6 }
 
-.bSub{ background-color: #726254; }
+.bSub{ color: #726254; }
 
-.bTitle{ background-color: #ebdfce; }
+.bTitle{ color: #ebdfce; }
 
 /*==============================================================================*/
 .wBg{ background-color: white; }
 
-.wPri{ background-color: #32271e }
+.wPri{ color: #32271e }
 
-.wSec{ background-color: #b2a69b; }
+.wSec{ color: #b2a69b; }
 
-.wMain{ background-color: #32271e }
+.wMain{ color: #32271e }
 
 .wMainLight{ opacity: 0.6 }
 
-.wSub{ background-color: #b2a69b; }
+.wSub{ color: #b2a69b; }
 
-.wTitle{background-color: #32271e }
+.wTitle{ color: #32271e }
 /*==============================================================================*/
 
 h1{ font-size: 1.875rem;}
