@@ -118,7 +118,7 @@ function Review(){
             <div className={classes.wrap}>
                 <div className={classes["section_header"]}>
                     <div></div>
-                    <h2>ABOUT THIS THEATER</h2>
+                    <h2 className={classes.h2}>ABOUT THIS THEATER</h2>
                     <div></div>
                 </div>
 
@@ -210,7 +210,7 @@ function Review(){
             {pan && selectedPost && (
                 <div className={classes.pan} onClick={() => setPan(false)}>
                     <div className={classes.popup} onClick={(e) => e.stopPropagation()}>
-                        <h3>{selectedPost.title}</h3>
+                        <div className={classes.h3}>{selectedPost.title}</div>
                         <div className={classes.postDetails}>
                             <div className={classes.postInfo}>
                                 <span>글번호: {selectedPost.id}</span>

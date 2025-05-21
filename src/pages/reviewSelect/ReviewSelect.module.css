@@ -1,11 +1,3 @@
-*{
-    box-sizing: border-box;
-}
-
-body{
-    /*background-color: black;*/
-    /*margin: 0;*/
-}
 
 .wrap{
     margin-top: 60px;
@@ -25,13 +17,11 @@ body{
     background-color: #fff;
 }
 
-h2{
+.h2{
     text-align: center;
     padding: 0;
     margin: 0;
     display: inline-block;
-    font-family: 'Belleza', sans-serif !important;
-    font-weight: normal;
 }
 
 .nav{
@@ -54,4 +44,9 @@ h2{
 
 .nav a div div{
     background-color: #fff;
+}
+
+.a{
+    text-decoration: none;
+    color: #b2a69b;
 }

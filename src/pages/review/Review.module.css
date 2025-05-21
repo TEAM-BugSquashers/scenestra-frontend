@@ -28,14 +28,12 @@
     /*transform: translateY(-180%);*/
 }
 
-.section_header h2{
+.section_header .h2{
     text-align: center;
     padding: 0;
     margin: 0;
     display: inline-block;
-    font-family: 'Belleza', sans-serif !important;
     font-weight: normal;
-    font-size: 50px;
 }
 
 section{
@@ -61,7 +59,7 @@ section{
     font-size: 18px;
 }
 
-.main h2{
+.main .h2{
     text-align: center;
 }
 
@@ -87,7 +85,7 @@ section{
     font-weight: bold;
     background-color: black;
     display: grid;
-    grid-template-columns: 0.3fr 1fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr;
     padding: 12px;
     border-bottom: 1px solid #ddd;
     align-items: center;
@@ -95,7 +93,12 @@ section{
 }
 
 .board_header div span{
-    display: none;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .board_header div{
@@ -103,6 +106,7 @@ section{
     gap: 5px;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .board_header div:nth-child(1),
@@ -114,12 +118,12 @@ section{
 
 
 .board_header div:hover span{
-    display: block;
+    opacity: 1;
 }
 
 .board_row {
     display: grid;
-    grid-template-columns: 0.3fr 1fr 2fr 1fr 1fr 1fr;
+    grid-template-columns: 0.5fr 1fr 2fr 1fr 1fr 1fr;
     padding: 12px;
     border-bottom: 1px solid #ddd;
     align-items: center;
@@ -190,7 +194,7 @@ section{
     position: relative;
 }
 
-.popup h3 {
+.popup .h3 {
     margin-top: 0;
     font-size: 22px;
     border-bottom: 1px solid #ddd;
@@ -235,7 +239,3 @@ section{
 
 
 
-footer{
-    width: 100%;
-    height: 300px;
-}

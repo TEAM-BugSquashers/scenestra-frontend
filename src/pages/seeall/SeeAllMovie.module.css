@@ -1,11 +1,6 @@
 *{       
     box-sizing: border-box; 
-} 
-
-body{     
-    /*margin: 60px 0 0 0; */
-    /*background-color: black !important;*/
-}    
+}
 
 /* 검색바 스타일 */
 .search_container {
@@ -137,7 +132,7 @@ body{
     opacity: 1; 
 }   
 
-.movie_overlay h3 {     
+.movie_overlay .h3 {
     margin: 0;       
     font-size: 14px;       
     font-weight: normal; 

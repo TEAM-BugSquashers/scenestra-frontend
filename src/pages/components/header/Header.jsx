@@ -5,7 +5,7 @@ function Header({ toggleMenu, isMenuOpen }) {
   return (
     <header className={classes.header}>
       <div className={classes.logo}>
-        <a href="#">SCENESTRA</a>
+        <a href="#" className={classes.a}>SCENESTRA</a>
       </div>
       <button 
         className={`${classes.hamburgerBtn} ${classes.btn2} ${isMenuOpen ? classes.open : ''}`}

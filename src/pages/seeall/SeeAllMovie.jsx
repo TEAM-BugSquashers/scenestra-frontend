@@ -103,7 +103,7 @@ function SeeAllMovie() {
                                 style={{ backgroundImage: `url(${movie.image})` }}
                             >
                                 <div className={classes["movie_overlay"]}>
-                                <h3>{movie.title}</h3>
+                                <div className={classes.h3}>{movie.title}</div>
                                 </div>
                             </div>
                             </div>
