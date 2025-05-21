@@ -19,6 +19,55 @@
 
 body {
   margin: 0;
-  /*color: #e6ddf9;*/
-  color: #32271e;
+  color: #e6ddf9;
 }
+
+
+
+/*==============================================================================*/
+.bBg{ background-color: #32271e }
+
+.bPri{ color: #b2a69b; }
+
+.bSec{ color: #32271e}
+
+.bMain{ color: #b2a69b;}
+
+.bMainLight{ opacity: 0.6 }
+
+.bSub{ color: #726254; }
+
+.bTitle{ color: #ebdfce; }
+
+/*==============================================================================*/
+.wBg{ background-color: white; }
+
+.wPri{ color: #32271e }
+
+.wSec{ color: #b2a69b; }
+
+.wMain{ color: #32271e }
+
+.wMainLight{ opacity: 0.6 }
+
+.wSub{ color: #b2a69b; }
+
+.wTitle{ color: #32271e }
+/*==============================================================================*/
+
+h1{ font-size: 1.875rem;}
+
+h2{ font-size: 1.5rem;}
+
+.subtitle{ font-size: 1.25rem;}
+
+.btn1{ font-size: 1rem; }
+
+.btn2{ font-size: 0.875rem; }
+
+.btn3{ font-size: 0.75rem }
+
+.body1{ font-size: 1rem; }
+
+.body2{ font-size: 0.875rem; }
+
