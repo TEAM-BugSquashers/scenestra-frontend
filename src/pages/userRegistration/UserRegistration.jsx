@@ -1,5 +1,6 @@
-import './UserRegistration.css'
+import './UserRegistration.module.css'
 import {useState, useRef} from "react";
+import classes from "./UserRegistration.module.css";
 
 function UserRegistration() {
     // State for form fields
@@ -152,142 +153,143 @@ function UserRegistration() {
     };
 
     return (
-        <div className="main">
-            <section className="topBar">
-                <div className="horLine"></div>
-                <div className="barTitle">SIGN UP</div>
-                <div className="horLine"></div>
-            </section>
+        <>
+            <div className={`${classes["main"]} ${classes["wBg"]} ${classes["wMain"]}`}>
+                <section className={classes["topBar"]}>
+                    <div className={`${classes["horLine"]} ${classes["wPri"]}`}></div>
+                    <div className={classes["barTitle"]}>SIGN UP</div>
+                    <div className={`${classes["horLine"]} ${classes["wPri"]}`}></div>                </section>
 
-            <form onSubmit={handleSubmit}>
-                <section className="userInfo">
-                    {/* 아이디 */}
-                    <div className="idWrap">
+                <form onSubmit={handleSubmit}>
+                    <section className="userInfo">
+                        {/* 아이디 */}
+                        <div className="idWrap">
+                            <div className="formField">
+                                <input
+                                    type="text"
+                                    id="id"
+                                    minLength="1"
+                                    maxLength="50"
+                                    value={formData.id}
+                                    onChange={handleInputChange}
+                                    placeholder=" "
+                                    required
+                                />
+                                <label htmlFor="id">아이디</label>
+                            </div>
+                            <button onClick={handleIdCheck}>아이디<br/>중복 확인</button>
+                        </div>
+
+                        {/* 비번 */}
                         <div className="formField">
                             <input
-                                type="text"
-                                id="id"
+                                type="password"
+                                id="pw"
                                 minLength="1"
                                 maxLength="50"
-                                value={formData.id}
+                                value={formData.pw}
                                 onChange={handleInputChange}
                                 placeholder=" "
                                 required
                             />
-                            <label htmlFor="id">아이디</label>
+                            <label htmlFor="pw">비밀번호</label>
                         </div>
-                        <button onClick={handleIdCheck}>아이디<br/>중복 확인</button>
-                    </div>
 
-                    {/* 비번 */}
-                    <div className="formField">
-                        <input
-                            type="password"
-                            id="pw"
-                            minLength="1"
-                            maxLength="50"
-                            value={formData.pw}
-                            onChange={handleInputChange}
-                            placeholder=" "
-                            required
-                        />
-                        <label htmlFor="pw">비밀번호</label>
-                    </div>
-
-                    {/* 비번확인 */}
-                    <div className="formField">
-                        <input
-                            type="password"
-                            id="chkPw"
-                            minLength="1"
-                            maxLength="50"
-                            value={formData.chkPw}
-                            onChange={handleInputChange}
-                            placeholder=" "
-                            required
-                        />
-                        <label htmlFor="chkPw">비밀번호 확인</label>
-                    </div>
-
-                    {/* 이름 */}
-                    <div className="formField">
-                        <input
-                            type="text"
-                            id="name"
-                            minLength="1"
-                            maxLength="50"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            placeholder=" "
-                            required
-                        />
-                        <label htmlFor="name">이름</label>
-                    </div>
-
-                    {/* 전번 */}
-                    <div className="formField">
-                        <input
-                            type="text"
-                            id="mobile"
-                            minLength="1"
-                            maxLength="50"
-                            value={formData.mobile}
-                            onChange={handleInputChange}
-                            placeholder=" "
-                            required
-                        />
-                        <label htmlFor="mobile">전화번호</label>
-                    </div>
-
-                    {/* 이메일 */}
-                    <div className="formField">
-                        <input
-                            type="email"
-                            id="email"
-                            minLength="1"
-                            maxLength="50"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder=" "
-                            required
-                        />
-                        <label htmlFor="email">이메일 주소</label>
-                    </div>
-
-                    {/* 장르 */}
-                    <div className="genre">
-                        <div className="genreBar">
-                            <div className="genreTitle">선호하는 장르 3개 선택해주세요</div>
-                            <div className="horLine"></div>
+                        {/* 비번확인 */}
+                        <div className="formField">
+                            <input
+                                type="password"
+                                id="chkPw"
+                                minLength="1"
+                                maxLength="50"
+                                value={formData.chkPw}
+                                onChange={handleInputChange}
+                                placeholder=" "
+                                required
+                            />
+                            <label htmlFor="chkPw">비밀번호 확인</label>
                         </div>
-                        <div className="genreBox">
-                            {genres.map(genre => (
-                                <div key={genre.id} style={{ display: 'contents' }}>
-                                    <input
-                                        type="checkbox"
-                                        name="chkGenre"
-                                        id={genre.id}
-                                        value={genre.id}
-                                        checked={selectedGenres.includes(genre.id)}
-                                        onChange={handleGenreChange}
-                                    />
-                                    <label
-                                        className="genreChkBx"
-                                        htmlFor={genre.id}
-                                        style={getGenreLabelStyle(genre.id)}
-                                        onMouseEnter={() => handleMouseEnter(genre.id)}
-                                        onMouseLeave={() => handleMouseLeave(genre.id)}
-                                    >
-                                        {genre.label}
-                                    </label>
-                                </div>
-                            ))}
+
+                        {/* 이름 */}
+                        <div className="formField">
+                            <input
+                                type="text"
+                                id="name"
+                                minLength="1"
+                                maxLength="50"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                placeholder=" "
+                                required
+                            />
+                            <label htmlFor="name">이름</label>
                         </div>
-                    </div>
-                </section>
-                <button type="submit">SUBMIT</button>
-            </form>
-        </div>
+
+                        {/* 전번 */}
+                        <div className="formField">
+                            <input
+                                type="text"
+                                id="mobile"
+                                minLength="1"
+                                maxLength="50"
+                                value={formData.mobile}
+                                onChange={handleInputChange}
+                                placeholder=" "
+                                required
+                            />
+                            <label htmlFor="mobile">전화번호</label>
+                        </div>
+
+                        {/* 이메일 */}
+                        <div className="formField">
+                            <input
+                                type="email"
+                                id="email"
+                                minLength="1"
+                                maxLength="50"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                placeholder=" "
+                                required
+                            />
+                            <label htmlFor="email">이메일 주소</label>
+                        </div>
+
+                        {/* 장르 */}
+                        <div className="genre">
+                            <div className="genreBar">
+                                <div className="genreTitle">선호하는 장르 3개 선택해주세요</div>
+                                <div className="horLine"></div>
+                            </div>
+                            <div className="genreBox">
+                                {genres.map(genre => (
+                                    <div key={genre.id} style={{ display: 'contents' }}>
+                                        <input
+                                            type="checkbox"
+                                            name="chkGenre"
+                                            id={genre.id}
+                                            value={genre.id}
+                                            checked={selectedGenres.includes(genre.id)}
+                                            onChange={handleGenreChange}
+                                        />
+                                        <label
+                                            className="genreChkBx"
+                                            htmlFor={genre.id}
+                                            style={getGenreLabelStyle(genre.id)}
+                                            onMouseEnter={() => handleMouseEnter(genre.id)}
+                                            onMouseLeave={() => handleMouseLeave(genre.id)}
+                                        >
+                                            {genre.label}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                    <button type="submit">SUBMIT</button>
+                </form>
+            </div>
+        </>
     );
 }
 
