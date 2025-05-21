@@ -7,20 +7,11 @@
 /****************************/
 /****** the framework ******/
 /****************************/
-body {
-    margin: 0;
-    background-color: #32271e;
-    color: #32271e;
-    font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 15px;
-}
 .main {
     width: 500px;
-    background-color: white;
-    margin: 120px auto 120px;
+    margin: 120px auto 60px;
     padding: 10px 30px 30px 30px;
-    border: 1px solid;
-    border-radius: 40px;
+    border-radius: 30px;
     box-sizing: border-box;
 
     display: flex;
@@ -29,6 +20,7 @@ body {
 }
 .topBar {
     padding: 20px 0;
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -46,12 +38,12 @@ body {
 }
 .formField input {
     width: 100%;
-    height: 50px;
+    height: 40px;
 
     color: #32271e;
-    font-size: 15px;
+    font-size: 1rem;
 
-    padding: 20px 10px 10px;
+    padding: 20px 10px 5px;
     border: 1px solid #b2a69b;
     border-radius: 10px;
     box-sizing: border-box;
@@ -63,12 +55,12 @@ body {
 }
 .formField > label {
     color: #b2a69b;
-    font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 15px;
+    font-size: 1rem;
 
     position: absolute;
+    top: 50%;
     left: 10px;
-    top: 15px;
+    transform: translateY(-50%);
 
     pointer-events: none;
     transition: all 0.2s ease;
@@ -89,11 +81,12 @@ body {
 }
 /****************************/
 /****** the details ******/
+/****************************/
 /* topBar */
 .barTitle {
     font-family: "Noto Serif KR", serif;
     font-weight: 500;
-    font-size: 25px;
+    font-size: 1.5rem;
     white-space: nowrap;
 
     margin: 0 10px;
@@ -101,7 +94,6 @@ body {
 .horLine {
     width: 100%;
     height: 1px;
-    background-color: #32271e;
 }
 /* formField */
 .formField input:focus {
@@ -109,10 +101,10 @@ body {
 }
 .formField input:focus + label,
 .formField input:not(:placeholder-shown) + label {
-    color: #32271e;
+    color: #b2a69b;
     font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 12px;
-    top: 7px;
+    font-size: 0.625rem;
+    top: 11px;
     left: 10px;
 }
 /* id */
@@ -125,14 +117,14 @@ body {
 }
 .idWrap button {
     width: calc((100% - 10px)*0.2);
-    height: 50px;
+    height: 40px;
 
     background-color: #b2a69b;
     color: white;
-    font-size: 12px;
+    font-size: 0.875rem;
 
     padding: 0;
-    border: 1px solid #b2a69b;
+    border: none;
     border-radius: 10px;
     box-sizing: border-box;
 
@@ -154,12 +146,11 @@ input[type="checkbox"] {
 /* genreBox */
 .genreBox label {
     width: calc((100% - 20px)/3);
-    height: 30px;
+    height: 40px;
 
     font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 15px;
+    font-size: 1rem;
 
-    padding: 25px;
     border: 1px solid;
     border-radius: 10px;
     box-sizing: border-box;
@@ -181,12 +172,13 @@ input[type="checkbox"]:checked + label {
 /* sign up button */
 form > button {
     width: 100%;
-    height: 50px;
+    height: 40px;
 
     background-color: #b2a69b;
     color: white;
     font-family: "Noto Serif KR", serif;
     font-weight: 500;
+    font-size: 1rem;
 
     margin-top: 20px;
 
