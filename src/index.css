@@ -33,7 +33,7 @@ body {
 
 .bMain{ color: #b2a69b;}
 
-.bMainLight{ opacity: 0.6 }
+.bMainLight{ color: #b2a69b; opacity: 0.6 }
 
 .bSub{ color: #726254; }
 
@@ -48,7 +48,7 @@ body {
 
 .wMain{ color: #32271e }
 
-.wMainLight{ opacity: 0.6 }
+.wMainLight{ color: #32271e; opacity: 0.6 }
 
 .wSub{ color: #b2a69b; }
 
