@@ -1,11 +1,6 @@
 *{       
     box-sizing: border-box; 
-} 
-
-body{     
-    margin: 60px 0 0 0; 
-    background-color: black;
-}    
+}
 
 /* 검색바 스타일 */
 .search_container {
@@ -13,8 +8,8 @@ body{
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    margin-bottom: 1rem;
-    margin-top: 250px;
+    margin-bottom: 110px;
+    margin-top: 200px;
 }
 
 .search_bar {
@@ -67,10 +62,10 @@ body{
 
 /* 넷플릭스 앱 스타일 */
 .netflix_app {       
-    background-color: #000;     
+    background-color: #32271e;
     color: #fff;       
     min-height: 100vh;       
-    font-family: 'Helvetica Neue', Arial, sans_serif;     
+    /*font-family: 'Helvetica Neue', Arial, sans_serif;     */
     padding: 0 0 60px 0;
 }   
 
@@ -78,13 +73,14 @@ body{
     padding: 10px 0; 
 }   
 
-.category {     
+.category {
+    margin-top: 30px;
     margin-bottom: 25px; 
 }   
 
 .category_title {     
     padding: 0 20px;       
-    margin-bottom: 10px;       
+    margin-bottom: 20px;
     font-size: 30px;       
     font-weight: 500; 
 }   
@@ -136,7 +132,7 @@ body{
     opacity: 1; 
 }   
 
-.movie_overlay h3 {     
+.movie_overlay .h3 {
     margin: 0;       
     font-size: 14px;       
     font-weight: normal; 

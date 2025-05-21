@@ -4,10 +4,11 @@
   right: -250px; 
   width: 250px;
   height: calc(100vh - 60px);
-  background-color: black;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  background-color: #32271e;
+  /*box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);*/
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
+  padding: 25px;
 }
 
 .sidebar.open {
@@ -17,6 +18,7 @@
 .nav ul {
   list-style: none;
   padding: 20px;
+  margin: 0;
 }
 
 .nav li {
