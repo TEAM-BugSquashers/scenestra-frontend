@@ -1,9 +1,12 @@
 import './Login.css'
 import {useEffect, useState} from "react";
+import {axiosLogin} from "../api/axios.js";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     // State to track current image
     const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate();
 
     // Login form state
     const [userId, setUserId] = useState('');
@@ -13,12 +16,12 @@ function Login() {
     // Images array with their classNames for reference
     const imageClasses = [
         'imgEight',
-        'imgOne',
         'imgThree',
         'imgFive',
         'imgSeven',
         'imgNine',
-        'imgEleven'
+        'imgEleven',
+        'imgOne'
     ];
 
     // Effect for image rotation
@@ -34,6 +37,24 @@ function Login() {
     // Form submission handler
     const handleSubmit = () => {
         console.log('Form submitted:', { userId, password, rememberMe });
+        axiosLogin(userId, password)
+            .then(response => {
+                if (response.status === 200) {
+                    navigate("/");
+                } else {
+                    alert(`로그인에 성공했으나, 예상치 못한 응답입니다: ${response.status}`);
+                }
+            })
+            .catch(error => {
+                let errorMessage = "로그인 중 오류가 발생했습니다.";
+                if (error.response && error.response.data && error.response.data.message) {
+                    errorMessage = error.response.data.message;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                alert(errorMessage);
+                console.error('Login error:', error);
+            });
         // Add your login logic here
     };
 
@@ -64,45 +85,45 @@ function Login() {
                         style={getImageStyle(0)}
                     />
                     <img
-                        src="./img/1.jpg"
-                        alt=""
-                        className="imgOne"
-                        style={getImageStyle(1)}
-                    />
-                    <img
                         src="./img/3.jpg"
                         alt=""
                         className="imgThree"
-                        style={getImageStyle(2)}
+                        style={getImageStyle(1)}
                     />
                     <img
                         src="./img/5.jpg"
                         alt=""
                         className="imgFive"
-                        style={getImageStyle(3)}
+                        style={getImageStyle(2)}
                     />
                     <img
                         src="./img/7.jpg"
                         alt=""
                         className="imgSeven"
-                        style={getImageStyle(4)}
+                        style={getImageStyle(3)}
                     />
                     <img
                         src="./img/9.jpeg"
                         alt=""
                         className="imgNine"
-                        style={getImageStyle(5)}
+                        style={getImageStyle(4)}
                     />
                     <img
                         src="./img/11.jpg"
                         alt=""
                         className="imgEleven"
+                        style={getImageStyle(5)}
+                    />
+                    <img
+                        src="./img/1.jpg"
+                        alt=""
+                        className="imgOne"
                         style={getImageStyle(6)}
                     />
                     {/* Movie Video */}
                     <div className="videoBox">
                         <video
-                            src="./img/casablanca.mp4"
+                            src="https://scenestra.s3.ap-northeast-2.amazonaws.com/video/casablanca.mp4"
                             autoPlay
                             muted
                             loop

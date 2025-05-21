@@ -5,9 +5,12 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Mousewheel, Pagination } from 'swiper/modules';
+import {Route, useNavigate} from "react-router-dom";
+import {axiosTest} from "../api/axios.js";
 
 const MovieSlide = ({movieSrc, genre, isActive }) => {
     const movieRef = useRef(null);
+    const navigate = useNavigate();
     const [isClicked, setIsClicked] = useState(false);
     const topPostData = [
         {id: 1, image: '/posterimage/더랍스터.jpg', title:'더랍스터' },
@@ -64,7 +67,7 @@ const MovieSlide = ({movieSrc, genre, isActive }) => {
                                     />
                                 </div>
                             ))}
-                            <button className={classes.allMovieShowBtn}>전체영화보기</button>
+                            <button className={classes.allMovieShowBtn} onClick={()=>navigate("/seeAllMoive")}>전체영화보기</button>
                         </div>
                     </div>
                 )}
@@ -77,6 +80,10 @@ function ForYou(){
 
 
     const [activeIndex, setActiveIndex ] = useState(0);
+
+    useEffect(() => {
+        axiosTest()
+    }, []);
 
     //영화정보 넣을때 사용자가 선호장르 설정하지 않으면 4(Best),5(New) 만 보여주게 해야됩니다.
     const movies = [

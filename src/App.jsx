@@ -55,11 +55,11 @@ function App() {
       
       <main>
         <Routes>
+          <Route path="/" element={<ForYou />} />
           <Route path="/seeAllMoive" element={<SeeAllMovie />} />
           <Route path="/roomSelect" element={<RoomSelect />} />
           <Route path="/review" element={<Review />} />
-          <Route path="/forYou" element={<ForYou />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/join" element={<UserRegistration />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
