@@ -1,11 +1,17 @@
 
 import classes from './Header.module.css';
+import {useNavigate} from "react-router-dom";
+
+
 
 function Header({ toggleMenu, isMenuOpen }) {
+
+    const navi = useNavigate();
+
   return (
     <header className={classes.header}>
       <div className={classes.logo}>
-        <a href="#" className={classes.a}>SCENESTRA</a>
+        <a onClick={()=>navi("/")} className={classes.a}>SCENESTRA</a>
       </div>
       <button 
         className={`${classes.hamburgerBtn} ${classes.btn2} ${isMenuOpen ? classes.open : ''}`}
