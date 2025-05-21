@@ -1,6 +1,6 @@
-import './UserRegistration.module.css'
-import {useState, useRef} from "react";
 import classes from "./UserRegistration.module.css";
+import {useState, useRef} from "react";
+
 
 function UserRegistration() {
     // State for form fields
@@ -109,7 +109,7 @@ function UserRegistration() {
             // Just unselected with mouse still on it - force white
             return {
                 backgroundColor: 'white',
-                color: '#32271e',
+                color: '#b2a69b',
                 borderColor: '#b2a69b'
             };
         } else if (hoveredGenre === id) {
@@ -123,7 +123,7 @@ function UserRegistration() {
             // Default state - white background
             return {
                 backgroundColor: 'white',
-                color: '#32271e',
+                color: '#b2a69b',
                 borderColor: '#b2a69b'
             };
         }
@@ -154,11 +154,11 @@ function UserRegistration() {
 
     return (
         <>
-            <div className={`${classes["main"]} ${classes["wBg"]} ${classes["wMain"]}`}>
+            <div className={`${classes["main"]} wBg wMain`}>
                 <section className={classes["topBar"]}>
-                    <div className={`${classes["horLine"]} ${classes["wPri"]}`}></div>
+                    <div className={`${classes["horLine"]} bBg`}></div>
                     <div className={classes["barTitle"]}>SIGN UP</div>
-                    <div className={`${classes["horLine"]} ${classes["wPri"]}`}></div>
+                    <div className={`${classes["horLine"]} bBg`}></div>
                 </section>
 
                 <form onSubmit={handleSubmit}>
@@ -176,13 +176,13 @@ function UserRegistration() {
                                     placeholder=" "
                                     required
                                 />
-                                <label htmlFor="id">아이디</label>
+                                <label htmlFor="id" className={classes["wSec"]}>아이디</label>
                             </div>
                             <button onClick={handleIdCheck}>아이디<br/>중복 확인</button>
                         </div>
 
                         {/* 비번 */}
-                        <div className="formField">
+                        <div className={classes["formField"]}>
                             <input
                                 type="password"
                                 id="pw"
@@ -197,7 +197,7 @@ function UserRegistration() {
                         </div>
 
                         {/* 비번확인 */}
-                        <div className="formField">
+                        <div className={classes["formField"]}>
                             <input
                                 type="password"
                                 id="chkPw"
@@ -212,7 +212,7 @@ function UserRegistration() {
                         </div>
 
                         {/* 이름 */}
-                        <div className="formField">
+                        <div className={classes["formField"]}>
                             <input
                                 type="text"
                                 id="name"
@@ -227,7 +227,7 @@ function UserRegistration() {
                         </div>
 
                         {/* 전번 */}
-                        <div className="formField">
+                        <div className={classes["formField"]}>
                             <input
                                 type="text"
                                 id="mobile"
@@ -242,7 +242,7 @@ function UserRegistration() {
                         </div>
 
                         {/* 이메일 */}
-                        <div className="formField">
+                        <div className={classes["formField"]}>
                             <input
                                 type="email"
                                 id="email"
@@ -257,12 +257,12 @@ function UserRegistration() {
                         </div>
 
                         {/* 장르 */}
-                        <div className="genre">
-                            <div className="genreBar">
-                                <div className="genreTitle">선호하는 장르 3개 선택해주세요</div>
-                                <div className="horLine"></div>
+                        <div className={classes["genre"]}>
+                            <div className={classes["genreBar"]}>
+                                <div className={classes["genreTitle"]}>선호하는 장르 3개 선택해주세요</div>
+                                <div className={`${classes["horLine"]} bBg`}></div>
                             </div>
-                            <div className="genreBox">
+                            <div className={classes["genreBox"]}>
                                 {genres.map(genre => (
                                     <div key={genre.id} style={{ display: 'contents' }}>
                                         <input
@@ -273,8 +273,7 @@ function UserRegistration() {
                                             checked={selectedGenres.includes(genre.id)}
                                             onChange={handleGenreChange}
                                         />
-                                        <label
-                                            className="genreChkBx"
+                                        <label className={classes["genreChkBx"]}
                                             htmlFor={genre.id}
                                             style={getGenreLabelStyle(genre.id)}
                                             onMouseEnter={() => handleMouseEnter(genre.id)}

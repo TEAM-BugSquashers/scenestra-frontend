@@ -9,7 +9,7 @@
 /****************************/
 .main {
     width: 500px;
-    margin: 5vw auto 2.5vw;
+    margin: 120px auto 60px;
     padding: 10px 30px 30px 30px;
     border-radius: 30px;
     box-sizing: border-box;
@@ -20,6 +20,7 @@
 }
 .topBar {
     padding: 20px 0;
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -42,7 +43,7 @@
     color: #32271e;
     font-size: 1rem;
 
-    padding: 20px 10px 10px;
+    padding: 20px 10px 5px;
     border: 1px solid #b2a69b;
     border-radius: 10px;
     box-sizing: border-box;
@@ -54,9 +55,7 @@
 }
 .formField > label {
     color: #b2a69b;
-    font-family: 'Pretendard-Regular', sans-serif;
-    /*font-size: clamp(0.65vw, 1vw, 13px);*/
-    font-size: 13px;
+    font-size: 1rem;
 
     position: absolute;
     top: 50%;
@@ -82,6 +81,7 @@
 }
 /****************************/
 /****** the details ******/
+/****************************/
 /* topBar */
 .barTitle {
     font-family: "Noto Serif KR", serif;
@@ -103,8 +103,8 @@
 .formField input:not(:placeholder-shown) + label {
     color: #b2a69b;
     font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 10px;
-    top: 12px;
+    font-size: 0.625rem;
+    top: 11px;
     left: 10px;
 }
 /* id */
@@ -121,9 +121,10 @@
 
     background-color: #b2a69b;
     color: white;
-    font-size: 1rem;
+    font-size: 0.875rem;
 
     padding: 0;
+    border: none;
     border-radius: 10px;
     box-sizing: border-box;
 
@@ -148,8 +149,7 @@ input[type="checkbox"] {
     height: 40px;
 
     font-family: 'Pretendard-Regular', sans-serif;
-    /*font-size: clamp(0.65vw, 1vw, 13px);*/
-    font-size: 13px;
+    font-size: 1rem;
 
     border: 1px solid;
     border-radius: 10px;
@@ -178,8 +178,7 @@ form > button {
     color: white;
     font-family: "Noto Serif KR", serif;
     font-weight: 500;
-    /*font-size: clamp(0.65vw, 1vw, 13px);*/
-    font-size: 13px;
+    font-size: 1rem;
 
     margin-top: 20px;
 
