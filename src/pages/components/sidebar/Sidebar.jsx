@@ -26,7 +26,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
             <li><a href="/about">About Us</a></li>
             <li><a href="/services">Review</a></li>
           </ul>
-          <button className={classes.logout} onClick={()=>{handleLogout()}}>Logout</button>
+          <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout()}}>Logout</button>
         </nav>
       </div>
       
