@@ -10,6 +10,7 @@ import Review from './pages/review/Review.jsx';
 import NotFound from './pages/NotFound/NotFound.jsx';
 import ForYou from "./pages/forYou/ForYou.jsx";
 import Login from "./pages/login/Login.jsx";
+import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
