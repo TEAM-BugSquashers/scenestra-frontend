@@ -13,7 +13,7 @@ import useMoviePopUp from "../hooks/useMoviePopUp.jsx";
 const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => {
     const movieRef = useRef(null);
     const navigate = useNavigate();
-    const [isClicked, setIsClicked] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
         if(movieRef.current) {
@@ -26,15 +26,20 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
         }
     }, [isActive]);
 
-    const showMovieHandler = () => {
-        setIsClicked(!isClicked);
+    const handleMouseEnter = () => {
+        setIsHovered(true);
     }
     const contentStyle = {
-        bottom: isClicked ? '34%' : '10%'
+        bottom: isHovered ? '115%' : '40%',
+        transition: 'bottom 0.5s ease'
     };
-
+    const handleContainerClick = () => {
+        setIsHovered(false);
+    }
     return (
-        <div className={classes.movieContainer}>
+        <div className={classes.movieContainer}
+            onClick={handleContainerClick}
+        >
             <video
                 ref={movieRef}
                 className={classes.backgroundMovie}
@@ -44,20 +49,26 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
             >
                 <source src={movieSrc} type="video/mp4" />
             </video>
-            <div className={classes.bottomContainer}>
+            <div className={classes.bottomContainer}
+                onMouseEnter={handleMouseEnter}
+                    onClick={(e) => e.stopPropagation()}
+            >
                 <div className={classes.movieContent} style={contentStyle}>
                     <div className={classes.line1} />
-                    <h1 onClick={showMovieHandler} className={classes.genreTitle}>{genre}</h1>
+                    <h2 className={classes.genreTitle}>{genre}</h2>
                     <div className={classes.line2} />
                 </div>
-                {isClicked && (
+                {isHovered && (
                     <div className={classes.topMovies}>
                         <div className={classes.postersContainer}>
                             {topPostData.map(poster => (
                                 <div
                                     key={poster.id}
                                     className={classes.posterItem}
-                                    onClick={() => onSelectMovie(poster.id)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onSelectMovie(poster.id);
+                                    }}
                                 >
                                     <img
                                         src={poster.image}
@@ -66,7 +77,15 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
                                     />
                                 </div>
                             ))}
-                            <button className={classes.allMovieShowBtn} onClick={()=>navigate("/seeAllMoive")}>전체영화보기</button>
+                            <button
+                                className={classes.allMovieShowBtn}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate("/seeAllMoive");
+                                }}
+                            >
+                                전체영화보기
+                            </button>
                         </div>
                     </div>
                 )}

@@ -42,18 +42,22 @@
     object-fit: cover;
 }
 .bottomContainer {
-
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    height: 30%;
 }
 .movieContent {
     position: absolute;
     width: 100%;
     left: 0;
-    bottom: 10%;
-    z-index: 1;
+    z-index: 10;
     color: #fff;
     display: flex;
     align-items: center;
-    transition: bottom 0.3s ease;
+    transition: bottom 0.5s ease;
 }
 .line1 {
     background-color: #fff;
@@ -66,12 +70,10 @@
     width: 100%;
 }
 .genreTitle {
-    font-size: 1.5rem;
     font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
     margin: 0 20px;
     cursor: pointer;
 }
-
 .forYouSwiper :global(.swiper-pagination) {
     display: none;
 }
@@ -79,30 +81,32 @@
 /*하단 top5 무비포스터*/
 .topMovies {
     position: absolute;
-    bottom: 5%;
+    bottom: 20%;
     left: 0;
     right: 0;
-    z-index: 5;
+    z-index: 11;
     padding: 0 20px;
     opacity: 0;
     animation: fadeIn 0.5s forwards;
+    padding-top: 10px;
 }
 .postersContainer {
     display: flex;
     justify-content: center;
     gap: 30px;
     padding-bottom: 10px;
+    z-index: 1002;
 }
 .posterItem {
     flex: 0 0 auto;
-    /*width: 18%;*/
     text-align: center;
 }
 .posterImage {
     max-width: 160px;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.5s;
+    transition: transform 0.7s;
+    cursor: pointer;
 }
 .posterImage:hover {
     transform: scale(1.05);
@@ -110,7 +114,7 @@
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -121,7 +125,7 @@
 .allMovieShowBtn {
     border: 1px solid;
     border-radius: 10px;
-    width: 100px;
+    width: 120px;
     height: 30px;
     position: absolute;
     color: #fff;
