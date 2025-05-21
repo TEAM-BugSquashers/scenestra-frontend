@@ -8,6 +8,7 @@ import { Mousewheel, Pagination } from 'swiper/modules';
 import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
 import {Route, useNavigate} from "react-router-dom";
 import {axiosTest} from "../api/axios.js";
+import useMoviePopUp from "../hooks/useMoviePopUp.jsx";
 
 const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => {
     const movieRef = useRef(null);
@@ -46,7 +47,7 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
             <div className={classes.bottomContainer}>
                 <div className={classes.movieContent} style={contentStyle}>
                     <div className={classes.line1} />
-                    <h1 onClick={showMovieHandler}>{genre}</h1>
+                    <h1 onClick={showMovieHandler} className={classes.genreTitle}>{genre}</h1>
                     <div className={classes.line2} />
                 </div>
                 {isClicked && (
@@ -76,12 +77,11 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
 
 function ForYou(){
     const [activeIndex, setActiveIndex ] = useState(0);
-    const [selectedMovieData, setSelectedMovieData] = useState(null);
+    const [selectedMovieData, handleSelectMovie, handleClosePopUp ] = useMoviePopUp();
     useEffect(() => {
         axiosTest()
     }, []);
 
-    //영화정보 넣을때 사용자가 선호장르 설정하지 않으면 4(Best),5(New) 만 보여주게 해야됩니다.
     const movies = [
         {id: 1, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/WarNapoleon.mp4', genre: 'WAR' },
         {id: 2, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/CrimeNightmare+Alley.mp4', genre: 'CRIME' },
@@ -140,42 +140,45 @@ function ForYou(){
     const handleSlideChange = (swiper) => {
         setActiveIndex(swiper.activeIndex);
     }
-    const handleSelectMovie = (movieId) => {
+    const onSelectMovie = (movieId) => {
         const selectedMovie = topPostData.find(movie => movie.id === movieId);
-        setSelectedMovieData(selectedMovie)
+        handleSelectMovie(selectedMovie);
     };
+
     return (
         <>
-            <div className={classes.pageContainer}>
-                <MoviePopUp
-                    movie={selectedMovieData}
-                    onClose={() => setSelectedMovieData(null)}
-                />
-                <Swiper
-                    direction={'vertical'}
-                    slidesPerView={1}
-                    spaceBetween={30}
-                    mousewheel={true}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[Mousewheel, Pagination]}
-                    className={classes.forYouSwiper}
-                    initialSlide={0}
-                    onSlideChange={handleSlideChange}
-                >
-                    {movies.map((movie, index) => (
-                        <SwiperSlide key={movie.id} className={classes.forYouSlide}>
-                            <MovieSlide
-                                movieSrc={movie.url}
-                                genre={movie.genre}
-                                isActive={index === activeIndex}
-                                topPostData={topPostData}
-                                onSelectMovie={handleSelectMovie}
-                            />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+            <div className={classes.backgroundPan}>
+                <div className={classes.pageContainer}>
+                    <MoviePopUp
+                        movie={selectedMovieData}
+                        onClose={handleClosePopUp}
+                    />
+                    <Swiper
+                        direction={'vertical'}
+                        slidesPerView={1}
+                        spaceBetween={30}
+                        mousewheel={true}
+                        pagination={{
+                            clickable: true,
+                        }}
+                        modules={[Mousewheel, Pagination]}
+                        className={classes.forYouSwiper}
+                        initialSlide={0}
+                        onSlideChange={handleSlideChange}
+                    >
+                        {movies.map((movie, index) => (
+                            <SwiperSlide key={movie.id} className={classes.forYouSlide}>
+                                <MovieSlide
+                                    movieSrc={movie.url}
+                                    genre={movie.genre}
+                                    isActive={index === activeIndex}
+                                    topPostData={topPostData}
+                                    onSelectMovie={onSelectMovie}
+                                />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
             </div>
         </>
     );

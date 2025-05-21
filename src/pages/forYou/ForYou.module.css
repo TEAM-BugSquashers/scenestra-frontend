@@ -1,3 +1,9 @@
+.backgroundPan {
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    z-index: 1;
+}
 .pageContainer {
     position: relative;
     height: 100vh;
@@ -59,12 +65,12 @@
     height: 3px;
     width: 100%;
 }
-h1 {
+.genreTitle {
+    font-size: 1.5rem;
     font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
     margin: 0 20px;
     cursor: pointer;
 }
-
 
 .forYouSwiper :global(.swiper-pagination) {
     display: none;
@@ -114,7 +120,7 @@ h1 {
 /*영화 전체보기 속성*/
 .allMovieShowBtn {
     border: 1px solid;
-    border-radius: 5px;
+    border-radius: 10px;
     width: 100px;
     height: 30px;
     position: absolute;
@@ -122,6 +128,7 @@ h1 {
     bottom: -30px;
     background-color: transparent;
     cursor: pointer;
+    font-size: 0.875rem;
 }
 .allMovieShowBtn:hover {
     background-color: rgba(178,166,155, 0.4);

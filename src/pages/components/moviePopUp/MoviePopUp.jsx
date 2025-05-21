@@ -16,15 +16,12 @@ function MoviePopUp({movie, onClose}) {
                         <div className={classes.xLeft}></div>
                         <div className={classes.xRight}></div>
                     </div>
-                    <div className={classes.movieDetailTitle}>
-                        <h2 className={classes.movieTitle}>{movie.title}</h2>
-                        <p className={classes.releaseYear}>{movie.releaseYear}</p>
-                    </div>
-                    <div>
-                        <p>감독: {movie.director}</p>
-                        <p>장르: {movie.genre}</p>
-                        <p>상영시간: {movie.runtime}분</p>
-                    </div>
+                    <h2 className={classes.movieTitle}>{movie.title}</h2>
+                    <div className={classes.releaseYear}>{movie.releaseYear}</div>
+                    <div>감독: {movie.director}</div>
+                    <div>장르: {movie.genre}</div>
+                    <div>상영시간: {movie.runtime}분</div>
+                    <div className={classes.selectMovieBtn}>영화선택</div>
                 </div>
             </div>
         </>
