@@ -8,10 +8,7 @@
 /****** the framework ******/
 /****************************/
 body {
-    margin: 0;
-    background-color: #32271e;
-    color: #ebdfce;
-    font-family: 'Pretendard-Regular', sans-serif;
+    /*color: #ebdfce;*/
 }
 .sectionWrap {
     display: flex;
@@ -63,9 +60,9 @@ body {
 }
 /* sectionRight */
 .rightContentWrap {
-    width: calc(100% - 60px*2);
+    width: calc(100% - 2.5vw *2);
 
-    padding: 60px;
+    padding: 2.5vw;
     box-sizing: border-box;
 }
 .rightContentWrapTop {
@@ -159,16 +156,23 @@ body {
 
     outline: none;
 }
+.rightContentWrapTop > input:-webkit-autofill,
+.rightContentWrapTop > input:-webkit-autofill:hover,
+.rightContentWrapTop > input:-webkit-autofill:focus,
+.rightContentWrapTop > input:-webkit-autofill:active {
+    -webkit-box-shadow: none !important;
+    -webkit-text-fill-color: #b2a69b !important;
+    border: 1px solid #b2a69b !important;
+    transition: background-color 999999999s ease-in-out 0s;
+}
 .rightContentWrapTop > input::placeholder {
     color: #b2a69b;
     font-family: 'Pretendard-Regular', sans-serif;
-    font-size: clamp(0.65vw, 1vw, 13px);
+    font-size: 1rem;
 }
 /* remember id */
 .rmbrIdLbl {
-    font-size: clamp(0.65vw, 0.8vw, 13px);
-    color: #b2a69b;
-    opacity: 0.6;
+    font-size: 0.875rem;
 
     display: flex;
     align-items: center;
@@ -198,7 +202,7 @@ body {
     cursor: pointer;
 }
 .chkMk {
-    font-size: 15px;
+    font-size: 0.875rem;
     transform: rotateY(180deg) rotateZ(-45deg);
     user-select: none;
     display: none;
@@ -214,11 +218,9 @@ body {
 .rightContentWrapTop button {
     width: 100%;
     height: 40px;
-    background-color: #32271e;
-    color: #b2a69b;
     font-family: "Noto Serif KR", serif;
     font-weight: 500;
-    font-size: clamp(0.65vw, 1vw, 13px);
+    font-size: 1rem;
     white-space: nowrap;
 
     margin: 10px 0 5px;
@@ -240,7 +242,7 @@ body {
     background-color: transparent;
     color: #b2a69b;
     font-family: 'Pretendard-Regular', sans-serif;
-    font-size: clamp(0.65vw, 1vw, 13px);
+    font-size: 0.875rem;
     white-space: nowrap;
     opacity: 0.6;
 
