@@ -158,13 +158,14 @@ function UserRegistration() {
                 <section className={classes["topBar"]}>
                     <div className={`${classes["horLine"]} ${classes["wPri"]}`}></div>
                     <div className={classes["barTitle"]}>SIGN UP</div>
-                    <div className={`${classes["horLine"]} ${classes["wPri"]}`}></div>                </section>
+                    <div className={`${classes["horLine"]} ${classes["wPri"]}`}></div>
+                </section>
 
                 <form onSubmit={handleSubmit}>
-                    <section className="userInfo">
+                    <section className={classes["userInfo"]}>
                         {/* 아이디 */}
-                        <div className="idWrap">
-                            <div className="formField">
+                        <div className={classes["idWrap"]}>
+                            <div className={classes["formField"]}>
                                 <input
                                     type="text"
                                     id="id"

@@ -40,8 +40,7 @@
     height: 40px;
 
     color: #32271e;
-    /*font-size: clamp(0.65vw, 1vw, 13px);*/
-    font-size: 13px;
+    font-size: 1rem;
 
     padding: 20px 10px 10px;
     border: 1px solid #b2a69b;
@@ -122,11 +121,9 @@
 
     background-color: #b2a69b;
     color: white;
-    /*font-size: clamp(0.65vw, 1vw, 13px);*/
-    font-size: 13px;
+    font-size: 1rem;
 
     padding: 0;
-    border: 1px solid #b2a69b;
     border-radius: 10px;
     box-sizing: border-box;
 
