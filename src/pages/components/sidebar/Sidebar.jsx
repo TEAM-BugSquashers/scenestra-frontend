@@ -1,7 +1,22 @@
 
 import classes from './Sidebar.module.css';
+import {axiosLogout} from "../../api/axios.js";
+import {Navigate, useNavigate} from "react-router-dom";
 
 function Sidebar({ isOpen, toggleSidebar }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    axiosLogout().then(res => {
+      if (res.status === 200) {
+        alert("로그아웃 되었습니다.");
+        navigate("/login")
+      }
+    }).catch(err => {
+      alert(err.message);
+    });
+
+  };
   return (
     <>
       <div className={`${classes.sidebar} ${isOpen ? classes.open : ''}`}>
@@ -11,7 +26,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
             <li><a href="/about">About Us</a></li>
             <li><a href="/services">Review</a></li>
           </ul>
-          <button className={`${classes.logout} ${classes.btn2}`}>Logout</button>
+          <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout()}}>Logout</button>
         </nav>
       </div>
       
