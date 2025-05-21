@@ -3,12 +3,12 @@ import classes from './Header.module.css';
 
 function Header({ toggleMenu, isMenuOpen }) {
   return (
-    <header>
+    <header className={classes.header}>
       <div className={classes.logo}>
-        <a href="#">SCENESTRA</a>
+        <a href="#" className={classes.a}>SCENESTRA</a>
       </div>
       <button 
-        className={`${classes.hamburgerBtn} ${isMenuOpen ? classes.open : ''}`}
+        className={`${classes.hamburgerBtn} ${classes.btn2} ${isMenuOpen ? classes.open : ''}`}
         onClick={toggleMenu}
         aria-label="메뉴"
       >

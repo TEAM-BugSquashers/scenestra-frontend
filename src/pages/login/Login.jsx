@@ -16,12 +16,12 @@ function Login() {
     // Images array with their classNames for reference
     const imageClasses = [
         'imgEight',
-        'imgOne',
         'imgThree',
         'imgFive',
         'imgSeven',
         'imgNine',
-        'imgEleven'
+        'imgEleven',
+        'imgOne'
     ];
 
     // Effect for image rotation
@@ -85,45 +85,45 @@ function Login() {
                         style={getImageStyle(0)}
                     />
                     <img
-                        src="./img/1.jpg"
-                        alt=""
-                        className="imgOne"
-                        style={getImageStyle(1)}
-                    />
-                    <img
                         src="./img/3.jpg"
                         alt=""
                         className="imgThree"
-                        style={getImageStyle(2)}
+                        style={getImageStyle(1)}
                     />
                     <img
                         src="./img/5.jpg"
                         alt=""
                         className="imgFive"
-                        style={getImageStyle(3)}
+                        style={getImageStyle(2)}
                     />
                     <img
                         src="./img/7.jpg"
                         alt=""
                         className="imgSeven"
-                        style={getImageStyle(4)}
+                        style={getImageStyle(3)}
                     />
                     <img
                         src="./img/9.jpeg"
                         alt=""
                         className="imgNine"
-                        style={getImageStyle(5)}
+                        style={getImageStyle(4)}
                     />
                     <img
                         src="./img/11.jpg"
                         alt=""
                         className="imgEleven"
+                        style={getImageStyle(5)}
+                    />
+                    <img
+                        src="./img/1.jpg"
+                        alt=""
+                        className="imgOne"
                         style={getImageStyle(6)}
                     />
                     {/* Movie Video */}
                     <div className="videoBox">
                         <video
-                            src="./img/casablanca.mp4"
+                            src="https://scenestra.s3.ap-northeast-2.amazonaws.com/video/casablanca.mp4"
                             autoPlay
                             muted
                             loop
