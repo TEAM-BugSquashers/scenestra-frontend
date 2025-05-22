@@ -10,6 +10,7 @@ import useMoviePopUp from "../hooks/useMoviePopUp.jsx";
 import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
 import {axiosgroupedByGenre} from "../api/axios.js";
 import  { useEffect } from 'react';
+import Loading from "../components/loading/Loading.jsx";
 
 function SeeAllMovie() {
     const [selectedMovieData,handleSelectMovie, handleClosePopUp ] = useMoviePopUp();
@@ -38,8 +39,9 @@ function SeeAllMovie() {
     };
 
     if (isLoading) {
-        return <h1>Loading...</h1>;
-    } else return (
+        return <Loading />;
+    }
+    return (
         <>
 
             <div className={classes["netflix_app"]}>
