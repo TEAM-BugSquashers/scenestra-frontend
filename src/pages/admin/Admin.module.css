@@ -14,17 +14,24 @@
     grid-column-gap: 30px;
 }
 
+.article.active{
+    margin-top: 30px;
+    opacity: 1;
+}
+
 .article{
     height: 400px;
     background-color: #ebdfce;
     border-radius: 30px;
-    margin-top: 30px;
+    margin-top: 60px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
     "title title"
     "resNum roomNum"
     "runTime peopleNum ";
+    opacity: 0;
+    transition: 1s;
 }
 
 .title {

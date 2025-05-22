@@ -1,7 +1,12 @@
 import classes from './ReviewSelect.module.css'
 import {useNavigate} from "react-router-dom";
+import {axiosgroupedByGenre} from "../api/axios.js";
 
 function ReviewSelect(){
+    axiosgroupedByGenre().then(response => {
+        console.log(response)
+    })
+
     const navi = useNavigate();
     return(
         <>

@@ -8,6 +8,7 @@ import classes from './SeeAllMovie.module.css';
 import { useState } from 'react';
 import useMoviePopUp from "../hooks/useMoviePopUp.jsx";
 import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
+import {axiosgroupedByGenre} from "../api/axios.js";
 
 const categories = [
     {
@@ -56,6 +57,9 @@ function SeeAllMovie() {
 
     const [searchTerm, setSearchTerm] = useState('');
 
+    axiosgroupedByGenre().then(response => {
+        console.log(response)
+    })
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
