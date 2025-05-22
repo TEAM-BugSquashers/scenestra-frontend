@@ -52,3 +52,28 @@ export const axiosLogout = async () => {
         throw error;
     }
 }
+
+export const axiosJoin = async (username, password, email, mobile, realName, genres) => {
+    try {
+        const response = await instance.post("/users/join", {
+            username,
+            password,
+            email,
+            mobile,
+            realName,
+            genres
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosChkUsername = async (username) => {
+    try {
+        const response = await instance.get("/users/check-username?username="+username);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
