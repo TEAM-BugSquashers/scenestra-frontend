@@ -62,3 +62,11 @@ export const axiosgroupedByGenre = async () => {
     }
 }
 
+export const axiosBindMovie = async () => {
+    try {
+        const response = await instance.get("/api/movies/{movieId}");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
