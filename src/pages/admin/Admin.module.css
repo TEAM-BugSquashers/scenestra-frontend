@@ -1,0 +1,78 @@
+.wrap{
+    width: 100%;
+    padding: 60px 2.5vw 0;
+}
+
+.header{
+    margin-top: 60px;
+    font-size: 45px;
+}
+
+.gridContainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 30px;
+}
+
+.article.active{
+    margin-top: 30px;
+    opacity: 1;
+}
+
+.article{
+    height: 400px;
+    background-color: #ebdfce;
+    border-radius: 30px;
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+    "title title"
+    "resNum roomNum"
+    "runTime peopleNum ";
+    opacity: 0;
+    transition: 1s;
+}
+
+.title {
+    grid-area: title;
+    text-align: center;
+    color: #b2a69b;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: 20px;
+    font-size: 2rem;
+    border-bottom: 1px solid rgba(178, 166, 155, 0.3);
+}
+
+.resNum {
+    grid-area: resNum;
+    text-align: center;
+    color: #b2a69b;
+    border: 1px solid rgba(178, 166, 155, 0.3);
+}
+.roomNum {
+    grid-area: roomNum;
+    text-align: center;
+    color: #b2a69b;
+    border: 1px solid rgba(178, 166, 155, 0.3);
+}
+
+.runTime {
+    grid-area: runTime;
+    text-align: center;
+    color: #b2a69b;
+    border-top: 1px solid rgba(178, 166, 155, 0.3);
+    border-right: 1px solid rgba(178, 166, 155, 0.3);
+}
+
+.peopleNum {
+    grid-area: peopleNum;
+    text-align: center;
+    color: #b2a69b;
+    border-top: 1px solid rgba(178, 166, 155, 0.3);
+    border-left: 1px solid rgba(178, 166, 155, 0.3);
+}

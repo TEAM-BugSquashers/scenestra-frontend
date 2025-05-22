@@ -11,12 +11,14 @@ import NotFound from './pages/NotFound/NotFound.jsx';
 import ForYou from "./pages/forYou/ForYou.jsx";
 import Login from "./pages/login/Login.jsx";
 import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
+import Admin from "./pages/admin/Admin.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const toggleMenu = () => {
     setIsMenuOpen(prevState => !prevState);
+    console.log("isMenuOpen");
   };
 
   return (
@@ -36,6 +38,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<UserRegistration />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
       

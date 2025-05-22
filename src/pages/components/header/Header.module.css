@@ -16,6 +16,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Belleza', sans-serif;
+    cursor: pointer;
 }
 
 .hamburgerBtn {
