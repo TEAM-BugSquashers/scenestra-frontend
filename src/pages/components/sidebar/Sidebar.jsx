@@ -23,12 +23,12 @@ function Sidebar({ isOpen, toggleSidebar }) {
         <nav className={classes.nav}>
           <ul>
             <li><a onClick={()=> {navi("/");
-              toggleSidebar();}}>My Page</a></li>
-            <li><a href="/about">About Us</a></li>
+              toggleSidebar();}}>MY PAGE</a></li>
+            <li><a href="/about">ABOUT US</a></li>
             <li><a onClick={()=> {navi("/roomSelect");
-              toggleSidebar();}}>Review</a></li>
+              toggleSidebar();}}>REVIEW</a></li>
           </ul>
-          <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout()}}>Logout</button>
+          <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout(); toggleSidebar();}}>Logout</button>
         </nav>
       </div>
       

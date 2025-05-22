@@ -1,6 +1,10 @@
 function AllMovie() {
     return(
+
+
+
         <>
+
         </>
     );
 }
