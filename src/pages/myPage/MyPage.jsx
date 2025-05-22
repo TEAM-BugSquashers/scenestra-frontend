@@ -1,7 +1,12 @@
 import classes from './MyPage.module.css';
 import {useState} from "react";
+import {axiosgroupedByGenre} from "../api/axios.js";
 
 function MyPage() {
+    axiosgroupedByGenre().then(response => {
+        console.log(response)
+    })
+
         // Original user data (simulating from database)
         const originalProfileData = {
             userId: "appleseed",
@@ -287,7 +292,7 @@ function MyPage() {
 
                                         <div className={classes["genreBox"]}>
                                             {(isEditMode ? allGenres : allGenres.filter(genre => selectedGenres.includes(genre.value))).map((genre) => (
-                                                <React.Fragment key={genre.value}>
+                                                <div key={genre.value}>
                                                     <input
                                                         type="checkbox"
                                                         name="chkGenre"
@@ -295,21 +300,17 @@ function MyPage() {
                                                         value={genre.value}
                                                         checked={selectedGenres.includes(genre.value)}
                                                         onChange={handleGenreChange}
-                                                        disabled={!isEditMode}
+                                                        disabled={!isEditMode || (!selectedGenres.includes(genre.value) && selectedGenres.length >= 3)}
                                                     />
-                                                    <label
-                                                        className={classes["genreChkBx"]}
+                                                    <label className={classes["genreChkBx"]}
                                                         htmlFor={genre.value}
                                                         style={{
-                                                            backgroundColor: selectedGenres.includes(genre.value) ? '#32271e' : 'white',
-                                                            color: selectedGenres.includes(genre.value) ? 'white' : '#b2a69b',
-                                                            borderColor: selectedGenres.includes(genre.value) ? '#32271e' : '#b2a69b',
-                                                            cursor: isEditMode ? 'pointer' : 'default'
-                                                        }}
+                                                            backgroundColor: selectedGenres.includes(genre.value) ? '#32271e' : 'white', color: selectedGenres.includes(genre.value) ? 'white' : '#b2a69b', borderColor: selectedGenres.includes(genre.value) ? '#32271e' : '#b2a69b', cursor: isEditMode ? 'pointer' : 'default'
+                                                            }}
                                                     >
                                                         {genre.label}
                                                     </label>
-                                                </React.Fragment>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>

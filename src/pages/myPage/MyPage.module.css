@@ -95,7 +95,7 @@
     height: 50px;
 
     color: #32271e;
-    font-size: 15px;
+    font-size: 1rem;
 
     padding: 20px 10px 10px;
     border: 1px solid #b2a69b;
@@ -109,8 +109,7 @@
 }
 .formField > label {
     color: #b2a69b;
-    font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 15px;
+    font-size: 1rem;
 
     position: absolute;
     left: 10px;
@@ -172,6 +171,7 @@
 .barTitle {
     font-family: "Noto Serif KR", serif;
     font-weight: 500;
+    font-size: 1.5rem;
     /* delete line below */
     color: #ebdfce;
     white-space: nowrap;
@@ -196,8 +196,7 @@
 .formField input:focus + label,
 .formField input:not(:placeholder-shown) + label {
     color: #32271e;
-    font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 12px;
+    font-size: 0.625rem;
     top: 7px;
     left: 10px;
 }
@@ -214,8 +213,8 @@ input[type="checkbox"] {
     width: calc((100% - 20px)/3);
     height: 30px;
 
-    font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 15px;
+    /*font-family: 'Pretendard-Regular', sans-serif;*/
+    font-size: 1rem;
 
     padding: 25px;
     border: 1px solid;
