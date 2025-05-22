@@ -48,7 +48,7 @@ function SeeAllMovie() {
                     <div className={classes["search_bar"]}>
                         <input
                             type="text"
-                            placeholder="영화나 시리즈를 검색하세요"
+                            placeholder="영화 제목을 검색하세요"
                             value={searchTerm}
                             onChange={handleSearchChange}
                         />
@@ -61,7 +61,11 @@ function SeeAllMovie() {
                 <div className={classes.content}>
                 {movieData.map((genre) => (
                     <div className={classes.category} key={genre.id}>
+                        <div className={classes.ctWrap}>
+                        <div className={classes.leftTitleLine}></div>
                     <h1 className={classes["category_title"]}>{genre.genreName}</h1>
+                        <div className={classes.rightTitleLine}></div>
+                        </div>
                     <Swiper
                         modules={[Navigation]}
                         navigation
