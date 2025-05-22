@@ -1,5 +1,6 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import url('https://fonts.googleapis.com/css2?family=Belleza&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -19,11 +20,9 @@
 
 body {
   margin: 0;
+  color: #e6ddf9;
   background-color: #32271e;
-  color: #b2a69b;
 }
-
-
 
 /*==============================================================================*/
 .bBg{ background-color: #32271e }

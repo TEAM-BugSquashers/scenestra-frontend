@@ -122,7 +122,7 @@ function Review(){
                     <div></div>
                 </div>
 
-                <section>
+                <section className={classes.section}>
                     <figure className={classes.roomImg}></figure>
                     <figcaption className={classes["imgDescription"]}>
                         여기에 상영관 설명이 들어가요<br></br>
@@ -204,7 +204,7 @@ function Review(){
                     {/*    </svg>*/}
                     {/*</div>*/}
                 </div>
-                <footer></footer>
+                <footer className={classes.footer}></footer>
             </div>
 
             {pan && selectedPost && (
