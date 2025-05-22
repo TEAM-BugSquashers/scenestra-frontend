@@ -62,9 +62,9 @@ export const axiosgroupedByGenre = async () => {
     }
 }
 
-export const axiosBindMovie = async () => {
+export const axiosBindMovie = async (movieId) => {
     try {
-        const response = await instance.get("/api/movies/{movieId}");
+        const response = await instance.get(`/movies/${movieId}`);
         return response;
     } catch (error) {
         throw error;
