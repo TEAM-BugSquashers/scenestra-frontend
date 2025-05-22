@@ -1,0 +1,329 @@
+/****************************/
+/****** the framework ******/
+/****************************/
+.body {
+    width: calc(100% - 2.5vw*2);
+    margin: 0 2.5vw 0;
+}
+.sectionWrap {
+    height: 500px;
+
+    margin: 2.5vw 0 0;
+
+    display: flex;
+    flex-direction: column;
+}
+.contentBox {
+    /* delete line below */
+    background-color: white;
+
+    padding: 10px 30px 30px 30px;
+    border: 1px solid;
+    border-radius: 30px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.profileWrap {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.userProfile {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.pastWrap {
+    width: 100%;
+    height: fit-content;
+}
+.currWrap {
+    width: 100%;
+    height: fit-content;
+}
+/****************************/
+/****** the components ******/
+/****************************/
+.top {
+    border: 1px solid green;
+
+    margin: 7.5vw 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.bottom {
+    display: flex;
+    justify-content: center;
+    gap: 2.5vw;
+}
+.left {
+    width: 300px;
+
+    display: flex;
+    justify-content: flex-end;
+}
+.right {
+    width: 500px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2.5vw;
+}
+.conBoxBar {
+    width: 100%;
+    /* delete line below */
+    color: #32271e;
+
+    padding: 20px 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.formField {
+    position: relative;
+}
+.formField input {
+    width: 100%;
+    height: 50px;
+
+    color: #32271e;
+    font-size: 15px;
+
+    padding: 20px 10px 10px;
+    border: 1px solid #b2a69b;
+    border-radius: 10px;
+    box-sizing: border-box;
+
+    outline: none;
+
+    display: flex;
+    align-items: center;
+}
+.formField > label {
+    color: #b2a69b;
+    font-family: 'Pretendard-Regular', sans-serif;
+    font-size: 15px;
+
+    position: absolute;
+    left: 10px;
+    top: 15px;
+
+    pointer-events: none;
+    transition: all 0.2s ease;
+
+    display: block;
+}
+/* genreBar */
+.genreBar {
+    white-space: nowrap;
+
+    display: flex;
+    align-items: center;
+}
+.genreBox {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+/* past reservation box */
+.pastBox {
+    height: 150px;
+
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid;
+    /* border-top: none; */
+    box-sizing: border-box;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+}
+.pastBoxLeft {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.pastBoxRight {
+    width: 40%;
+    height: 100%;
+}
+.currBox {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+/****************************/
+/****** the details ******/
+/****************************/
+/* top */
+.barTitle {
+    font-family: "Noto Serif KR", serif;
+    font-weight: 500;
+    /* delete line below */
+    color: #ebdfce;
+    white-space: nowrap;
+
+    margin: 0 10px;
+}
+.horLine {
+    width: 100%;
+    height: 1px;
+    /* delete line below */
+    background-color: #ebdfce;
+}
+/* contentBox */
+.contentBox .horLine {
+    /* delete line below */
+    background-color: #32271e;
+}
+/* formField */
+.formField input:focus {
+    border: 1px solid #32271e;
+}
+.formField input:focus + label,
+.formField input:not(:placeholder-shown) + label {
+    color: #32271e;
+    font-family: 'Pretendard-Regular', sans-serif;
+    font-size: 12px;
+    top: 7px;
+    left: 10px;
+}
+/* genreBar */
+.genreTitle {
+    margin: 10px 10px 10px 0;
+}
+/* checkbox */
+input[type="checkbox"] {
+    display: none;
+}
+/* genreBox */
+.genreBox label {
+    width: calc((100% - 20px)/3);
+    height: 30px;
+
+    font-family: 'Pretendard-Regular', sans-serif;
+    font-size: 15px;
+
+    padding: 25px;
+    border: 1px solid;
+    border-radius: 10px;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.genreBox label:hover {
+    background-color: #32271e;
+    color: white;
+    border-color: #32271e;
+}
+input[type="checkbox"]:checked + label {
+    background-color: #32271e;
+    color: white;
+    border-color: #32271e;
+}
+
+/* edit profile button */
+.bigBtn {
+    width: 100%;
+    height: 40px;
+
+    background-color: #b2a69b;
+    color: white;
+    font-family: "Noto Serif KR", serif;
+    font-weight: 500;
+    font-size: 1rem;
+
+    margin-top: 20px;
+
+    border: none;
+    border-radius: 10px;
+}
+.cancelResBtn {
+    margin-top: 0;
+}
+.cancelBtn {
+    width: fit-content;
+    height: 20px;
+
+    background-color: transparent;
+    color: #b2a69b;
+    font-family: "Noto Serif KR", serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.bigBtn:hover {
+    background-color: #32271e;
+}
+.cancelBtn:hover {
+    color: #32271e;
+}
+/* past reservation box */
+/* .pastTitle {
+    border: 1px solid red;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: absolute;
+    top: 0;
+    left: 0px;
+    right: 0;
+    transform: translateY(-50%);
+}
+.pastHorLine {
+    width: 100%;
+    height: 1px;
+    background-color: #32271e;
+} */
+.pastNum {
+    background-color: white;
+    white-space: nowrap;
+
+    padding: 0 10px;
+    box-sizing: border-box;
+
+    position: absolute;
+    top: 0;
+    left: 30px;
+    transform: translateY(-50%);
+}
+/* margin */
+.marBotDel {
+    margin-bottom: 0;
+}
+.pastImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.currBoxTop {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.currBoxBot {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

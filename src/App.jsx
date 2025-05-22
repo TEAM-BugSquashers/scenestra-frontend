@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound/NotFound.jsx';
 import ForYou from "./pages/forYou/ForYou.jsx";
 import Login from "./pages/login/Login.jsx";
 import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
+import MyPage from "./pages/myPage/MyPage.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,6 +36,7 @@ function App() {
           <Route path="/review" element={<Review />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<UserRegistration />} />
+          <Route path="/myPage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
