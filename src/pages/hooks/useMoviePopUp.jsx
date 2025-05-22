@@ -5,6 +5,7 @@ import { useState } from 'react';
 function useMoviePopUp() {
     const [selectedMovieData, setSelectedMovieData] = useState(null);
     const handleSelectMovie = (movieData) => {
+        console.log('Movie selected:', movieData);
         setSelectedMovieData(movieData);
     };
     const handleClosePopUp = () => {
