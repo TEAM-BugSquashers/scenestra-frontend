@@ -7,7 +7,9 @@ function MoviePopUp({movie, onClose}) {
 
     return (
         <>
-            <div className={classes.popUpPan} onClick={onClose}>
+            <div className={classes.popUpPan} onClick={onClose}
+                    onClick={(e) => e.stopPropagation()}
+            >
                 <div className={classes.moviePopUp}>
                     <div className={classes.movieDetailImg}>
                         <img src={movie.image} alt={movie.title} />

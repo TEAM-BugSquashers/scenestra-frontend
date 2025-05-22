@@ -171,6 +171,7 @@ function ForYou(){
                     <MoviePopUp
                         movie={selectedMovieData}
                         onClose={handleClosePopUp}
+                        onClick={(e) => e.stopPropagation()}
                     />
                     <Swiper
                         direction={'vertical'}

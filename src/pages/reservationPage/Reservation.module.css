@@ -1,0 +1,89 @@
+* {
+    box-sizing: border-box;
+}
+.outerBox {
+    width: 500px;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 30px;
+    margin: 100px auto 0;
+    padding-bottom: 30px;
+
+}
+.RTitle {
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    color: #32271e;
+    padding: 0 10px;
+}
+.innerBox {
+    margin: 30px;
+}
+.reserveBtn {
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    background-color: #fff;
+    border: 1px solid #32271e;
+    font-weight: 700;
+}
+.btnBox {
+    display: flex;
+    justify-content: center;
+}
+.titleBox {
+    display: flex;
+    align-items: center;
+    margin: 0 30px;
+    /*padding-top: 20px;*/
+}
+.line1 {
+    width: 100%;
+    height: 1px;
+    background: #32271e;
+}
+.line2 {
+    width: 100%;
+    height: 1px;
+    background: #32271e;
+}
+
+/*예약 페이지 안의 섹션 css*/
+.sectionTitle {
+    display: inline;
+    border-bottom: 3px solid #b2a69b;
+    margin-top: 10px;
+}
+.movieImg {
+    width: 50px;
+    height: 70px;
+    background: #777777;
+}
+.selectedMovie {
+    width: 100%;
+    border: 1px solid;
+    display: flex;
+    padding: 10px;
+    margin-top: 10px;
+}
+.movieDesc {
+    display: flex;
+}
+/*예약인원수 설정 칸*/
+.number {
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    font-size: 1rem;
+    border: 1px solid  #b2a69b;
+}
+.nBtn {
+    width: 40px;
+    height: 40px;
+    background: #b2a69b;
+    border: none;
+    font-size: 1.25rem;
+}
+.box {
+    margin: 10px 0;
+}
