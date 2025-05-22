@@ -12,6 +12,7 @@ import ForYou from "./pages/forYou/ForYou.jsx";
 import Login from "./pages/login/Login.jsx";
 import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
 import MyPage from "./pages/myPage/MyPage.jsx";
+import Admin from "./pages/admin/Admin.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,6 +39,7 @@ function App() {
           <Route path="/join" element={<UserRegistration />} />
           <Route path="/myPage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
       

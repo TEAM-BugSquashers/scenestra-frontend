@@ -52,3 +52,13 @@ export const axiosLogout = async () => {
         throw error;
     }
 }
+
+export const axiosgroupedByGenre = async () => {
+    try {
+        const response = await instance.get("/movies/grouped-by-genre");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+

@@ -1,4 +1,4 @@
-import './Login.css'
+import classes from './Login.module.css';
 import {useEffect, useState} from "react";
 import {axiosLogin} from "../api/axios.js";
 import { useNavigate } from 'react-router-dom';
@@ -72,56 +72,56 @@ function Login() {
     };
 
     return (
-        <div className="sectionWrap">
+        <div className={classes["sectionWrap"]}>
             {/* Section Left */}
-            <div className="sectionLeft">
+            <div className={classes["sectionLeft"]}>
 
                 {/* Theater Images */}
-                <div className="imgBox">
+                <div className={classes["imgBox"]}>
                     <img
                         src="./img/8.jpeg"
                         alt=""
-                        className="imgEight"
+                        className={classes["imgEight"]}
                         style={getImageStyle(0)}
                     />
                     <img
                         src="./img/3.jpg"
                         alt=""
-                        className="imgThree"
+                        className={classes["imgThree"]}
                         style={getImageStyle(1)}
                     />
                     <img
                         src="./img/5.jpg"
                         alt=""
-                        className="imgFive"
+                        className={classes["imgFive"]}
                         style={getImageStyle(2)}
                     />
                     <img
                         src="./img/7.jpg"
                         alt=""
-                        className="imgSeven"
+                        className={classes["imgSeven"]}
                         style={getImageStyle(3)}
                     />
                     <img
                         src="./img/9.jpeg"
                         alt=""
-                        className="imgNine"
+                        className={classes["imgNine"]}
                         style={getImageStyle(4)}
                     />
                     <img
                         src="./img/11.jpg"
                         alt=""
-                        className="imgEleven"
+                        className={classes["imgEleven"]}
                         style={getImageStyle(5)}
                     />
                     <img
                         src="./img/1.jpg"
                         alt=""
-                        className="imgOne"
+                        className={classes["imgOne"]}
                         style={getImageStyle(6)}
                     />
                     {/* Movie Video */}
-                    <div className="videoBox">
+                    <div className={classes["videoBox"]}>
                         <video
                             src="https://scenestra.s3.ap-northeast-2.amazonaws.com/video/casablanca.mp4"
                             autoPlay
@@ -134,11 +134,11 @@ function Login() {
             </div>
 
             {/* Section Right */}
-            <div className="sectionRight">
+            <div className={classes["sectionRight"]}>
                 {/* Right Content Wrap */}
-                <div className="rightContentWrap">
+                <div className={classes["rightContentWrap"]}>
                     {/* Top */}
-                    <div className="rightContentWrapTop">
+                    <div className={classes["rightContentWrapTop"]}>
                         <input
                             type="text"
                             placeholder="아이디"
@@ -152,7 +152,7 @@ function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <div
-                            className="rmbrIdLbl"
+                            className={`${classes["rmbrIdLbl"]} bMainLight`}
                             onClick={toggleRememberMe}
                         >
                             <input
@@ -162,20 +162,20 @@ function Login() {
                                 onChange={toggleRememberMe}
                                 style={{ display: 'none' }}
                             />
-                            <div className="chkBx">
-                                <div className="chkMk" style={rememberMe ? { display: 'block' } : { display: 'none' }}>L</div>
+                            <div className={classes["chkBx"]}>
+                                <div className={classes["chkMk"]} style={rememberMe ? { display: 'block' } : { display: 'none' }}>L</div>
                             </div>
                             아이디 기억하기
                         </div>
                         <button
-                            onClick={handleSubmit}
+                            onClick={handleSubmit} className={`bBg bPri`}
                         >
                             LOG IN
                         </button>
                     </div>
 
                     {/* Bottom */}
-                    <div className="rightContentWrapBot">
+                    <div className={classes["rightContentWrapBot"]}>
                         <button>
                             아이디/비밀번호 찾기
                         </button>
