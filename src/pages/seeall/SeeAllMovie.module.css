@@ -219,3 +219,17 @@
 .movie_slider:hover :global(.swiper-button-prev) {
     opacity: 1;
 }
+
+.seeMoreWrap{
+    text-align: center;
+    transform: translateY(30px);
+}
+
+.seeMoreWrap span{
+    display: inline-block;
+    width: 100px;
+    height: 25px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+}
+
