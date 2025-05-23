@@ -30,7 +30,7 @@ function App() {
       
       <main>
         <Routes>
-          <Route path="/allMovie" element={<AllMovie />} />
+          <Route path="/allMovie/:id" element={<AllMovie />} />
           <Route path="/seeAllMovie" element={<SeeAllMovie />} />
           <Route path="/" element={<ForYou />} />
           <Route path="/seeAllMoive" element={<SeeAllMovie />} />

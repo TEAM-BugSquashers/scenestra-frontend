@@ -39,7 +39,7 @@
 
 .hamburgerLine {
   width: 100%;
-  height: 3px;
+  height: 1px;
   background-color: white;
   border-radius: 3px;
   transition: all 0.3s ease;
