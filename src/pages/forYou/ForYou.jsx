@@ -30,7 +30,7 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
         setIsHovered(true);
     }
     const contentStyle = {
-        bottom: isHovered ? '115%' : '40%',
+        bottom: isHovered ? '110%' : '40%',
         transition: 'bottom 0.5s ease'
     };
     const handleContainerClick = () => {
@@ -55,7 +55,7 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
             >
                 <div className={classes.movieContent} style={contentStyle}>
                     <div className={classes.line1} />
-                    <h2 className={classes.genreTitle}>{genre}</h2>
+                    <h1 className={classes.genreTitle}>{genre}</h1>
                     <div className={classes.line2} />
                 </div>
                 {isHovered && (
@@ -139,7 +139,7 @@ function ForYou(){
         {
             id: 4,
             image: '/posterimage/CallMeByYourName.jpg',
-            title:'CallMeByYourName',
+            title:'Call Me By Your Name',
             director: '감독이름',
             genre: '장르',
             runtime: '상영시간',
@@ -149,6 +149,24 @@ function ForYou(){
             id: 5,
             image: '/posterimage/하얼빈.jpg',
             title:'하얼빈',
+            director: '감독이름',
+            genre: '장르',
+            runtime: '상영시간',
+            releaseYear: '개봉연도'
+        },
+        {
+            id: 6,
+            image: '/posterimage/파묘.jpg',
+            title:'파묘',
+            director: '감독이름',
+            genre: '장르',
+            runtime: '상영시간',
+            releaseYear: '개봉연도'
+        },
+        {
+            id: 7,
+            image: '/posterimage/더랍스터.jpg',
+            title:'더랍스터',
             director: '감독이름',
             genre: '장르',
             runtime: '상영시간',
