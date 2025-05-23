@@ -6,6 +6,9 @@ function MoviePopUp({movie, onClose}) {
     const [movieData,setMovieData] = useState(null);
 
     useEffect(()=>{
+
+        if (!movie) return;
+
         const combineMovie = async () => {
             try {
                 const response = await axiosBindMovie(movie.movieId);

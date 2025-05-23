@@ -63,9 +63,7 @@
 /* 넷플릭스 앱 스타일 */
 .netflix_app {       
     background-color: #32271e;
-    color: #fff;       
-    min-height: 100vh;       
-    /*font-family: 'Helvetica Neue', Arial, sans_serif;     */
+    min-height: 100vh;
     padding: 0 0 60px 0;
 }   
 
@@ -101,7 +99,8 @@
 .category_title {
     margin-bottom: 20px;
     font-size: 30px;       
-    font-weight: 500; 
+    font-weight: 500;
+    color: #fff;
 }   
 
 .movie_slider {     
@@ -131,10 +130,10 @@
     left: 0;       
     width: 100%;       
     height: 100%;     
-    background-size: contain;     
+    background-size: cover;
     background-position: center;       
     background-repeat: no-repeat;     
-    background-color: #32271e;
+    background-color: hotpink;
 }   
 
 .movie_overlay {       
@@ -145,7 +144,11 @@
     /* background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));      */
     padding: 10px;       
     opacity: 0;     
-    transition: opacity 0.3s ease; 
+    transition: opacity 0.3s ease;
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }   
 
 .movie_card:hover .movie_overlay {       
@@ -223,6 +226,7 @@
 .seeMoreWrap{
     text-align: center;
     transform: translateY(30px);
+    color: #fff;
 }
 
 .seeMoreWrap span{
