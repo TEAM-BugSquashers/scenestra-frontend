@@ -96,3 +96,8 @@ export const axiosBindMovie = async (movieId) => {
         throw error;
     }
 }
+
+export const axiosGenreId = async (genreId) => {
+        const response = await instance.get(`/movies/genre/${genreId}`);
+        return response;
+}

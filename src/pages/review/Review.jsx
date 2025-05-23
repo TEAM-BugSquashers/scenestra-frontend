@@ -1,5 +1,6 @@
 import classes from './Review.module.css'
 import { useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 function Review(){
     const initialPosts = [
@@ -54,6 +55,7 @@ function Review(){
             content: "항상 저희 브랜드를 사랑해주시는 고객님들을 위한 특별한 감사 이벤트를 준비했습니다."
         }
     ];
+    const navi = useNavigate();
 
     // const pageNum= [
     //     {pn:1},{pn:2},{pn:3},{pn:4},{pn:5},{pn:6},{pn:7}
@@ -203,6 +205,10 @@ function Review(){
                     {/*        <path d="M-12,-12 L0,0 L-12,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
                     {/*    </svg>*/}
                     {/*</div>*/}
+                </div>
+                <div className={classes.wrtieWrap}>
+                    <div></div>
+                    <div className={classes.wrapBtn} onClick={() => {navi("/WriteReview")}}>글쓰기</div>
                 </div>
                 <footer className={classes.footer}></footer>
             </div>

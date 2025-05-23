@@ -11,12 +11,15 @@ import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
 import {axiosgroupedByGenre} from "../api/axios.js";
 import  { useEffect } from 'react';
 import Loading from "../components/loading/Loading.jsx";
+import {useNavigate} from "react-router-dom";
 
 function SeeAllMovie() {
     const [selectedMovieData,handleSelectMovie, handleClosePopUp ] = useMoviePopUp();
     const [searchTerm, setSearchTerm] = useState('');
     const [movieData, setMovieData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const navi = useNavigate();
+
 
     useEffect(() => {
         const fetchMovieData = async () => {
@@ -96,6 +99,9 @@ function SeeAllMovie() {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+                        <div className={classes.seeMoreWrap}>
+                            <span onClick={() => navi("/AllMovie")}>장르 더보기</span>
+                        </div>
                     </div>
                 ))}
                 </div>
