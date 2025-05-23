@@ -6,9 +6,7 @@
     margin: 0 2.5vw 0;
 }
 .sectionWrap {
-    height: 500px;
-
-    margin: 2.5vw 0 0;
+    margin: 60px 0 60px;
 
     display: flex;
     flex-direction: column;
@@ -51,9 +49,7 @@
 /****** the components ******/
 /****************************/
 .top {
-    border: 1px solid green;
-
-    margin: 7.5vw 0;
+    margin: 60px 0 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -113,11 +109,17 @@
     position: absolute;
     top: 50%;
     left: 10px;
+    transform: translateY(-50%);
 
     pointer-events: none;
     transition: all 0.2s ease;
 
     display: block;
+}
+.genre {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 /* genreBar */
 .genreBar {
@@ -127,6 +129,7 @@
     align-items: center;
 }
 .genreBox {
+    width: 100%;
     margin-top: 10px;
     display: flex;
     flex-wrap: wrap;
@@ -167,6 +170,9 @@
 /****** the details ******/
 /****************************/
 /* top */
+.top > .barTitle {
+    font-size: 1.5rem;
+}
 .barTitle {
     font-family: "Noto Serif KR", serif;
     font-weight: 500;
@@ -178,12 +184,10 @@
 .horLine {
     width: 100%;
     height: 1px;
-    /* delete line below */
     background-color: #ebdfce;
 }
 /* contentBox */
 .contentBox .horLine {
-    /* delete line below */
     background-color: #32271e;
 }
 /* formField */
@@ -192,7 +196,7 @@
 }
 .formField input:focus + label,
 .formField input:not(:placeholder-shown) + label {
-    color: #32271e;
+    color: #b2a69b;
     font-size: 0.625rem;
     top: 11px;
     left: 10px;
@@ -206,21 +210,20 @@ input[type="checkbox"] {
     display: none;
 }
 /* genreBox */
+.genreBox > div {
+    display: contents;
+}
 .genreBox label {
     width: calc((100% - 20px)/3);
-    height: 30px;
+    height: 40px;
 
-    /*font-family: 'Pretendard-Regular', sans-serif;*/
     font-size: 1rem;
+    line-height: 40px;
+    text-align: center;
 
-    padding: 25px;
     border: 1px solid;
     border-radius: 10px;
     box-sizing: border-box;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 .genreBox label:hover {
     background-color: #32271e;
@@ -273,25 +276,6 @@ input[type="checkbox"]:checked + label {
 .cancelBtn:hover {
     color: #32271e;
 }
-/* past reservation box */
-/* .pastTitle {
-    border: 1px solid red;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    position: absolute;
-    top: 0;
-    left: 0px;
-    right: 0;
-    transform: translateY(-50%);
-}
-.pastHorLine {
-    width: 100%;
-    height: 1px;
-    background-color: #32271e;
-} */
 .pastNum {
     background-color: white;
     white-space: nowrap;

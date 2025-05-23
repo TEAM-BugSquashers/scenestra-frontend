@@ -368,16 +368,24 @@ function MyPage() {
                                         <div className={classes["pastNum"]}>{reservation.num}</div>
 
                                         <div className={classes["pastBoxLeft"]}>
-                                            <div className={classes["pastDate"]}>날짜: {reservation.date}</div>
-                                            <div className={classes["pastTime"]}>시간: {reservation.time}</div>
-                                            <div className={classes["pastRoom"]}>방: {reservation.room}</div>
-                                            <div className={classes["pastMovie"]}>영화: {reservation.movie}</div>
+                                            <div className={classes["pastDate"]}>
+                                                날짜 <span style={{ color: '#b2a69b' }}>{reservation.date}</span>
+                                            </div>
+                                            <div className={classes["pastTime"]}>
+                                                시간 <span style={{ color: '#b2a69b' }}>{reservation.time}</span>
+                                            </div>
+                                            <div className={classes["pastRoom"]}>
+                                                방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                            </div>
+                                            <div className={classes["pastMovie"]}>
+                                                영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+                                            </div>
                                         </div>
 
                                         <div className={classes["pastBoxRight"]}>
                                             <img src="/api/placeholder/150/120"
                                                 className={classes["pastImg"]}
-                                                alt="Movie poster"
+                                                alt="Theater Image"
                                             />
                                         </div>
                                     </div>
