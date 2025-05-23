@@ -76,14 +76,14 @@ function SeeAllMovie() {
                         navigation
                         loop={true}
                         slidesPerView={5.5}
-                        spaceBetween={10}
+                        spaceBetween={20}
                         className={classes["movie_slider"]}
                         breakpoints={{
                         320: { slidesPerView: 2.5, spaceBetween: 10 },
                         1024: { slidesPerView: 5.5, spaceBetween: 10 },
                         }}
                     >
-                        {genre.movies.map((movie) => (
+                        {genre.movies.slice(0,20).map((movie) => (
                             <SwiperSlide key={movie.movieId}>
                                 <div className={classes["movie_card"]}>
                                     <div
