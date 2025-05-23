@@ -1,6 +1,6 @@
 import classes from "./Room.module.css";
 import React, { useState } from "react";
-// import styled from "styled-components";
+
 
 function Room() {
     const roomData = [
@@ -15,24 +15,23 @@ function Room() {
         <div className={classes.roomContainer}>
             {roomData.map(room => (
                 <div key={room.id} className={classes.rBox}>
-                    <div className={classes.rImg}>
+                    <div className={classes.rImg} onClick={() => setSelectedRoomId(room.id)}>
                         <img src={room.url} alt={room.name} />
                     </div>
-                    <div className={classes.innerBox}>
-                        <div
-                            className={`${classes.chkBox} ${selectedRoomId === room.id ? classes.checked : ''}`}
-                            onClick={() => setSelectedRoomId(room.id)}
-                        >
-                            {selectedRoomId === room.id && <div className={classes.checkMark}>✓</div>}
+                        <div className={classes.innerBox} onClick={() => setSelectedRoomId(room.id)}>
+                            <div
+                                className={`${classes.chkBox} ${selectedRoomId === room.id ? classes.checked : ''}`}
+                            >
+                                {selectedRoomId === room.id && <div className={classes.checkMark}>✓</div>}
+                            </div>
+                            <div className={classes.rName}>
+                                {room.name} ({room.peopleNo})
+                            </div>
                         </div>
-                        <div className={classes.rName}>
-                            {room.name} ({room.peopleNo})
-                        </div>
-                    </div>
                 </div>
             ))}
         </div>
-    )
+    );
 }
 
 export default Room;

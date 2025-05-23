@@ -1,8 +1,10 @@
 import classes from './Reservation.module.css';
 import Calendar from 'react-calendar';
 import React, { useState } from 'react';
+import Room from './room/Room.jsx';
+import TimeSelect from "./timeSelect/TimeSelect.jsx";
+import PeopleNumber from "./peopleNo/PeopleNumber.jsx";
 import 'react-calendar/dist/Calendar.css';
-import Room from '../components/room/Room.jsx';
 
 // import {axiosgroupedByGenre} from "../api/axios.js";
 
@@ -34,9 +36,7 @@ function Reservation() {
                     <div className={classes.box}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>총 예약인원</div>
                         <div className={classes.box}>
-                            <button className={classes.nBtn}>-</button>
-                            <input type="text" value="1" className={classes.number}/>
-                            <button className={classes.nBtn}>+</button>
+                            <PeopleNumber />
                         </div>
                     </div>
                     <div>
@@ -47,7 +47,9 @@ function Reservation() {
                     </div>
                     <div className={classes.box}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>시간선택</div>
-                        <div className={classes.box}></div>
+                        <div className={classes.box}>
+                            {/*<TimeSelect />*/}
+                        </div>
                     </div>
                     <div className={classes.box}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>날짜선택</div>
@@ -62,7 +64,7 @@ function Reservation() {
                     </div>
                 </div>
                 <div className={classes.btnBox}>
-                    <button className={`${classes["reserveBtn"]} btn2 wTitle`}>RESERVE NOW</button>
+                    <button className={`${classes["reserveBtn"]} btn2`}>RESERVE NOW</button>
                 </div>
             </div>
         </>

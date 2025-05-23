@@ -1,0 +1,14 @@
+.number {
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    font-size: 1rem;
+    border: 1px solid  #b2a69b;
+}
+.nBtn {
+    width: 40px;
+    height: 40px;
+    background: #b2a69b;
+    border: none;
+    font-size: 1rem;
+}
