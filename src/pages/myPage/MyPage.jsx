@@ -151,9 +151,9 @@ function MyPage() {
 
         return (
             <div className={classes["body"]}>
-                <div className={classes["sectionWrap"]}>
+                <div className={`${classes["sectionWrap"]}`}>
                     {/* Top Section */}
-                    <section className={`${classes["top"]} ${classes["bTitle"]}`}>
+                    <section className={`${classes["top"]} bTitle`}>
                         <div className={classes["horLine"]}></div>
                         <h2 className={classes["barTitle"]}>MY PAGE</h2>
                         <div className={classes["horLine"]}></div>
@@ -163,28 +163,42 @@ function MyPage() {
                     <section className={classes["bottom"]}>
                         {/* Left - Current Reservation */}
                         <article className={classes["left"]}>
-                            <div className={`${classes["currWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}>
+                            <div className={`${classes["currWrap"]} ${classes["contentBox"]}`}>
                                 {/* Title bar */}
-                                <div className={`${classes["conBoxBar"]} ${classes["wTitle"]}`}>
+                                <div className={`${classes["conBoxBar"]}`}>
                                     <div className={classes["horLine"]}></div>
-                                    <div className={`${classes["barTitle"]} ${classes["subtitle"]}`}>MY RESERVATION</div>
+                                    <div className={`${classes["barTitle"]}`}>MY RESERVATION</div>
                                     <div className={classes["horLine"]}></div>
                                 </div>
 
                                 {/* Content */}
                                 <div className={classes["currBox"]}>
                                     <div className={classes["currBoxTop"]}>
-                                        <div className={classes["num"]}>예약번호: {currResData.num}</div>
-                                        <div className={classes["date"]}>날짜: {currResData.date}</div>
-                                        <div className={classes["time"]}>시간: {currResData.time}</div>
-                                        <div className={classes["room"]}>방: {currResData.room}</div>
-                                        <div className={classes["movie"]}>영화: {currResData.movie}</div>
+                                        <div className={classes["num"]}>
+                                            예약번호 <span style={{ color: '#b2a69b' }}>{currResData.num}</span>
+                                        </div>
+                                        <div className={classes["date"]}>
+                                            날짜 <span style={{ color: '#b2a69b' }}>{currResData.date}</span>
+                                        </div>
+                                        <div className={classes["time"]}>
+                                            시간 <span style={{ color: '#b2a69b' }}>{currResData.time}</span>
+                                        </div>
+                                        <div className={classes["room"]}>
+                                            방 <span style={{ color: '#b2a69b' }}>{currResData.room}</span>
+                                        </div>
+                                        <div className={classes["movie"]}>
+                                            영화 <span style={{ color: '#b2a69b' }}>{currResData.movie}</span>
+                                        </div>
                                     </div>
                                     <div className={classes["currBoxBot"]}>
-                                        <div className={classes["name"]}>예약자: {currResData.name}</div>
-                                        <div className={classes["mobile"]}>전화번호: {currResData.mobile}</div>
+                                        <div className={classes["name"]}>
+                                            예약자 <span style={{ color: '#b2a69b' }}>{currResData.name}</span>
+                                        </div>
+                                        <div className={classes["mobile"]}>
+                                            전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
+                                        </div>
                                     </div>
-                                    <button type="submit" className={`${classes["bigBtn"]} ${classes["cancelResBtn"]} ${classes["btn1"]}`}>
+                                    <button type="submit" className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}>
                                         CANCEL RESERVATION
                                     </button>
                                 </div>
@@ -194,11 +208,11 @@ function MyPage() {
                         {/* Right */}
                         <article className={classes["right"]}>
                             {/* Profile */}
-                            <div className={`${classes["profileWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}>
+                            <div className={`${classes["profileWrap"]} ${classes["contentBox"]}`}>
                                 {/* Title bar */}
-                                <div className={`${classes["conBoxBar"]} ${classes["wTitle"]}`}>
+                                <div className={`${classes["conBoxBar"]}`}>
                                     <div className={classes["horLine"]}></div>
-                                    <div className={`${classes["barTitle"]} ${classes["subtitle"]}`}>MY PROFILE</div>
+                                    <div className={`${classes["barTitle"]}`}>MY PROFILE</div>
                                     <div className={classes["horLine"]}></div>
                                 </div>
 
