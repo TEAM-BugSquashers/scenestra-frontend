@@ -68,7 +68,7 @@ function SeeAllMovie() {
                     <div className={classes.category} key={genre.id}>
                         <div className={classes.ctWrap}>
                         <div className={classes.leftTitleLine}></div>
-                    <h1 className={classes["category_title"]}>{genre.genreName}</h1>
+                    <h2 className={classes["category_title"]}>{genre.engName}</h2>
                         <div className={classes.rightTitleLine}></div>
                         </div>
                     <Swiper
