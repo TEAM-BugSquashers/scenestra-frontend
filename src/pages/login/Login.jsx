@@ -4,16 +4,16 @@ import {axiosLogin} from "../api/axios.js";
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
-    // State to track current image
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const navigate = useNavigate();
-
-    // Login form state
+    // login form state
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
-    // Images array with their classNames for reference
+    // current theater image state
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate();
+
+    // theater image array (className)
     const imageClasses = [
         'imgEight',
         'imgThree',
@@ -24,7 +24,7 @@ function Login() {
         'imgOne'
     ];
 
-    // Effect for image rotation
+    // theater image slideshow
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex(prevIndex => (prevIndex + 1) % imageClasses.length);
@@ -34,9 +34,17 @@ function Login() {
         return () => clearInterval(interval);
     }, [imageClasses.length]);
 
-    // Form submission handler
+    // changing opacity and zIndex of theater images
+    const getImageStyle = (index) => {
+        return {
+            opacity: index === currentIndex ? 1 : 0,
+            zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
+        };
+    };
+
+    // login form submission handler
     const handleSubmit = () => {
-        console.log('Form submitted:', { userId, password, rememberMe });
+        // console.log('form submitted:', { userId, password, rememberMe });
         axiosLogin(userId, password)
             .then(response => {
                 if (response.status === 200) {
@@ -55,18 +63,14 @@ function Login() {
                 alert(errorMessage);
                 console.error('Login error:', error);
             });
-        // Add your login logic here
     };
 
-    // Get dynamic styles for images based on current index
-    const getImageStyle = (index) => {
-        return {
-            opacity: index === currentIndex ? 1 : 0,
-            zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
-        };
+    // navigate to user registration page (in new tab)
+    const goToJoin = () => {
+        window.open('/join', '_blank');
     };
 
-    // Toggle remember me checkbox
+    // Toggle remember me checkbox, NOT YET CREATED
     const toggleRememberMe = () => {
         setRememberMe(!rememberMe);
     };
@@ -179,7 +183,7 @@ function Login() {
                         <button>
                             아이디/비밀번호 찾기
                         </button>
-                        <button>
+                        <button onClick={goToJoin}>
                             회원가입
                         </button>
                     </div>
