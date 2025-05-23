@@ -19,8 +19,11 @@ function MoviePopUp({movie, onClose}) {
                             <div className={classes.xLeft}></div>
                             <div className={classes.xRight}></div>
                         </div>
-                        <h2 className={`${classes["movieTitle"]} wTitle`}>{movie.title}</h2>
-                        <div className={`${classes["releaseYear"]} body2 wSub`}>{movie.releaseYear}</div>
+                        <div className={classes.titleBox}>
+                            <div className={classes.cBox}></div>
+                            <h1 className={`${classes["movieTitle"]} wTitle`}>{movie.title}</h1>
+                        </div>
+                        <div className={`${classes["releaseYear"]} subTitle `}>{movie.releaseYear}</div>
                         <div className={`${classes["movieDesc"]} body2`}>
                             감독: {movie.director}
                         </div>
