@@ -3,16 +3,20 @@ import {useEffect, useState} from "react";
 import {axiosGenreId} from "../api/axios.js";
 import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
 import useMoviePopUp from "../hooks/useMoviePopUp.jsx";
+import {useParams} from "react-router-dom";
 
 function AllMovie() {
     const [selectedMovieData,handleSelectMovie, handleClosePopUp ] = useMoviePopUp();
     const [movieData, setMovieData] = useState([]);
-    //
-    useEffect((selectedMovieData) => {
+    const {id} = useParams();
+
+    useEffect(() => {
+
+        if(id === null) return;
         const fetchMovieData = async () => {
             try{
                 console.log("API 호출 시작");
-                const response = await axiosGenreId();
+                const response = await axiosGenreId(id);
                 console.log("API 응답:", response); // 추가
                 console.log("영화 데이터:", response.data.payload);
                 setMovieData(response.data.payload);
@@ -26,7 +30,7 @@ function AllMovie() {
         }
 
         fetchMovieData();
-    },[])
+    },[id])
 
     return(
 

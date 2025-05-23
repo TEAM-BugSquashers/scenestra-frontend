@@ -15,7 +15,7 @@ import {useNavigate} from "react-router-dom";
 
 function SeeAllMovie() {
     const [selectedMovieData,handleSelectMovie, handleClosePopUp ] = useMoviePopUp();
-    const [searchTerm, setSearchTerm] = useState('');
+    // const [searchTerm, setSearchTerm] = useState('');
     const [movieData, setMovieData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const navi = useNavigate();
@@ -37,9 +37,9 @@ function SeeAllMovie() {
     },[])
 
 
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
+    // const handleSearchChange = (e) => {
+    //     setSearchTerm(e.target.value);
+    // };
 
     if (isLoading) {
         return <Loading />;
@@ -49,27 +49,27 @@ function SeeAllMovie() {
 
             <div className={classes["netflix_app"]}>
                 {/* 검색바 */}
-                <div className={classes["search_container"]}>
-                    <div className={classes["search_bar"]}>
-                        <input
-                            type="text"
-                            placeholder="영화 제목을 검색하세요"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                        />
-                        <button className={classes["search_button"]}>
-                            <FaSearch />
-                        </button>
-                    </div>
-                </div>
+                {/*<div className={classes["search_container"]}>*/}
+                {/*    <div className={classes["search_bar"]}>*/}
+                {/*        <input*/}
+                {/*            type="text"*/}
+                {/*            placeholder="영화 제목을 검색하세요"*/}
+                {/*            value={searchTerm}*/}
+                {/*            onChange={handleSearchChange}*/}
+                {/*        />*/}
+                {/*        <button className={classes["search_button"]}>*/}
+                {/*            <FaSearch />*/}
+                {/*        </button>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 <div className={classes.content}>
                 {movieData.map((genre) => (
-                    <div className={classes.category} key={genre.id}>
+                    <div className={classes.category} key={genre.genreId}>
                         <div className={classes.ctWrap}>
-                        <div className={classes.leftTitleLine}></div>
-                    <h2 className={classes["category_title"]}>{genre.engName}</h2>
-                        <div className={classes.rightTitleLine}></div>
+                            <div className={classes.leftTitleLine}></div>
+                            <h2 className={classes["category_title"]}>{genre.engName}</h2>
+                            <div className={classes.rightTitleLine}></div>
                         </div>
                     <Swiper
                         modules={[Navigation]}
@@ -83,7 +83,7 @@ function SeeAllMovie() {
                         1024: { slidesPerView: 5.5, spaceBetween: 10 },
                         }}
                     >
-                        {genre.movies.slice(0, 20).map((movie) => (
+                        {genre.movies.map((movie) => (
                             <SwiperSlide key={movie.movieId}>
                                 <div className={classes["movie_card"]}>
                                     <div
@@ -100,7 +100,7 @@ function SeeAllMovie() {
                         ))}
                     </Swiper>
                         <div className={classes.seeMoreWrap}>
-                            <span onClick={() => navi("/AllMovie")}>장르 더보기</span>
+                            <span onClick={() => navi("/AllMovie/"+genre.genreId)}>장르 더보기</span>
                         </div>
                     </div>
                 ))}
