@@ -67,7 +67,7 @@ function Login() {
 
     // navigate to user registration page (in new tab)
     const goToJoin = () => {
-        window.open('/join', '_blank');
+        window.location.href = '/join';
     };
 
     // Toggle remember me checkbox, NOT YET CREATED
@@ -148,12 +148,22 @@ function Login() {
                             placeholder="아이디"
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSubmit();
+                                }
+                            }}
                         />
                         <input
                             type="password"
                             placeholder="비밀번호"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSubmit();
+                                }
+                            }}
                         />
                         <div
                             className={`${classes["rmbrIdLbl"]} bMainLight`}
