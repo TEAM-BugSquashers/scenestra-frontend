@@ -1,153 +1,374 @@
 import classes from './MyPage.module.css';
-import {useState} from "react";
-import {axiosgroupedByGenre} from "../api/axios.js";
+import {useEffect, useState} from "react";
+import {axiosGenres, axiosInfo, axiosMe} from "../api/axios.js";
 
 function MyPage() {
-    axiosgroupedByGenre().then(response => {
-        console.log(response)
+
+    axiosInfo().then(response => {
+        console.log(response);
     })
+    // axiosGenres().then(response => {
+    //     // console.log(response.data.payload);
+    //
+    //     const tmp = response.data.payload.map(genre => ({
+    //         value: genre.genreId,
+    //         label: genre.name
+    //     }));
+    //
+    //     console.log(tmp);
+    //
+    //     const tmp = response.data.payload.userGenres;
+    //
+    //     const tmp2 = tmp.map(ob => ob.genreId);
+    //
+    //     console.log(tmp2);
+        // const userGenres = response.data.payload.userGenres;
+        // const tmp =
+        // for (let i=0; i<userGenres.length; i++) {
+        //     console.log(userGenres[i].genreId);
+        // }
+    // })
 
-        // Original user data (simulating from database)
-        const originalProfileData = {
-            userId: "appleseed",
-            userPw: "JohnDoe",
-            userName: "John Doe",
-            userMobile: "000-1111-2222",
-            userEmail: "john.doe@email.com"
-        };
 
-        const originalGenreData = ["family", "performance", "horror"];
+    // Original user data (simulating from database)
+    // const originalProfileData = {
+    //     userId: "appleseed",
+    //     userPw: "JohnDoe",
+    //     userName: "John Doe",
+    //     userMobile: "000-1111-2222",
+    //     userEmail: "john.doe@email.com"
+    // };
 
-        // All available genres
-        const allGenres = [
-            { value: "family", label: "가족" },
-            { value: "performance", label: "공연" },
-            { value: "horror", label: "공포(호러)" },
-            { value: "drama", label: "드라마" },
-            { value: "mystery", label: "미스터리" },
-            { value: "crime", label: "범죄" },
-            { value: "thriller", label: "스릴러" },
-            { value: "animation", label: "애니메이션" },
-            { value: "action", label: "액션" },
-            { value: "comedy", label: "코미디" },
-            { value: "fantasy", label: "판타지" },
-            { value: "scifi", label: "SF" }
-        ];
+    // const originalGenreData = ["family", "performance", "horror"];
 
-        // State for form data
-        const [formData, setFormData] = useState(originalProfileData);
-        const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
-        const [confirmPassword, setConfirmPassword] = useState('');
+    // All available genres
+    // const allGenres = [
+    //     { value: "family", label: "가족" },
+    //     { value: "performance", label: "공연" },
+    //     { value: "horror", label: "공포(호러)" },
+    //     { value: "drama", label: "드라마" },
+    //     { value: "mystery", label: "미스터리" },
+    //     { value: "crime", label: "범죄" },
+    //     { value: "thriller", label: "스릴러" },
+    //     { value: "animation", label: "애니메이션" },
+    //     { value: "action", label: "액션" },
+    //     { value: "comedy", label: "코미디" },
+    //     { value: "fantasy", label: "판타지" },
+    //     { value: "scifi", label: "SF" }
+    // ];
 
-        // Edit mode state
-        const [isEditMode, setIsEditMode] = useState(false);
+    // State for form data
+    const [formData, setFormData] = useState([]);
+    // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
+    const [selectedGenres, setSelectedGenres] = useState([]);
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-        // Backup for cancel functionality
-        const [backupData, setBackupData] = useState(originalProfileData);
-        const [backupGenres, setBackupGenres] = useState(originalGenreData);
+    // Edit mode state
+    const [isEditMode, setIsEditMode] = useState(false);
 
-        // Current and past reservation data
-        const currResData = {
-            num: "A000-1111-2222",
+    // Backup for cancel functionality
+    const [backupData, setBackupData] = useState([]);
+    // const [backupGenres, setBackupGenres] = useState(originalGenreData);
+    const [backupGenres, setBackupGenres] = useState([]);
+
+    // ;ASKDLFJ;ALSDKJF;LAKJDF;LAKSDFJ
+    useEffect(() => {
+        const fetchUserProfile = async () =>
+        {
+            try {
+                const response = await axiosMe();
+                setFormData(response.data.payload);
+                setBackupData(response.data.payload);
+            } catch (error) {
+                console.error("failed to retrieve user profile: "+error);
+            }
+        }
+        fetchUserProfile();
+    },[])
+
+    // console.log("formData: "+formData);
+
+    // A;SLDKFJA;SLKDJFA;SLKDJF
+    useEffect(() => {
+        const fetchUserGenre = async () => {
+            try {
+                const response = await axiosMe();
+                const userGenre = response.data.payload.userGenres.map(genre => String(genre.genreId));
+                setSelectedGenres(userGenre);
+                setBackupGenres(userGenre);
+            } catch (error) {
+                console.error("failed to retrieve user genre: "+error);
+            }
+        }
+        fetchUserGenre();
+    }, [])
+
+    // console.log("selectedGenres: "+selectedGenres);
+
+    // A;SLDKJFA;SLDKJFA;SDKLFJ
+    const [allGenres, setAllGenres] = useState([]);
+    useEffect(() => {
+        const fetchAllGenres = async () => {
+            try {
+                const response = await axiosGenres();
+                const allGenres = response.data.payload.map(genre => ({
+                    value: String(genre.genreId),
+                    label: genre.name
+                }));
+                setAllGenres(allGenres);
+            } catch (error) {
+                console.error("failed to compile genres: "+error);
+            }
+        }
+        fetchAllGenres();
+    }, [])
+
+console.log(allGenres);
+
+    // Current and past reservation data
+    const currResData = {
+        num: "A000-1111-2222",
+        date: "2025년 2월 5일",
+        time: "12:00",
+        room: "Theater A",
+        movie: "Cars 2",
+        name: "John Doe",
+        mobile: "000-1111-2222"
+    };
+
+    const pastResData = [
+        {
+            num: "B000-1111-2222",
             date: "2025년 2월 5일",
             time: "12:00",
             room: "Theater A",
             movie: "Cars 2",
-            name: "John Doe",
-            mobile: "000-1111-2222"
-        };
+        },
+        {
+            num: "C000-1111-2222",
+            date: "2025년 2월 5일",
+            time: "12:00",
+            room: "Theater A",
+            movie: "Cars 2",
+        }
+    ];
 
-        const pastResData = [
-            {
-                num: "B000-1111-2222",
-                date: "2025년 2월 5일",
-                time: "12:00",
-                room: "Theater A",
-                movie: "Cars 2",
-            },
-            {
-                num: "C000-1111-2222",
-                date: "2025년 2월 5일",
-                time: "12:00",
-                room: "Theater A",
-                movie: "Cars 2",
+    // Handle input changes
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setFormData({ ...formData, [id]: value });
+    };
+    // Handle genre changes
+    const handleGenreChange = (e) => {
+        const { id, checked } = e.target;
+
+        if (checked) {
+            if (selectedGenres.length >= 3) {
+                alert('선호하는 장르는 3개까지만 선택할 수 있습니다.');
+                return;
             }
-        ];
+            setSelectedGenres([...selectedGenres, id]);
+        } else {
+            setSelectedGenres(selectedGenres.filter(genre => genre !== id));
+        }
+    };
 
-        // Handle input changes
-        const handleInputChange = (e) => {
-            const { id, value } = e.target;
-            setFormData({ ...formData, [id]: value });
-        };
-
-        // Handle genre changes
-        const handleGenreChange = (e) => {
-            const { id, checked } = e.target;
-
-            if (checked) {
-                if (selectedGenres.length >= 3) {
-                    alert('선호하는 장르는 3개까지만 선택할 수 있습니다.');
-                    return;
-                }
-                setSelectedGenres([...selectedGenres, id]);
-            } else {
-                setSelectedGenres(selectedGenres.filter(genre => genre !== id));
-            }
-        };
-
-        // Handle edit profile button
-        const handleEditProfile = () => {
-            if (!isEditMode) {
-                // Enter edit mode
-                setIsEditMode(true);
-                setBackupData({ ...formData });
-                setBackupGenres([...selectedGenres]);
-                setFormData({ ...formData, userPw: '' }); // Clear password for editing
-                setConfirmPassword('');
-            } else {
-                // Save changes
-                if (formData.userPw !== '' && formData.userPw !== confirmPassword) {
-                    alert('비밀번호가 일치하지 않습니다.');
-                    return;
-                }
-
-                if (selectedGenres.length !== 3) {
-                    alert('선호하는 장르 3개를 선택해주세요.');
-                    return;
-                }
-
-                // Update password if changed
-                const updatedData = { ...formData };
-                if (formData.userPw === '') {
-                    updatedData.userPw = backupData.userPw; // Keep original password
-                }
-
-                setFormData(updatedData);
-                setIsEditMode(false);
-                setConfirmPassword('');
-
-                console.log("Saving updated user data:", {
-                    ...updatedData,
-                    selectedGenres
-                });
-            }
-        };
-
-        // Handle cancel edit
-        const handleCancelEdit = () => {
-            setFormData({ ...backupData });
-            setSelectedGenres([...backupGenres]);
+    // Handle edit profile button
+    const handleEditProfile = () => {
+        if (!isEditMode) {
+            // Enter edit mode
+            setIsEditMode(true);
+            setBackupData({ ...formData });
+            setBackupGenres([...selectedGenres]);
+            setFormData({ ...formData, userPw: '' }); // Clear password for editing
             setConfirmPassword('');
-            setIsEditMode(false);
-        };
-
-        // Get display password (masked or editable)
-        const getDisplayPassword = () => {
-            if (isEditMode) {
-                return formData.userPw;
+        } else {
+            // Save changes
+            if (formData.userPw !== '' && formData.userPw !== confirmPassword) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
             }
-            return '********';
-        };
+
+            if (selectedGenres.length !== 3) {
+                alert('선호하는 장르 3개를 선택해주세요.');
+                return;
+            }
+
+            // Update password if changed
+            const updatedData = { ...formData };
+            if (formData.userPw === '') {
+                updatedData.userPw = backupData.userPw; // Keep original password
+            }
+
+            setFormData(updatedData);
+            setIsEditMode(false);
+            setConfirmPassword('');
+
+            console.log("Saving updated user data:", {
+                ...updatedData,
+                selectedGenres
+            });
+        }
+    };
+
+    // Handle cancel edit
+    const handleCancelEdit = () => {
+        setFormData({ ...backupData });
+        setSelectedGenres([...backupGenres]);
+        setConfirmPassword('');
+        setIsEditMode(false);
+    };
+
+    // Get display password (masked or editable)
+    const getDisplayPassword = () => {
+        if (isEditMode) {
+            return formData.userPw;
+        }
+        return '********';
+    };
+
+
+        // // Original user data (simulating from database)
+        // const originalProfileData = {
+        //     userId: "appleseed",
+        //     userPw: "JohnDoe",
+        //     userName: "John Doe",
+        //     userMobile: "000-1111-2222",
+        //     userEmail: "john.doe@email.com"
+        // };
+        //
+        // const originalGenreData = ["family", "performance", "horror"];
+        //
+        // // All available genres
+        // const allGenres = [
+        //     { value: "family", label: "가족" },
+        //     { value: "performance", label: "공연" },
+        //     { value: "horror", label: "공포(호러)" },
+        //     { value: "drama", label: "드라마" },
+        //     { value: "mystery", label: "미스터리" },
+        //     { value: "crime", label: "범죄" },
+        //     { value: "thriller", label: "스릴러" },
+        //     { value: "animation", label: "애니메이션" },
+        //     { value: "action", label: "액션" },
+        //     { value: "comedy", label: "코미디" },
+        //     { value: "fantasy", label: "판타지" },
+        //     { value: "scifi", label: "SF" }
+        // ];
+        //
+        // // State for form data
+        // const [formData, setFormData] = useState(originalProfileData);
+        // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
+        // const [confirmPassword, setConfirmPassword] = useState('');
+        //
+        // // Edit mode state
+        // const [isEditMode, setIsEditMode] = useState(false);
+        //
+        // // Backup for cancel functionality
+        // const [backupData, setBackupData] = useState(originalProfileData);
+        // const [backupGenres, setBackupGenres] = useState(originalGenreData);
+        //
+        // // Current and past reservation data
+        // const currResData = {
+        //     num: "A000-1111-2222",
+        //     date: "2025년 2월 5일",
+        //     time: "12:00",
+        //     room: "Theater A",
+        //     movie: "Cars 2",
+        //     name: "John Doe",
+        //     mobile: "000-1111-2222"
+        // };
+        //
+        // const pastResData = [
+        //     {
+        //         num: "B000-1111-2222",
+        //         date: "2025년 2월 5일",
+        //         time: "12:00",
+        //         room: "Theater A",
+        //         movie: "Cars 2",
+        //     },
+        //     {
+        //         num: "C000-1111-2222",
+        //         date: "2025년 2월 5일",
+        //         time: "12:00",
+        //         room: "Theater A",
+        //         movie: "Cars 2",
+        //     }
+        // ];
+        //
+        // // Handle input changes
+        // const handleInputChange = (e) => {
+        //     const { id, value } = e.target;
+        //     setFormData({ ...formData, [id]: value });
+        // };
+        //
+        // // Handle genre changes
+        // const handleGenreChange = (e) => {
+        //     const { id, checked } = e.target;
+        //
+        //     if (checked) {
+        //         if (selectedGenres.length >= 3) {
+        //             alert('선호하는 장르는 3개까지만 선택할 수 있습니다.');
+        //             return;
+        //         }
+        //         setSelectedGenres([...selectedGenres, id]);
+        //     } else {
+        //         setSelectedGenres(selectedGenres.filter(genre => genre !== id));
+        //     }
+        // };
+        //
+        // // Handle edit profile button
+        // const handleEditProfile = () => {
+        //     if (!isEditMode) {
+        //         // Enter edit mode
+        //         setIsEditMode(true);
+        //         setBackupData({ ...formData });
+        //         setBackupGenres([...selectedGenres]);
+        //         setFormData({ ...formData, userPw: '' }); // Clear password for editing
+        //         setConfirmPassword('');
+        //     } else {
+        //         // Save changes
+        //         if (formData.userPw !== '' && formData.userPw !== confirmPassword) {
+        //             alert('비밀번호가 일치하지 않습니다.');
+        //             return;
+        //         }
+        //
+        //         if (selectedGenres.length !== 3) {
+        //             alert('선호하는 장르 3개를 선택해주세요.');
+        //             return;
+        //         }
+        //
+        //         // Update password if changed
+        //         const updatedData = { ...formData };
+        //         if (formData.userPw === '') {
+        //             updatedData.userPw = backupData.userPw; // Keep original password
+        //         }
+        //
+        //         setFormData(updatedData);
+        //         setIsEditMode(false);
+        //         setConfirmPassword('');
+        //
+        //         console.log("Saving updated user data:", {
+        //             ...updatedData,
+        //             selectedGenres
+        //         });
+        //     }
+        // };
+        //
+        // // Handle cancel edit
+        // const handleCancelEdit = () => {
+        //     setFormData({ ...backupData });
+        //     setSelectedGenres([...backupGenres]);
+        //     setConfirmPassword('');
+        //     setIsEditMode(false);
+        // };
+        //
+        // // Get display password (masked or editable)
+        // const getDisplayPassword = () => {
+        //     if (isEditMode) {
+        //         return formData.userPw;
+        //     }
+        //     return '********';
+        // };
 
         return (
             <div className={classes["body"]}>
@@ -161,6 +382,7 @@ function MyPage() {
 
                     {/* Bottom Section */}
                     <section className={classes["bottom"]}>
+
                         {/* Left - Current Reservation */}
                         <article className={classes["left"]}>
                             <div className={`${classes["currWrap"]} ${classes["contentBox"]}`}>
@@ -173,34 +395,44 @@ function MyPage() {
 
                                 {/* Content */}
                                 <div className={classes["currBox"]}>
-                                    <div className={classes["currBoxTop"]}>
-                                        <div className={classes["num"]}>
-                                            예약번호 <span style={{ color: '#b2a69b' }}>{currResData.num}</span>
+                                    {/* current left, reservation info */}
+                                    <div className={classes["currBoxLeft"]}>
+                                        <div className={classes["currBoxTop"]}>
+                                            <div className={classes["num"]}>
+                                                예약번호 <span style={{ color: '#b2a69b' }}>{currResData.num}</span>
+                                            </div>
+                                            <div className={classes["date"]}>
+                                                날짜 <span style={{ color: '#b2a69b' }}>{currResData.date}</span>
+                                            </div>
+                                            <div className={classes["time"]}>
+                                                시간 <span style={{ color: '#b2a69b' }}>{currResData.time}</span>
+                                            </div>
+                                            <div className={classes["room"]}>
+                                                방 <span style={{ color: '#b2a69b' }}>{currResData.room}</span>
+                                            </div>
+                                            <div className={classes["movie"]}>
+                                                영화 <span style={{ color: '#b2a69b' }}>{currResData.movie}</span>
+                                            </div>
                                         </div>
-                                        <div className={classes["date"]}>
-                                            날짜 <span style={{ color: '#b2a69b' }}>{currResData.date}</span>
+                                        <div className={classes["currBoxBot"]}>
+                                            <div className={classes["name"]}>
+                                                예약자 <span style={{ color: '#b2a69b' }}>{currResData.name}</span>
+                                            </div>
+                                            <div className={classes["mobile"]}>
+                                                전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
+                                            </div>
                                         </div>
-                                        <div className={classes["time"]}>
-                                            시간 <span style={{ color: '#b2a69b' }}>{currResData.time}</span>
-                                        </div>
-                                        <div className={classes["room"]}>
-                                            방 <span style={{ color: '#b2a69b' }}>{currResData.room}</span>
-                                        </div>
-                                        <div className={classes["movie"]}>
-                                            영화 <span style={{ color: '#b2a69b' }}>{currResData.movie}</span>
-                                        </div>
+                                        <button type="submit" className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}>
+                                            CANCEL RESERVATION
+                                        </button>
                                     </div>
-                                    <div className={classes["currBoxBot"]}>
-                                        <div className={classes["name"]}>
-                                            예약자 <span style={{ color: '#b2a69b' }}>{currResData.name}</span>
-                                        </div>
-                                        <div className={classes["mobile"]}>
-                                            전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
-                                        </div>
+                                    {/* current right, theater image */}
+                                    <div className={classes["currBoxRight"]}>
+                                        <img src="/api/placeholder/150/120"
+                                             className={classes["pastImg"]}
+                                             alt="Theater Image"
+                                        />
                                     </div>
-                                    <button type="submit" className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}>
-                                        CANCEL RESERVATION
-                                    </button>
                                 </div>
                             </div>
                         </article>
@@ -224,7 +456,7 @@ function MyPage() {
                                             <input
                                                 type="text"
                                                 id="userId"
-                                                value={formData.userId}
+                                                value={formData.username}
                                                 readOnly
                                                 placeholder=" "
                                             />
@@ -264,7 +496,7 @@ function MyPage() {
                                         <input
                                             type="text"
                                             id="userName"
-                                            value={formData.userName}
+                                            value={formData.realName}
                                             readOnly
                                             placeholder=" "
                                         />
@@ -276,7 +508,7 @@ function MyPage() {
                                         <input
                                             type="text"
                                             id="userMobile"
-                                            value={formData.userMobile}
+                                            value={formData.mobile}
                                             onChange={handleInputChange}
                                             readOnly={!isEditMode}
                                             placeholder=" "
@@ -289,7 +521,7 @@ function MyPage() {
                                         <input
                                             type="text"
                                             id="userEmail"
-                                            value={formData.userEmail}
+                                            value={formData.email}
                                             onChange={handleInputChange}
                                             readOnly={!isEditMode}
                                             placeholder=" "
@@ -297,7 +529,7 @@ function MyPage() {
                                         <label htmlFor="userEmail">이메일 주소</label>
                                     </div>
 
-                                    {/* Genres */}
+                                    {/*Genres */}
                                     <div className={classes["genre"]}>
                                         <div className={classes["genreBar"]}>
                                             <div className={classes["genreTitle"]}>선호하는 장르 3개 선택해주세요</div>
@@ -314,7 +546,8 @@ function MyPage() {
                                                         value={genre.value}
                                                         checked={selectedGenres.includes(genre.value)}
                                                         onChange={handleGenreChange}
-                                                        disabled={!isEditMode || (!selectedGenres.includes(genre.value) && selectedGenres.length >= 3)}
+                                                        // disabled={!isEditMode || (!selectedGenres.includes(genre.value) && selectedGenres.length >= 3)}
+                                                        disabled={!isEditMode}
                                                     />
                                                     <label className={classes["genreChkBx"]}
                                                         htmlFor={genre.value}
