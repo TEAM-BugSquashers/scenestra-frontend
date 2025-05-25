@@ -2,7 +2,7 @@
     box-sizing: border-box;
 }
 .outerBox {
-    width: 500px;
+    width: 1280px;
     height: 100%;
     background-color: #fff;
     border-radius: 20px;
@@ -19,7 +19,7 @@
     margin: 30px;
 }
 .reserveBtn {
-    width: 200px;
+    width: 250px;
     height: 40px;
     border-radius: 10px;
     font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
@@ -60,19 +60,20 @@
     margin-top: 10px;
 }
 .movieImg {
-    width: 50px;
-    height: 70px;
+    width: 100px;
+    height: 150px;
     background: #777777;
 }
 .selectedMovie {
     width: 100%;
     border: 1px solid;
     display: flex;
+    align-items: center;
+    gap: 20px;
     padding: 10px;
     margin-top: 10px;
 }
-.movieDesc { display: flex; }
-.box { margin: 10px 0; }
+.box { margin: 15px 0; }
 /*캘린더css*/
 .outerBox :global(.react-calendar__tile--active ) {background: #32271e;}
 .outerBox :global(.react-calendar__tile--now ) {background: #b2a69b;}
@@ -90,3 +91,16 @@
     font-family: 'Arial', 'Helvetica', sans-serif;
     line-height: 1em;
 }
+.reserveBox {
+    display: flex;
+    gap: 40px;
+}
+.reserveTitle {
+    margin: 10px 0;
+}
+.reservationInfo > ul{
+    margin: 10px 0;
+    padding: 0 0 0 15px;
+    list-style: decimal;
+}
+
