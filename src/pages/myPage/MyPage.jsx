@@ -57,21 +57,18 @@ function MyPage() {
     //     { value: "scifi", label: "SF" }
     // ];
 
-    // State for form data
+    // states
     const [formData, setFormData] = useState([]);
     // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    // Edit mode state
     const [isEditMode, setIsEditMode] = useState(false);
-
-    // Backup for cancel functionality
+    // // backup for cancel functionality
     const [backupData, setBackupData] = useState([]);
     // const [backupGenres, setBackupGenres] = useState(originalGenreData);
     const [backupGenres, setBackupGenres] = useState([]);
 
-    // ;ASKDLFJ;ALSDKJF;LAKJDF;LAKSDFJ
+    // load data: fetch user profile
     useEffect(() => {
         const fetchUserProfile = async () =>
         {
@@ -88,7 +85,7 @@ function MyPage() {
 
     // console.log("formData: "+formData);
 
-    // A;SLDKFJA;SLKDJFA;SLKDJF
+    // load data: fetch user genre
     useEffect(() => {
         const fetchUserGenre = async () => {
             try {
@@ -105,7 +102,7 @@ function MyPage() {
 
     // console.log("selectedGenres: "+selectedGenres);
 
-    // A;SLDKJFA;SLDKJFA;SDKLFJ
+    // load data: fetch all genres
     const [allGenres, setAllGenres] = useState([]);
     useEffect(() => {
         const fetchAllGenres = async () => {
