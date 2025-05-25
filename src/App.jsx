@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound/NotFound.jsx';
 import ForYou from "./pages/forYou/ForYou.jsx";
 import Login from "./pages/login/Login.jsx";
 import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
+import MyPage from "./pages/myPage/MyPage.jsx";
 import Admin from "./pages/admin/Admin.jsx";
 import AllMovie from "./pages/allMovie/AllMovie.jsx";
 
@@ -19,7 +20,6 @@ function App() {
   
   const toggleMenu = () => {
     setIsMenuOpen(prevState => !prevState);
-    console.log("isMenuOpen");
   };
 
   return (
@@ -38,6 +38,7 @@ function App() {
           <Route path="/review" element={<Review />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<UserRegistration />} />
+          <Route path="/myPage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>

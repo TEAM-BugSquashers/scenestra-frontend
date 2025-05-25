@@ -53,6 +53,18 @@ export const axiosLogout = async () => {
     }
 }
 
+export const axiosInfo = async (email, mobile) => {
+    try {
+        const response = await instance.post("/users/info", {
+            email,
+            mobile
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const axiosJoin = async (username, password, email, mobile, realName, genres) => {
     try {
         const response = await instance.post("/users/join", {
@@ -63,6 +75,16 @@ export const axiosJoin = async (username, password, email, mobile, realName, gen
             realName,
             genres
         });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosMe = async () => {
+    try {
+        const response = await instance.get
+        ("/users/me");
         return response;
     } catch (error) {
         throw error;
@@ -82,6 +104,15 @@ export const axiosChkUsername = async (username) => {
 export const axiosgroupedByGenre = async () => {
     try {
         const response = await instance.get("/movies/grouped-by-genre");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosGenres = async () => {
+    try {
+        const response = await instance.get("/movies/genres");
         return response;
     } catch (error) {
         throw error;

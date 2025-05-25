@@ -1,3 +1,4 @@
+
 /****************************/
 /****** the framework ******/
 /****************************/
@@ -100,23 +101,6 @@
 /****************************/
 /****** the details ******/
 /****************************/
-/* leftQuote */
-.leftQuote {
-    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
-    font-size: 2rem;
-
-    margin-bottom: 20px;
-
-    display: flex;
-    justify-content: center;
-}
-.quoteLast {
-    color: white;
-    font-family: 'Belleza', sans-serif;
-
-    margin-bottom: 30px;
-
-}
 /* topBar */
 .barTitle {
     font-family: "Noto Serif KR", serif;
@@ -138,11 +122,6 @@
 .formField input:not(:placeholder-shown) + label {
     color: #b2a69b;
     font-family: 'Pretendard-Regular', sans-serif;
-    font-size: 0.625rem;
-    top: 11px;
-    left: 10px;
-}
-.formField .mobileLbl {
     font-size: 0.625rem;
     top: 11px;
     left: 10px;
@@ -172,9 +151,9 @@
     align-items: center;
     justify-content: center;
 }
-/*.idWrap button:hover {*/
-/*    background-color: #32271e;*/
-/*}*/
+.idWrap button:hover {
+    background-color: #32271e;
+}
 /* genreBar */
 .genreTitle {
     margin: 10px 10px 10px 0;
@@ -225,10 +204,6 @@ form > button {
     border: none;
     border-radius: 10px;
 }
-/*form > button:hover {*/
-/*    background-color: #32271e;*/
-/*}*/
-.valid {
-    background-color: #32271e !important;
-    cursor: pointer;
+form > button:hover {
+    background-color: #32271e;
 }
