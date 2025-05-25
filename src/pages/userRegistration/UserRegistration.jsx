@@ -1,10 +1,11 @@
 import classes from "./UserRegistration.module.css";
 import {useState, useRef} from "react";
-import {axiosChkUsername} from "../api/axios.js";
+import {axiosChkUsername, axiosJoin} from "../api/axios.js";
+import {useNavigate} from "react-router-dom";
 
 
 function UserRegistration() {
-    // State for form fields
+    // state: form field
     const [formData, setFormData] = useState({
         id: '',
         pw: '',
@@ -14,19 +15,19 @@ function UserRegistration() {
         email: ''
     });
 
-    // State for checkbox selections
+    // state: genre selection
     const [selectedGenres, setSelectedGenres] = useState([]);
 
-    // State for tracking hovered checkbox
+    // state: hovered genre selection
     const [hoveredGenre, setHoveredGenre] = useState(null);
 
-    // Track if a genre was just unselected
+    // genre that was just unselected
     const justUnselectedRef = useRef({
         id: null,
         mouseLeft: false
     });
 
-    // Available genres
+    // all genres --- USE AXIOS FUNCTION
     const genres = [
         { id: 'family', label: '가족' },
         { id: 'performance', label: '공연' },
@@ -42,86 +43,82 @@ function UserRegistration() {
         { id: 'scifi', label: 'SF' }
     ];
 
-    // Handle input changes
+    // handle input changes
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setFormData({ ...formData, [id]: value });
     };
 
-    // Handle checkbox changes
+    // handle genre selection changes
     const handleGenreChange = (e) => {
         const { id, checked } = e.target;
 
         if (checked) {
-            // Don't allow more than 3 selections
             if (selectedGenres.length >= 3) {
                 alert('선호하는 장르는 3개까지만 선택할 수 있습니다.');
-                return; // Ignore new selection if already 3 are selected
+                return;
             }
             setSelectedGenres([...selectedGenres, id]);
         } else {
-            // Remove from selected if unchecked
+            // if unchecked, genre is removed from selected
             setSelectedGenres(selectedGenres.filter(genre => genre !== id));
 
-            // Mark this genre as just unselected
+            // genre marked as just unselected
             justUnselectedRef.current = {
                 id: id,
                 mouseLeft: false
             };
 
-            // Reset hover state to force the label to turn white
+            // hover state is reset (aka. after unselection, even if hovered, genre label turns white)
             if (hoveredGenre === id) {
                 setHoveredGenre(null);
             }
         }
     };
 
-    // Handle mouse enter on genre label
+    // handle genre label mouse enter
     const handleMouseEnter = (id) => {
-        // If this is a re-entry after unselecting, clear the unselected flag
+        // if re-entry after unselection, 'unselected flag' is cleared
         if (justUnselectedRef.current.id === id && justUnselectedRef.current.mouseLeft) {
             justUnselectedRef.current = { id: null, mouseLeft: false };
         }
-
-        // Update hover state
+        // hover state updated
         setHoveredGenre(id);
     };
 
-    // Handle mouse leave on genre label
+    // house genre label mouse leave
     const handleMouseLeave = (id) => {
-        // Track that mouse has left the just unselected item
         if (justUnselectedRef.current.id === id) {
             justUnselectedRef.current.mouseLeft = true;
         }
-
         setHoveredGenre(null);
     };
 
-    // Get style for genre label
+    // genre label color change
     const getGenreLabelStyle = (id) => {
         if (selectedGenres.includes(id)) {
-            // Selected state - dark background
+            // selected state
             return {
                 backgroundColor: '#32271e',
                 color: 'white',
                 borderColor: '#32271e'
             };
         } else if (justUnselectedRef.current.id === id && !justUnselectedRef.current.mouseLeft) {
-            // Just unselected with mouse still on it - force white
+            // just unselected (mouse enter)
             return {
                 backgroundColor: 'white',
                 color: '#b2a69b',
                 borderColor: '#b2a69b'
             };
         } else if (hoveredGenre === id) {
-            // Hover state - dark background
+            // hover state
             return {
                 backgroundColor: '#32271e',
                 color: 'white',
                 borderColor: '#32271e'
             };
         } else {
-            // Default state - white background
+            // default state
             return {
                 backgroundColor: 'white',
                 color: '#b2a69b',
@@ -130,185 +127,262 @@ function UserRegistration() {
         }
     };
 
-    // Handle form submission
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    // handle form submit
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Check if exactly 3 genres are selected
+        // requirement 1. three-genre selection
         if (selectedGenres.length !== 3) {
             alert('선호하는 장르 3개 선택해주세요');
             return;
         }
 
-        // Process form submission
-        console.log('Form submitted:', { ...formData, genres: selectedGenres });
-        // You would typically send this data to your backend here
+        // requirement 2. password/password-check agreement
+        if (formData.pw !== formData.chkPw) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        // form submission processed
+        try {
+            const response = await axiosJoin(
+                formData.id,
+                formData.pw,
+                formData.email,
+                formData.mobile,
+                formData.name,
+                selectedGenres
+            );
+            console.log(response);
+
+            if (response.status === 201 || response.status === 200) {
+                alert('회원가입에 성공했습니다');
+                navigate('/login');
+            } else {
+                alert(`회원가입에 실패했습니다. 상태 코드: ${response.status}`);
+            }
+        } catch (error) {
+            alert('회원가입 중 오류가 발생했습니다');
+            console.log('error: ', error);
+        }
     };
 
-    // Handle ID duplication check
-    // const handleIdCheck = (e) => {
-    //     e.preventDefault();
-    //     console.log('Checking ID:', formData.id);
-    //     // In a real application, this would call an API to check ID availability
-    //     alert('ID 확인 기능은 아직 구현되지 않았습니다.');
-    // };
+    // handle id duplication check
+    const isIdFilled = formData.id.trim() !== '';
 
-    // Handle ID duplication check
     const handleIdCheck = (e) => {
         e.preventDefault();
 
-        axiosChkUsername(formData.id).then(response => {
-            if (response.status === 200) {
-                alert(`사용할 수 있는 아이디입니다.`)
-            }
-        })
-            .catch(error => {
-                if (error.response && error.response.status === 400) {
-                    alert(`이미 사용 중인 아이디입니다.`);
-                    setFormData(prev => ({ ...prev, id: '' }));
-                } else {
-                    alert(`오류가 발생했습니다. 다시 시도해주세요.`);
-                    console.error(error);
-                }
-            });
-     };
+        // prevent empty id field
+        if (!formData.id || formData.id.trim() === '') {
+            alert('아이디를 입력해주세요.');
+            return;
+        }
+
+        // id minimum length
+        if (formData.id.length < 1) {
+            alert('아이디는 최소 1글자 이상 입력해주세요.');
+            return;
+        }
+
+
+        // axiosChkUsername(formData.id).then(response => {
+
+            // console.log(response);
+
+        //     if (response.status === 200) {
+        //         alert(`사용할 수 있는 아이디입니다.`)
+        //     }
+        // })
+        //     .catch(error => {
+        //         if (error.response && error.response.status === 400) {
+        //             alert(`이미 사용 중인 아이디입니다.`);
+        //             setFormData(prev => ({ ...prev, id: '' }));
+        //         } else {
+        //             alert(`오류가 발생했습니다. 다시 시도해주세요.`);
+        //             console.error(error);
+        //         }
+        //     });
+    };
+
+    const isFormComplete = () => {
+        return (
+            formData.id.trim() &&
+            formData.pw.trim() &&
+            formData.chkPw.trim() &&
+            formData.name.trim() &&
+            formData.mobile.trim() &&
+            formData.email.trim() &&
+            selectedGenres.length === 3
+        );
+    };
 
     return (
         <>
-            <div className={`${classes["main"]} wBg wMain`}>
-                <section className={classes["topBar"]}>
-                    <div className={`${classes["horLine"]} bBg`}></div>
-                    <div className={classes["barTitle"]}>SIGN UP</div>
-                    <div className={`${classes["horLine"]} bBg`}></div>
-                </section>
+            <div className={classes["totalMargin"]}>
+                <div className={classes["totalLeft"]}>
+                    <div className={`${classes["leftQuote"]} ${classes["quoteLast"]}`}><em>SCENESTRA</em></div>
+                    <div className={`${classes["leftQuote"]} `}>Scene and space, exclusively yours.</div>
+                    {/*<div className={`${classes["leftQuote"]}`}>exclusively yours.</div>*/}
+                </div>
+                <div className={classes["totalMid"]}></div>
+                <div className={classes["totalRight"]}>
+                    <div className={`${classes["main"]} wBg wMain`}>
+                        <section className={classes["topBar"]}>
+                            <div className={`${classes["horLine"]} bBg`}></div>
+                            <div className={classes["barTitle"]}>SIGN UP</div>
+                            <div className={`${classes["horLine"]} bBg`}></div>
+                        </section>
 
-                <form onSubmit={handleSubmit}>
-                    <section className={classes["userInfo"]}>
-                        {/* 아이디 */}
-                        <div className={classes["idWrap"]}>
-                            <div className={classes["formField"]}>
-                                <input
-                                    type="text"
-                                    id="id"
-                                    minLength="1"
-                                    maxLength="50"
-                                    value={formData.id}
-                                    onChange={handleInputChange}
-                                    placeholder=" "
-                                    required
-                                />
-                                <label htmlFor="id" className={classes["wSec"]}>아이디</label>
-                            </div>
-                            <button onClick={handleIdCheck}>아이디<br/>중복 확인</button>
-                        </div>
-
-                        {/* 비번 */}
-                        <div className={classes["formField"]}>
-                            <input
-                                type="password"
-                                id="pw"
-                                minLength="1"
-                                maxLength="50"
-                                value={formData.pw}
-                                onChange={handleInputChange}
-                                placeholder=" "
-                                required
-                            />
-                            <label htmlFor="pw">비밀번호</label>
-                        </div>
-
-                        {/* 비번확인 */}
-                        <div className={classes["formField"]}>
-                            <input
-                                type="password"
-                                id="chkPw"
-                                minLength="1"
-                                maxLength="50"
-                                value={formData.chkPw}
-                                onChange={handleInputChange}
-                                placeholder=" "
-                                required
-                            />
-                            <label htmlFor="chkPw">비밀번호 확인</label>
-                        </div>
-
-                        {/* 이름 */}
-                        <div className={classes["formField"]}>
-                            <input
-                                type="text"
-                                id="name"
-                                minLength="1"
-                                maxLength="50"
-                                value={formData.name}
-                                onChange={handleInputChange}
-                                placeholder=" "
-                                required
-                            />
-                            <label htmlFor="name">이름</label>
-                        </div>
-
-                        {/* 전번 */}
-                        <div className={classes["formField"]}>
-                            <input
-                                type="text"
-                                id="mobile"
-                                minLength="1"
-                                maxLength="50"
-                                value={formData.mobile}
-                                onChange={handleInputChange}
-                                placeholder=" "
-                                required
-                            />
-                            <label htmlFor="mobile">전화번호</label>
-                        </div>
-
-                        {/* 이메일 */}
-                        <div className={classes["formField"]}>
-                            <input
-                                type="email"
-                                id="email"
-                                minLength="1"
-                                maxLength="50"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                                placeholder=" "
-                                required
-                            />
-                            <label htmlFor="email">이메일 주소</label>
-                        </div>
-
-                        {/* 장르 */}
-                        <div className={classes["genre"]}>
-                            <div className={classes["genreBar"]}>
-                                <div className={classes["genreTitle"]}>선호하는 장르 3개 선택해주세요</div>
-                                <div className={`${classes["horLine"]} bBg`}></div>
-                            </div>
-                            <div className={classes["genreBox"]}>
-                                {genres.map(genre => (
-                                    <div key={genre.id} style={{ display: 'contents' }}>
+                        <form onSubmit={handleSubmit}>
+                            <section className={classes["userInfo"]}>
+                                {/* 아이디 */}
+                                <div className={classes["idWrap"]}>
+                                    <div className={classes["formField"]}>
                                         <input
-                                            type="checkbox"
-                                            name="chkGenre"
-                                            id={genre.id}
-                                            value={genre.id}
-                                            checked={selectedGenres.includes(genre.id)}
-                                            onChange={handleGenreChange}
+                                            type="text"
+                                            id="id"
+                                            minLength="1"
+                                            maxLength="50"
+                                            value={formData.id}
+                                            onChange={handleInputChange}
+                                            placeholder=" "
+                                            autoComplete="new-password"
+                                            autoCorrect="off"
+                                            required
                                         />
-                                        <label className={classes["genreChkBx"]}
-                                            htmlFor={genre.id}
-                                            style={getGenreLabelStyle(genre.id)}
-                                            onMouseEnter={() => handleMouseEnter(genre.id)}
-                                            onMouseLeave={() => handleMouseLeave(genre.id)}
-                                        >
-                                            {genre.label}
-                                        </label>
+                                        <label htmlFor="id" className={classes["wSec"]}>아이디</label>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                    <button type="submit">SUBMIT</button>
-                </form>
+                                    <button
+                                        type="button"
+                                        onClick={handleIdCheck}
+                                        className={isIdFilled ? classes["valid"] : classes[""]}
+                                        disabled={!isIdFilled}
+                                    >아이디<br/>중복 확인</button>
+                                </div>
+
+                                {/* 비번 */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="password"
+                                        id="pw"
+                                        minLength="8"
+                                        maxLength="50"
+                                        value={formData.pw}
+                                        onChange={handleInputChange}
+                                        placeholder=" "
+                                        autoComplete="new-password"
+                                        autoCorrect="off"
+                                        required
+                                    />
+                                    <label htmlFor="pw">비밀번호</label>
+                                </div>
+
+                                {/* 비번확인 */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="password"
+                                        id="chkPw"
+                                        minLength="8"
+                                        maxLength="50"
+                                        value={formData.chkPw}
+                                        onChange={handleInputChange}
+                                        placeholder=" "
+                                        required
+                                    />
+                                    <label htmlFor="chkPw">비밀번호 확인</label>
+                                </div>
+
+                                {/* 이름 */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        minLength="1"
+                                        maxLength="50"
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        placeholder=" "
+                                        required
+                                    />
+                                    <label htmlFor="name">이름</label>
+                                </div>
+
+                                {/* 전번 */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="tel"
+                                        id="mobile"
+                                        minLength="1"
+                                        maxLength="50"
+                                        value={formData.mobile}
+                                        onChange={handleInputChange}
+                                        placeholder="예: 010-1234-5678"
+                                        pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
+                                        required
+                                    />
+                                    <label className={classes["mobileLbl"]} htmlFor="mobile">전화번호</label>
+                                </div>
+
+                                {/* 이메일 */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        minLength="1"
+                                        maxLength="50"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder=" "
+                                        required
+                                    />
+                                    <label htmlFor="email">이메일 주소</label>
+                                </div>
+
+                                {/* 장르 */}
+                                <div className={classes["genre"]}>
+                                    <div className={classes["genreBar"]}>
+                                        <div className={classes["genreTitle"]}>선호하는 장르 3개 선택해주세요</div>
+                                        <div className={`${classes["horLine"]} bBg`}></div>
+                                    </div>
+                                    <div className={classes["genreBox"]}>
+                                        {genres.map(genre => (
+                                            <div key={genre.id} style={{ display: 'contents' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    name="chkGenre"
+                                                    id={genre.id}
+                                                    value={genre.id}
+                                                    checked={selectedGenres.includes(genre.id)}
+                                                    onChange={handleGenreChange}
+                                                    disabled={
+                                                        !selectedGenres.includes(genre.id) && selectedGenres.length >= 3
+                                                    }
+                                                />
+                                                <label className={classes["genreChkBx"]}
+                                                       htmlFor={genre.id}
+                                                       style={getGenreLabelStyle(genre.id)}
+                                                       onMouseEnter={() => handleMouseEnter(genre.id)}
+                                                       onMouseLeave={() => handleMouseLeave(genre.id)}
+                                                >
+                                                    {genre.label}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </section>
+                            <button
+                                type="submit"
+                                className={isFormComplete() ? classes["valid"] : classes[""]}
+                                disabled={!isFormComplete()}
+                            >SUBMIT</button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </>
     );

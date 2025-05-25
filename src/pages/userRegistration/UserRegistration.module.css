@@ -1,17 +1,35 @@
-@font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
 /****************************/
 /****** the framework ******/
 /****************************/
+.totalMargin {
+    /*border: 1px solid pink;*/
+
+    width: 1280px;
+    height: calc(100vh - 60px);
+    margin: 60px auto 0;
+
+    display: flex;
+    align-items: center;
+}
+.totalLeft {
+    width: calc((100% - 1px)/2);
+}
+.totalRight {
+    /*border: 1px solid red;*/
+
+    width: calc((100% - 1px)/2);
+}
+.totalMid {
+    width: 1px;
+    height: 50%;
+
+    background-color: #b2a69b;
+}
 .main {
     width: 500px;
-    margin: 120px auto 60px;
+    margin: 0 auto;
     padding: 10px 30px 30px 30px;
-    border-radius: 30px;
+    border-radius: 20px;
     box-sizing: border-box;
 
     display: flex;
@@ -82,6 +100,23 @@
 /****************************/
 /****** the details ******/
 /****************************/
+/* leftQuote */
+.leftQuote {
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    font-size: 2rem;
+
+    margin-bottom: 20px;
+
+    display: flex;
+    justify-content: center;
+}
+.quoteLast {
+    color: white;
+    font-family: 'Belleza', sans-serif;
+
+    margin-bottom: 30px;
+
+}
 /* topBar */
 .barTitle {
     font-family: "Noto Serif KR", serif;
@@ -103,6 +138,11 @@
 .formField input:not(:placeholder-shown) + label {
     color: #b2a69b;
     font-family: 'Pretendard-Regular', sans-serif;
+    font-size: 0.625rem;
+    top: 11px;
+    left: 10px;
+}
+.formField .mobileLbl {
     font-size: 0.625rem;
     top: 11px;
     left: 10px;
@@ -132,9 +172,9 @@
     align-items: center;
     justify-content: center;
 }
-.idWrap button:hover {
-    background-color: #32271e;
-}
+/*.idWrap button:hover {*/
+/*    background-color: #32271e;*/
+/*}*/
 /* genreBar */
 .genreTitle {
     margin: 10px 10px 10px 0;
@@ -185,6 +225,10 @@ form > button {
     border: none;
     border-radius: 10px;
 }
-form > button:hover {
-    background-color: #32271e;
+/*form > button:hover {*/
+/*    background-color: #32271e;*/
+/*}*/
+.valid {
+    background-color: #32271e !important;
+    cursor: pointer;
 }
