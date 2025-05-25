@@ -6,6 +6,9 @@ function MoviePopUp({movie, onClose}) {
     const [movieData,setMovieData] = useState(null);
 
     useEffect(()=>{
+
+        if (!movie) return;
+
         const combineMovie = async () => {
             try {
                 const response = await axiosBindMovie(movie.movieId);
@@ -32,13 +35,15 @@ function MoviePopUp({movie, onClose}) {
                             <div className={classes.xLeft}></div>
                             <div className={classes.xRight}></div>
                         </div>
-                        <h2 className={`${classes["movieTitle"]} wTitle`}>{movieData?.title}</h2>
-                        <div className={`${classes["releaseYear"]} body2 wSub`}>{movieData?.openDate}</div>
+                        <h1 className={`${classes["movieTitle"]} wTitle`}>{movieData?.title}</h1>
+                        <div className={`${classes["releaseYear"]} body2 wSub`}>개봉: {movieData?.openDate.slice(0,4)}년</div>
                         <div className={`${classes["movieDesc"]} body2`}>
                             감독: {movieData?.director}
                         </div>
                         <div className={`${classes["movieDesc"]} body2`}>
-                            장르: {movieData?.numAudience}
+                            장르: {Array.isArray(movieData?.genreNames)
+                            ? movieData.genreNames.join(', ')
+                            : movieData?.genreNames}
                         </div>
                         <div className={`${classes["movieDesc"]} body2`}>
                             상영시간: {movieData?.showTime}분

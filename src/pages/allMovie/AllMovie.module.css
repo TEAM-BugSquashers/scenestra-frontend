@@ -1,0 +1,17 @@
+.wrap{
+    padding: 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 30px;
+}
+
+.movieArea{
+    width: 300px;
+    height: 450px;
+    margin-top: 60px;
+    background-color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}

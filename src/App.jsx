@@ -13,6 +13,7 @@ import Login from "./pages/login/Login.jsx";
 import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
 import MyPage from "./pages/myPage/MyPage.jsx";
 import Admin from "./pages/admin/Admin.jsx";
+import AllMovie from "./pages/allMovie/AllMovie.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +30,7 @@ function App() {
       
       <main>
         <Routes>
-
+          <Route path="/allMovie/:id" element={<AllMovie />} />
           <Route path="/seeAllMovie" element={<SeeAllMovie />} />
           <Route path="/" element={<ForYou />} />
           <Route path="/seeAllMoive" element={<SeeAllMovie />} />

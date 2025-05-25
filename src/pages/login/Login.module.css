@@ -1,9 +1,6 @@
 /****************************/
 /****** the framework ******/
 /****************************/
-body {
-    /*color: #ebdfce;*/
-}
 .sectionWrap {
     display: flex;
 }
