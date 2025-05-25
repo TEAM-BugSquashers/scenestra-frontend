@@ -1,5 +1,5 @@
 import classes from './MyPage.module.css';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {axiosGenres, axiosInfo, axiosMe} from "../api/axios.js";
 
 function MyPage() {
@@ -61,12 +61,19 @@ function MyPage() {
     const [formData, setFormData] = useState([]);
     // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
     const [selectedGenres, setSelectedGenres] = useState([]);
+    const [hoveredGenre, setHoveredGenre] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
     // // backup for cancel functionality
     const [backupData, setBackupData] = useState([]);
     // const [backupGenres, setBackupGenres] = useState(originalGenreData);
     const [backupGenres, setBackupGenres] = useState([]);
+
+    // genre that was just unselected
+    const justUnselectedRef = useRef({
+        id: null,
+        mouseLeft: false
+    });
 
     // load data: fetch user profile
     useEffect(() => {
@@ -155,6 +162,7 @@ console.log(allGenres);
         const { id, value } = e.target;
         setFormData({ ...formData, [id]: value });
     };
+
     // Handle genre changes
     const handleGenreChange = (e) => {
         const { id, checked } = e.target;
@@ -167,8 +175,75 @@ console.log(allGenres);
             setSelectedGenres([...selectedGenres, id]);
         } else {
             setSelectedGenres(selectedGenres.filter(genre => genre !== id));
+
+            // genre marked as just unselected
+            justUnselectedRef.current = {
+                id: id,
+                mouseLeft: false
+            };
+
+            // hover state is reset (aka. after unselection, even if hovered, genre label turns white)
+            if (hoveredGenre === id) {
+                setHoveredGenre(null);
+            }
         }
     };
+
+    // handle genre label mouse enter
+    const handleMouseEnter = (id) => {
+        // if re-entry after unselection, 'unselected flag' is cleared
+        if (justUnselectedRef.current.id === id && justUnselectedRef.current.mouseLeft) {
+            justUnselectedRef.current = { id: null, mouseLeft: false };
+        }
+        // hover state updated
+        setHoveredGenre(id);
+    };
+
+    // house genre label mouse leave
+    const handleMouseLeave = (id) => {
+        if (justUnselectedRef.current.id === id) {
+            justUnselectedRef.current.mouseLeft = true;
+        }
+        setHoveredGenre(null);
+    };
+
+    // genre label color change
+    const getGenreLabelStyle = (id) => {
+        if (selectedGenres.includes(id)) {
+            // selected state
+            return {
+                backgroundColor: '#32271e',
+                color: 'white',
+                borderColor: '#32271e'
+            };
+        } else if (justUnselectedRef.current.id === id && !justUnselectedRef.current.mouseLeft) {
+            // just unselected (mouse enter)
+            return {
+                backgroundColor: 'white',
+                color: '#b2a69b',
+                borderColor: '#b2a69b'
+            };
+        } else if (hoveredGenre === id) {
+            // hover state
+            return {
+                backgroundColor: '#32271e',
+                color: 'white',
+                borderColor: '#32271e'
+            };
+        } else {
+            // default state
+            return {
+                backgroundColor: 'white',
+                color: '#b2a69b',
+                borderColor: '#b2a69b'
+            };
+        }
+    };
+
+    // handle cancel reservation
+    const handelCancelRes = () => {
+        alert("상영관 예약이 취소되었습니다.")
+    }
 
     // Handle edit profile button
     const handleEditProfile = () => {
@@ -419,7 +494,11 @@ console.log(allGenres);
                                                 전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
                                             </div>
                                         </div>
-                                        <button type="submit" className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}>
+                                        <button
+                                            type="submit"
+                                            className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
+                                            onClick={handelCancelRes}
+                                        >
                                             CANCEL RESERVATION
                                         </button>
                                     </div>
@@ -548,9 +627,12 @@ console.log(allGenres);
                                                     />
                                                     <label className={classes["genreChkBx"]}
                                                         htmlFor={genre.value}
-                                                        style={{
-                                                            backgroundColor: selectedGenres.includes(genre.value) ? '#32271e' : 'white', color: selectedGenres.includes(genre.value) ? 'white' : '#b2a69b', borderColor: selectedGenres.includes(genre.value) ? '#32271e' : '#b2a69b', cursor: isEditMode ? 'pointer' : 'default'
-                                                            }}
+                                                        // style={{
+                                                        //     backgroundColor: selectedGenres.includes(genre.value) ? '#32271e' : 'white', color: selectedGenres.includes(genre.value) ? 'white' : '#b2a69b', borderColor: selectedGenres.includes(genre.value) ? '#32271e' : '#b2a69b', cursor: isEditMode ? 'pointer' : 'default'
+                                                        //     }}
+                                                        style={getGenreLabelStyle(genre.value)}
+                                                        onMouseEnter={() => handleMouseEnter(genre.value)}
+                                                        onMouseLeave={() => handleMouseLeave(genre.value)}
                                                     >
                                                         {genre.label}
                                                     </label>
