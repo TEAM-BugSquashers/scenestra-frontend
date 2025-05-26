@@ -7,7 +7,7 @@
     top: 0;
     left: 0;
     z-index: 10001;
-    border-bottom: 0.5px solid #b2a69b;
+    border-bottom: 0.5px solid rgba(178, 166, 155, 0.25);
 }
 .logo{
     font-size: 30px;
@@ -19,50 +19,126 @@
     cursor: pointer;
 }
 
-.hamburgerBtn {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 24px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  box-sizing: border-box;
-  position: relative;
-  top: 50%;
-  right: -95%;
+.rightSection{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-  transform: translate( 0, -50%);
+.hamBtnWrap{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    padding: 0 2.5vw;
+    transform: translateY(27%);
+}
+
+.hamburgerBtn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 .hamburgerLine {
-  width: 100%;
-  height: 1px;
-  background-color: white;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-  opacity: 1;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    opacity: 1;
 }
 
 .hamburgerBtn.open .hamburgerLine:nth-child(1) {
-  transform: translateY(10.5px) rotate(45deg);
+    transform: translateY(10.5px) rotate(45deg);
 }
 
 .hamburgerBtn.open .hamburgerLine:nth-child(2) {
-  opacity: 0;
+    opacity: 0;
 }
 
 .hamburgerBtn.open .hamburgerLine:nth-child(3) {
-  transform: translateY(-10.5px) rotate(-45deg);
+    transform: translateY(-10.5px) rotate(-45deg);
 }
 
 .hamburgerBtn:focus {
-  outline: none;
+    outline: none;
 }
 
 .a{
-  text-decoration: none;
-  color: white;
+    text-decoration: none;
+    color: white;
+}
+
+.searchWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search_container {
+    position: absolute;
+    right: 50px; /* 버튼 너비만큼 오른쪽에서 떨어뜨림 */
+    width: 0;
+    height: 40px;
+    overflow: hidden;
+    transition: width 0.5s ease;
+}
+
+.search_container.open {
+    width: 300px;
+}
+
+.search_bar {
+    display: flex;
+    align-items: center;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 40px;
+    width: 300px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.search_bar input {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 0 15px;
+    font-size: 16px;
+    height: 100%;
+}
+
+.search_bar input::placeholder {
+    color: #888;
+}
+
+.search_bar input:focus {
+    outline: none;
+}
+
+.search_button {
+    background-color: #473d35;
+    border: none;
+    color: white;
+    height: 40px;
+    width: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+    border-radius: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.search_button:hover {
+    background-color: #2a2a2a;
 }

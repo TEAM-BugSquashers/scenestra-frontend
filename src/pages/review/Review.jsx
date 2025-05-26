@@ -1,8 +1,9 @@
 import classes from './Review.module.css'
 import { useState} from "react";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation} from "swiper/modules";
+import WriteReview from "../components/writeReview/WriteReview.jsx";
 
 function Review(){
     // 각 리뷰 포스트별 이미지 배열
@@ -156,12 +157,14 @@ function Review(){
         }
     ];
 
-    const navi = useNavigate();
+    // const navi = useNavigate();
     const [selectedPost, setSelectedPost] = useState(null);
     const [pan, setPan] = useState(false);
     const [posts] = useState(initialPosts);
     const [sortBy, setSortBy] = useState('date');
     const [sortDirection, setSortDirection] = useState('desc');
+    const [showWriteForm, setShowWriteForm] = useState(false);
+
 
     const panHandler = (post) => {
         setSelectedPost(post);
@@ -286,7 +289,7 @@ function Review(){
 
                 <div className={classes.writeWrap}>
                     <div></div>
-                    <div className={classes.wrapBtn} onClick={() => {navi("/write")}}>글쓰기</div>
+                    <div className={classes.wrapBtn} onClick={() => setShowWriteForm(true)}>글쓰기</div>
                 </div>
                 <footer className={classes.footer}></footer>
             </div>
@@ -330,6 +333,28 @@ function Review(){
                     </div>
                 </div>
             )}
+
+            {/*{pan && writeReivew && (*/}
+            {/*    <div className={classes.pan} onClick={() => setPan(false)}>*/}
+            {/*        <div className={classes.composeWrap}>*/}
+            {/*            <div className={classes.titleInputWrap}>*/}
+            {/*                <input placeholder={"제목을 적으시오"}></input>*/}
+            {/*            </div>*/}
+
+            {/*            <div className={classes.contentInputWrap}>*/}
+            {/*                <textarea placeholder={"내용을 적으시오"}></textarea>*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*) }*/}
+            {showWriteForm && (
+                <div className={classes.pan} onClick={() => setShowWriteForm(false)}>
+                    <div className={classes.popup} onClick={(e) => e.stopPropagation()}>
+                        <WriteReview />
+                    </div>
+                </div>
+            )}
+
         </>
     );
 }

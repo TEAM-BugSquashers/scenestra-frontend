@@ -184,7 +184,7 @@ function Login() {
                         <button
                             onClick={handleSubmit} className={`bBg bPri`}
                         >
-                            LOG IN
+                            LOGIN
                         </button>
                     </div>
 

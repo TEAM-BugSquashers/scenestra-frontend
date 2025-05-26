@@ -14,7 +14,6 @@ import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
 import MyPage from "./pages/myPage/MyPage.jsx";
 import Admin from "./pages/admin/Admin.jsx";
 import AllMovie from "./pages/allMovie/AllMovie.jsx";
-import WriteReview from "./pages/writeReview/WriteReview.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,7 +41,6 @@ function App() {
           <Route path="/myPage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/write" element={<WriteReview />} />
         </Routes>
       </main>
       
