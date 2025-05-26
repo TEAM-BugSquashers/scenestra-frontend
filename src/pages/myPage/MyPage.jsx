@@ -1,12 +1,12 @@
 import classes from './MyPage.module.css';
 import {useEffect, useRef, useState} from "react";
-import {axiosGenres, axiosInfo, axiosMe} from "../api/axios.js";
+import {axiosGenres, axiosInfo, axiosMe, axiosPassword, axiosPreferredGenres} from "../api/axios.js";
 
 function MyPage() {
 
-    axiosInfo().then(response => {
-        console.log(response);
-    })
+    // axiosInfo().then(response => {
+    //     console.log(response);
+    // })
     // axiosGenres().then(response => {
     //     // console.log(response.data.payload);
     //
@@ -58,27 +58,44 @@ function MyPage() {
     // ];
 
     // states
-    const [formData, setFormData] = useState([]);
-    // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
+    const [formData, setFormData] = useState({});
+    const [allGenres, setAllGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [hoveredGenre, setHoveredGenre] = useState(null);
+
+    // password states
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    //edit mode states
     const [isEditMode, setIsEditMode] = useState(false);
-    // // backup for cancel functionality
-    const [backupData, setBackupData] = useState([]);
-    // const [backupGenres, setBackupGenres] = useState(originalGenreData);
+    const [isPwEditMode, setIsPwEditMode] = useState(false);
+
+    //backup states for 'cancel edit' functionality
+    const [backupData, setBackupData] = useState({});
     const [backupGenres, setBackupGenres] = useState([]);
 
-    // genre that was just unselected
+    // loading/error states
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // just-unselected genre ref
     const justUnselectedRef = useRef({
         id: null,
         mouseLeft: false
     });
 
+    // DELETE // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
+    // DELETE // const [backupGenres, setBackupGenres] = useState(originalGenreData);
+    // const [backupPassword, setBackupPassword] = useState('');
+
+    // genre that was just unselected
+
+
     // load data: fetch user profile
     useEffect(() => {
-        const fetchUserProfile = async () =>
-        {
+        const fetchUserProfile = async () => {
             try {
                 const response = await axiosMe();
                 setFormData(response.data.payload);
@@ -89,8 +106,6 @@ function MyPage() {
         }
         fetchUserProfile();
     },[])
-
-    // console.log("formData: "+formData);
 
     // load data: fetch user genre
     useEffect(() => {
@@ -107,10 +122,7 @@ function MyPage() {
         fetchUserGenre();
     }, [])
 
-    // console.log("selectedGenres: "+selectedGenres);
-
     // load data: fetch all genres
-    const [allGenres, setAllGenres] = useState([]);
     useEffect(() => {
         const fetchAllGenres = async () => {
             try {
@@ -126,8 +138,6 @@ function MyPage() {
         }
         fetchAllGenres();
     }, [])
-
-console.log(allGenres);
 
     // Current and past reservation data
     const currResData = {
@@ -157,11 +167,17 @@ console.log(allGenres);
         }
     ];
 
-    // Handle input changes
+    // handle input changes
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setFormData({ ...formData, [id]: value });
     };
+
+    // handle edit password
+    const handleEditPw = (e) => {
+        setIsPwEditMode(true);
+        setPassword(e.target.value);
+    }
 
     // Handle genre changes
     const handleGenreChange = (e) => {
@@ -241,7 +257,7 @@ console.log(allGenres);
     };
 
     // handle cancel reservation
-    const handelCancelRes = () => {
+    const handleCancelRes = () => {
         alert("상영관 예약이 취소되었습니다.")
     }
 
@@ -252,11 +268,16 @@ console.log(allGenres);
             setIsEditMode(true);
             setBackupData({ ...formData });
             setBackupGenres([...selectedGenres]);
-            setFormData({ ...formData, userPw: '' }); // Clear password for editing
-            setConfirmPassword('');
+            setBackupPassword([password]);
+            // setFormData({ ...formData, userPw: '' }); // Clear password for editing
+            // setConfirmPassword('');
         } else {
             // Save changes
-            if (formData.userPw !== '' && formData.userPw !== confirmPassword) {
+            // if (formData.password !== '' && formData.password !== confirmPassword) {
+            //     alert('비밀번호가 일치하지 않습니다.');
+            //     return;
+            // }
+            if (newPassword !== '' && newPassword !== confirmPassword) {
                 alert('비밀번호가 일치하지 않습니다.');
                 return;
             }
@@ -266,20 +287,63 @@ console.log(allGenres);
                 return;
             }
 
-            // Update password if changed
             const updatedData = { ...formData };
-            if (formData.userPw === '') {
-                updatedData.userPw = backupData.userPw; // Keep original password
+            setFormData(updatedData);
+
+            // Update password if changed
+            // if (formData.password === '') {
+            //     updatedData.password = backupData.password; // Keep original password
+            // }
+
+            // send updated info to db
+            axiosInfo(formData.email, formData.mobile).then(response => {
+                console.log('info: ', response);
+                if (response.status === 200) {
+                    alert('회원정보가 수정되었습니다.');
+                } else {
+                    alert('회원정보 수정에 성공했으나, 예상치 못한 응답입니다: ', response.status);
+                }
+            })
+                .catch(error => {
+                    alert('axiosInfo error: ', error);
+                });
+
+            // send updated pw to db
+            if (isPwEditMode) {
+                axiosPassword(password, newPassword).then(response => {
+                    console.log('pw: ', response);
+                    if (response.status === 200) {
+                        alert('비밀번호가 수정되었습니다.');
+                    } else if (response.status === 403) {
+                        alert('이전 비밀번호가 틀렸습니다.');
+                    } else {
+                        alert('axiosPw error: ', response.status);
+                    }
+                })
+                    .catch(error => {
+                        alert(error);
+                    });
             }
 
-            setFormData(updatedData);
-            setIsEditMode(false);
-            setConfirmPassword('');
+            // send updated genre to db
+            axiosPreferredGenres(selectedGenres).then(response => {
+                if (response.status === 200) {
+                    alert('선호장르가 수정되었습니다.');
+                } else {
+                    alert('prefgenr error: ', response.status);
+                }
+            })
+            .catch(error => {
+                alert('prefgen error2: ', error);
+            })
 
-            console.log("Saving updated user data:", {
-                ...updatedData,
-                selectedGenres
-            });
+            setIsEditMode(false);
+            // setConfirmPassword('');
+
+            // console.log("Saving updated user data:", {
+            //     ...updatedData,
+            //     selectedGenres
+            // });
         }
     };
 
@@ -287,18 +351,18 @@ console.log(allGenres);
     const handleCancelEdit = () => {
         setFormData({ ...backupData });
         setSelectedGenres([...backupGenres]);
+        setPassword(backupPassword);
         setConfirmPassword('');
         setIsEditMode(false);
     };
 
     // Get display password (masked or editable)
-    const getDisplayPassword = () => {
-        if (isEditMode) {
-            return formData.userPw;
-        }
-        return '********';
-    };
-
+    // const getDisplayPassword = () => {
+    //     if (isPwEditMode) {
+    //         return;
+    //     }
+    //     return '********';
+    // };
 
         // // Original user data (simulating from database)
         // const originalProfileData = {
@@ -497,7 +561,7 @@ console.log(allGenres);
                                         <button
                                             type="submit"
                                             className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
-                                            onClick={handelCancelRes}
+                                            onClick={handleCancelRes}
                                         >
                                             CANCEL RESERVATION
                                         </button>
@@ -531,30 +595,45 @@ console.log(allGenres);
                                         <div className={classes["formField"]}>
                                             <input
                                                 type="text"
-                                                id="userId"
+                                                id="username"
                                                 value={formData.username}
                                                 readOnly
                                                 placeholder=" "
                                             />
-                                            <label htmlFor="userId">아이디</label>
+                                            <label htmlFor="username">아이디</label>
                                         </div>
                                     </div>
 
                                     {/* Password */}
                                     <div className={classes["formField"]}>
                                         <input
-                                            type={isEditMode ? "password" : "text"}
-                                            id="userPw"
-                                            value={getDisplayPassword()}
-                                            onChange={handleInputChange}
+                                            // type={isEditMode ? "password" : "text"}
+                                            type={"password"}
+                                            id="password"
+                                            value={password}
+                                            onChange={handleEditPw}
                                             readOnly={!isEditMode}
                                             placeholder=" "
                                         />
-                                        <label htmlFor="userPw">비밀번호</label>
+                                        <label htmlFor="password">이전 비밀번호 확인</label>
                                     </div>
 
+                                    {/* New Password - only show in edit mode */}
+                                    {isPwEditMode && (
+                                        <div className={classes["formField"]}>
+                                            <input
+                                                type="password"
+                                                id="newPw"
+                                                value={newPassword}
+                                                onChange={(e) => setNewPassword(e.target.value)}
+                                                placeholder=" "
+                                            />
+                                            <label htmlFor="newPw">새로운 비밀번호</label>
+                                        </div>
+                                    )}
+
                                     {/* Confirm Password - only show in edit mode */}
-                                    {isEditMode && (
+                                    {isPwEditMode && (
                                         <div className={classes["formField"]}>
                                             <input
                                                 type="password"
@@ -563,7 +642,7 @@ console.log(allGenres);
                                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                                 placeholder=" "
                                             />
-                                            <label htmlFor="chkPw">비밀번호 확인</label>
+                                            <label htmlFor="chkPw">새로운 비밀번호 확인</label>
                                         </div>
                                     )}
 
@@ -571,38 +650,38 @@ console.log(allGenres);
                                     <div className={classes["formField"]}>
                                         <input
                                             type="text"
-                                            id="userName"
+                                            id="realName"
                                             value={formData.realName}
                                             readOnly
                                             placeholder=" "
                                         />
-                                        <label htmlFor="userName">이름</label>
+                                        <label htmlFor="realName">이름</label>
                                     </div>
 
                                     {/* Mobile */}
                                     <div className={classes["formField"]}>
                                         <input
                                             type="text"
-                                            id="userMobile"
+                                            id="mobile"
                                             value={formData.mobile}
                                             onChange={handleInputChange}
                                             readOnly={!isEditMode}
                                             placeholder=" "
                                         />
-                                        <label htmlFor="userMobile">전화번호</label>
+                                        <label htmlFor="mobile">전화번호</label>
                                     </div>
 
                                     {/* Email */}
                                     <div className={classes["formField"]}>
                                         <input
                                             type="text"
-                                            id="userEmail"
+                                            id="email"
                                             value={formData.email}
                                             onChange={handleInputChange}
                                             readOnly={!isEditMode}
                                             placeholder=" "
                                         />
-                                        <label htmlFor="userEmail">이메일 주소</label>
+                                        <label htmlFor="email">이메일 주소</label>
                                     </div>
 
                                     {/*Genres */}
