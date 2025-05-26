@@ -102,6 +102,7 @@ function Reservation() {
                                     <li>한 달 이내의 날짜만 선택 가능합니다</li>
                                     <li>또 쓸 말이 있으려나... ?</li>
                                     <li>없으려나..?</li>
+                                    <li>이 칸을 그대로 써야하나 말아야하나</li>
                                 </ul>
                             </div>
                             <Calendar

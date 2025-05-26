@@ -52,3 +52,12 @@ export const axiosLogout = async () => {
         throw error;
     }
 }
+
+export const axiosRecommend = async() => {
+    try {
+        const response = await instance.get("/movies/recommend");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
