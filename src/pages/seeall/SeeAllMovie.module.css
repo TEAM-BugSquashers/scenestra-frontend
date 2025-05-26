@@ -215,8 +215,7 @@
     font-size: 20px !important;
 }
 
-/* .movie_slider 는 CSS 모듈 클래스니까 내부에선 그냥 클래스명 */
-/* Swiper 화살표는 전역이니 :global() 써서 조합 */
+
 .movie_slider:hover :global(.swiper-button-next),
 .movie_slider:hover :global(.swiper-button-prev) {
     opacity: 1;

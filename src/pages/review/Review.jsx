@@ -10,19 +10,19 @@ function Review(){
         1: [
             {
                 id: 1,
-                src: "/images/review1_1.jpg",
+                src: "https://www.yeongnam.com/mnt/file/200904/20090410.010360820290001i1.jpg",
                 alt: "최신 컬렉션 메인 제품",
                 caption: "2025 S/S 프리미엄 컬렉션 대표 아이템"
             },
             {
                 id: 2,
-                src: "/images/review1_2.jpg",
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4_rvuztGgWMtEpAN86fv1HvrC33MLLwvl9A&s",
                 alt: "컬렉션 디테일 샷",
                 caption: "정교한 디테일과 마감"
             },
             {
                 id: 3,
-                src: "/images/review1_3.jpg",
+                src: "https://img2.sbs.co.kr/img/seditor/VD/2016/05/20/VD40955926_w640.jpg",
                 alt: "착용 모습",
                 caption: "실제 착용했을 때의 모습"
             }
@@ -30,13 +30,13 @@ function Review(){
         2: [
             {
                 id: 4,
-                src: "/images/review2_1.jpg",
+                src: "https://cdn.mania.kr/dvdprime/g2/data/file/blu_ray/mania-done-1680247343_9dJ3SO1r_20230122_150413.jpg",
                 alt: "VIP 멤버십 이벤트 현장",
                 caption: "프라이빗 쇼핑 이벤트 현장"
             },
             {
                 id: 5,
-                src: "/images/review2_2.jpg",
+                src: "https://i1.ruliweb.com/img/5/5/3/D/553DBDBE3E32430004",
                 alt: "VIP 라운지",
                 caption: "특별한 VIP 전용 공간"
             }
@@ -44,25 +44,25 @@ function Review(){
         3: [
             {
                 id: 6,
-                src: "/images/review3_1.jpg",
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQDZ980dRDEoISo3AyQLBLGSHbmNdgmjFrPA&s",
                 alt: "파리 전시회 포스터",
                 caption: "파리 전시회 공식 포스터"
             },
             {
                 id: 7,
-                src: "/images/review3_2.jpg",
+                src: "https://www.wishbucket.io/_next/image?url=https%3A%2F%2Fd2gfz7wkiigkmv.cloudfront.net%2Fpickin%2F2%2F1%2F2%2Ff9BBam1FS5O8eQPm3c5n-w&w=1080&q=75",
                 alt: "전시회 초대권",
                 caption: "한정판 전시회 초대권"
             },
             {
                 id: 8,
-                src: "/images/review3_3.jpg",
+                src: "https://mblogthumb-phinf.pstatic.net/20160313_238/osn1201_14578553818895FwWQ_JPEG/IMG_6125.jpg?type=w420",
                 alt: "전시회장 전경",
                 caption: "파리 전시회장 내부 모습"
             },
             {
                 id: 9,
-                src: "/images/review3_4.jpg",
+                src: "https://d2ilb6aov9ebgm.cloudfront.net/1646187009935433.jpg?q=90&s=600x600",
                 alt: "특별 전시품",
                 caption: "이번 전시회의 하이라이트 작품"
             }
@@ -70,13 +70,13 @@ function Review(){
         4: [
             {
                 id: 10,
-                src: "/images/review4_1.jpg",
+                src: "https://img.sbs.co.kr/newimg/news/20181219/201262572_1280.jpg",
                 alt: "리미티드 에디션 제품",
                 caption: "한정판 리미티드 에디션"
             },
             {
                 id: 11,
-                src: "/images/review4_2.jpg",
+                src: "https://www.ilemonde.com/news/photo/202404/18695_38983_1515.jpg",
                 alt: "특별 패키징",
                 caption: "리미티드 에디션 전용 패키징"
             }
@@ -84,19 +84,19 @@ function Review(){
         5: [
             {
                 id: 12,
-                src: "/images/review5_1.jpg",
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBQ4YNCqcGZgfoUx5oOeajvI52AKcSabE1Pg&s",
                 alt: "고객 감사 이벤트",
                 caption: "고객 감사 이벤트 현장"
             },
             {
                 id: 13,
-                src: "/images/review5_2.jpg",
+                src: "https://img1.daumcdn.net/thumb/S702x344ht.u/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fnews%2F202505%2F26%2Fnewsis%2F20250526092822517axjp.jpg&scode=sports",
                 alt: "특별 선물",
                 caption: "감사의 마음을 담은 특별 선물"
             },
             {
                 id: 14,
-                src: "/images/review5_3.jpg",
+                src: "https://cdn.daejonilbo.com/news/photo/202401/2110473_534231_2920.jpg",
                 alt: "이벤트 참여 고객들",
                 caption: "이벤트에 참여한 소중한 고객들"
             }
@@ -284,7 +284,7 @@ function Review(){
                     ))}
                 </div>
 
-                <div className={classes.wrtieWrap}>
+                <div className={classes.writeWrap}>
                     <div></div>
                     <div className={classes.wrapBtn} onClick={() => {navi("/WriteReview")}}>글쓰기</div>
                 </div>
@@ -306,15 +306,15 @@ function Review(){
                             <div className={classes.reviewImgWrap}>
                                 <Swiper
                                     modules={[Navigation]}
-                                    navigation
-                                    loop={false}
+                                    navigation={true}
+                                    loop={true}
                                     slidesPerView={1}
-                                    spaceBetween={0}
+                                    spaceBetween={10}
                                     className={classes.reviewImg}
                                 >
                                     {reviewImages[selectedPost.id]?.map((image) => (
                                         <SwiperSlide key={image.id} className={classes.reviewImgContent}>
-                                            <img src={image.src} alt={image.alt} />
+                                            <div className={classes.ImgFill} style={{ backgroundImage: `url(${image.src})` }}></div>
                                             <p className={classes.imageCaption}>{image.caption}</p>
                                         </SwiperSlide>
                                     ))}
