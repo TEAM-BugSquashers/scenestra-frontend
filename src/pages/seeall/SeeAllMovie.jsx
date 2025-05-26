@@ -80,7 +80,7 @@ function SeeAllMovie() {
                         className={classes["movie_slider"]}
                         breakpoints={{
                         320: { slidesPerView: 2.5, spaceBetween: 10 },
-                        1024: { slidesPerView: 5.5, spaceBetween: 10 },
+                        1024: { slidesPerView: 5.5, spaceBetween: 20 },
                         }}
                     >
                         {genre.movies.slice(0,20).map((movie) => (
