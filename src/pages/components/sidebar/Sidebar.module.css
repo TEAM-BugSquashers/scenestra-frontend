@@ -24,7 +24,8 @@
 .nav li {
   margin-bottom: 15px;
   color: #fff;
-  font-family: 'Belleza', sans-serif;
+  font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+  cursor: pointer;
 }
 
 .nav a {
@@ -48,11 +49,11 @@
 .logout{
   width: 70px;
   height: 30px;
-  border-radius: 50%;
-  background-color: navy;
-  color: white;
+  border-radius: 10PX;
+  border: 1px solid;
   font-size: 17px;
   text-align: center;
+  font-weight: 900;
 
   outline: none;
   border: none;
@@ -63,6 +64,8 @@
   position: absolute;
   bottom: 50px;
   right: 20px;
+
+  font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
 }
 
 

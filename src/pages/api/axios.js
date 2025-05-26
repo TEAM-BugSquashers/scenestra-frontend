@@ -53,6 +53,87 @@ export const axiosLogout = async () => {
     }
 }
 
+export const axiosInfo = async (email, mobile) => {
+    try {
+        const response = await instance.post("/users/info", {
+            email,
+            mobile
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosJoin = async (username, password, email, mobile, realName, genres) => {
+    try {
+        const response = await instance.post("/users/join", {
+            username,
+            password,
+            email,
+            mobile,
+            realName,
+            genres
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosMe = async () => {
+    try {
+        const response = await instance.get
+        ("/users/me");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosChkUsername = async (username) => {
+    try {
+        const response = await instance.get("/users/check-username?username="+username);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export const axiosgroupedByGenre = async () => {
+    try {
+        const response = await instance.get("/movies/grouped-by-genre");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosGenres = async () => {
+    try {
+        const response = await instance.get("/movies/genres");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosBindMovie = async (movieId) => {
+    try {
+        const response = await instance.get(`/movies/${movieId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosGenreId = async (genreId) => {
+        const response = await instance.get(`/movies/genres/${genreId}`);
+        return response;
+}
+
+
 export const axiosRecommend = async() => {
     try {
         const response = await instance.get("/movies/recommend");

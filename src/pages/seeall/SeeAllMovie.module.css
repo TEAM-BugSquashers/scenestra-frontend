@@ -16,9 +16,9 @@
     display: flex;
     align-items: center;
     background-color: #2a2a2a;
-    border-radius: 5px;
+    border-radius: 10px;
     overflow: hidden;
-    height: 45px;
+    height: 40px;
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
@@ -44,7 +44,7 @@
 }
 
 .search_button {
-    background-color: #e50914;
+    background-color: #473d35;
     border: none;
     color: white;
     height: 100%;
@@ -57,37 +57,55 @@
 }
 
 .search_button:hover {
-    background-color: #f40612;
+    background-color: #2a2a2a;
 }
 
 /* 넷플릭스 앱 스타일 */
 .netflix_app {       
     background-color: #32271e;
-    color: #fff;       
-    min-height: 100vh;       
-    /*font-family: 'Helvetica Neue', Arial, sans_serif;     */
-    padding: 0 0 60px 0;
+    min-height: 100vh;
+    padding: 0 2.5vw 60px 2.5vw;
 }   
 
 .content {       
     padding: 10px 0; 
 }   
 
+.ctWrap{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: 'Noto Serif KR', serif;
+}
+
+.leftTitleLine{
+    width: 50px;
+    height: 1px;
+    background-color: #b2a69b;
+}
+.rightTitleLine{
+    width: calc(100% - 130px);
+    height: 1px;
+    background-color: #b2a69b;
+}
+
 .category {
     margin-top: 30px;
     margin-bottom: 25px; 
 }   
 
-.category_title {     
-    padding: 0 20px;       
+.category_title {
     margin-bottom: 20px;
-    font-size: 30px;       
-    font-weight: 500; 
+    color: #fff;
 }   
 
 .movie_slider {     
     width: 100%;       
-    padding: 0 10px; 
+    padding: 0 10px;
+    cursor: pointer;
 }   
 
 .movie_card {     
@@ -111,10 +129,10 @@
     left: 0;       
     width: 100%;       
     height: 100%;     
-    background-size: contain;     
+    background-size: cover;
     background-position: center;       
     background-repeat: no-repeat;     
-    background-color: #000;   
+    background-color: hotpink;
 }   
 
 .movie_overlay {       
@@ -125,7 +143,11 @@
     /* background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));      */
     padding: 10px;       
     opacity: 0;     
-    transition: opacity 0.3s ease; 
+    transition: opacity 0.3s ease;
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }   
 
 .movie_card:hover .movie_overlay {       
@@ -193,9 +215,25 @@
     font-size: 20px !important;
 }
 
-/* .movie_slider 는 CSS 모듈 클래스니까 내부에선 그냥 클래스명 */
-/* Swiper 화살표는 전역이니 :global() 써서 조합 */
+
 .movie_slider:hover :global(.swiper-button-next),
 .movie_slider:hover :global(.swiper-button-prev) {
     opacity: 1;
 }
+
+.seeMoreWrap{
+    text-align: center;
+    transform: translateY(30px);
+    color: #fff;
+}
+
+.seeMoreWrap span{
+    display: inline-block;
+    width: 160px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #b2a69b;
+    cursor: pointer;
+    line-height: 40px;
+}
+

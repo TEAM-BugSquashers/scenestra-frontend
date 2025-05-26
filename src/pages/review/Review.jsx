@@ -1,7 +1,108 @@
 import classes from './Review.module.css'
 import { useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Swiper, SwiperSlide} from "swiper/react";
+import {Navigation} from "swiper/modules";
 
 function Review(){
+    // 각 리뷰 포스트별 이미지 배열
+    const reviewImages = {
+        1: [
+            {
+                id: 1,
+                src: "https://www.yeongnam.com/mnt/file/200904/20090410.010360820290001i1.jpg",
+                alt: "최신 컬렉션 메인 제품",
+                caption: "2025 S/S 프리미엄 컬렉션 대표 아이템"
+            },
+            {
+                id: 2,
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4_rvuztGgWMtEpAN86fv1HvrC33MLLwvl9A&s",
+                alt: "컬렉션 디테일 샷",
+                caption: "정교한 디테일과 마감"
+            },
+            {
+                id: 3,
+                src: "https://img2.sbs.co.kr/img/seditor/VD/2016/05/20/VD40955926_w640.jpg",
+                alt: "착용 모습",
+                caption: "실제 착용했을 때의 모습"
+            }
+        ],
+        2: [
+            {
+                id: 4,
+                src: "https://cdn.mania.kr/dvdprime/g2/data/file/blu_ray/mania-done-1680247343_9dJ3SO1r_20230122_150413.jpg",
+                alt: "VIP 멤버십 이벤트 현장",
+                caption: "프라이빗 쇼핑 이벤트 현장"
+            },
+            {
+                id: 5,
+                src: "https://i1.ruliweb.com/img/5/5/3/D/553DBDBE3E32430004",
+                alt: "VIP 라운지",
+                caption: "특별한 VIP 전용 공간"
+            }
+        ],
+        3: [
+            {
+                id: 6,
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQDZ980dRDEoISo3AyQLBLGSHbmNdgmjFrPA&s",
+                alt: "파리 전시회 포스터",
+                caption: "파리 전시회 공식 포스터"
+            },
+            {
+                id: 7,
+                src: "https://www.wishbucket.io/_next/image?url=https%3A%2F%2Fd2gfz7wkiigkmv.cloudfront.net%2Fpickin%2F2%2F1%2F2%2Ff9BBam1FS5O8eQPm3c5n-w&w=1080&q=75",
+                alt: "전시회 초대권",
+                caption: "한정판 전시회 초대권"
+            },
+            {
+                id: 8,
+                src: "https://mblogthumb-phinf.pstatic.net/20160313_238/osn1201_14578553818895FwWQ_JPEG/IMG_6125.jpg?type=w420",
+                alt: "전시회장 전경",
+                caption: "파리 전시회장 내부 모습"
+            },
+            {
+                id: 9,
+                src: "https://d2ilb6aov9ebgm.cloudfront.net/1646187009935433.jpg?q=90&s=600x600",
+                alt: "특별 전시품",
+                caption: "이번 전시회의 하이라이트 작품"
+            }
+        ],
+        4: [
+            {
+                id: 10,
+                src: "https://img.sbs.co.kr/newimg/news/20181219/201262572_1280.jpg",
+                alt: "리미티드 에디션 제품",
+                caption: "한정판 리미티드 에디션"
+            },
+            {
+                id: 11,
+                src: "https://www.ilemonde.com/news/photo/202404/18695_38983_1515.jpg",
+                alt: "특별 패키징",
+                caption: "리미티드 에디션 전용 패키징"
+            }
+        ],
+        5: [
+            {
+                id: 12,
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBQ4YNCqcGZgfoUx5oOeajvI52AKcSabE1Pg&s",
+                alt: "고객 감사 이벤트",
+                caption: "고객 감사 이벤트 현장"
+            },
+            {
+                id: 13,
+                src: "https://img1.daumcdn.net/thumb/S702x344ht.u/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fnews%2F202505%2F26%2Fnewsis%2F20250526092822517axjp.jpg&scode=sports",
+                alt: "특별 선물",
+                caption: "감사의 마음을 담은 특별 선물"
+            },
+            {
+                id: 14,
+                src: "https://cdn.daejonilbo.com/news/photo/202401/2110473_534231_2920.jpg",
+                alt: "이벤트 참여 고객들",
+                caption: "이벤트에 참여한 소중한 고객들"
+            }
+        ]
+    };
+
     const initialPosts = [
         {
             id: 1,
@@ -55,20 +156,17 @@ function Review(){
         }
     ];
 
-    // const pageNum= [
-    //     {pn:1},{pn:2},{pn:3},{pn:4},{pn:5},{pn:6},{pn:7}
-    // ]
-
+    const navi = useNavigate();
     const [selectedPost, setSelectedPost] = useState(null);
+    const [pan, setPan] = useState(false);
+    const [posts] = useState(initialPosts);
+    const [sortBy, setSortBy] = useState('date');
+    const [sortDirection, setSortDirection] = useState('desc');
 
     const panHandler = (post) => {
         setSelectedPost(post);
         setPan(prevState => !prevState);
     }
-    const [pan,setPan] = useState(false);
-    const [posts] = useState(initialPosts);
-    const [sortBy, setSortBy] = useState('date');
-    const [sortDirection, setSortDirection] = useState('desc');
 
     // 게시글 정렬 함수
     const sortPosts = (posts, sortBy, direction) => {
@@ -80,6 +178,7 @@ function Review(){
             }
         });
     };
+
     // 정렬 변경 핸들러
     const handleSort = (column) => {
         if (sortBy === column) {
@@ -89,9 +188,9 @@ function Review(){
             setSortDirection('desc');
         }
     };
+
     // 정렬된 게시글
     const sortedPosts = sortPosts(posts, sortBy, sortDirection);
-
 
     const renderStars = (rating) => {
         const stars = [];
@@ -113,7 +212,7 @@ function Review(){
         return <span className={classes.starRating}>{stars}</span>;
     };
 
-        return (
+    return (
         <>
             <div className={classes.wrap}>
                 <div className={classes["section_header"]}>
@@ -122,7 +221,7 @@ function Review(){
                     <div></div>
                 </div>
 
-                <section>
+                <section className={classes.section}>
                     <figure className={classes.roomImg}></figure>
                     <figcaption className={classes["imgDescription"]}>
                         여기에 상영관 설명이 들어가요<br></br>
@@ -141,30 +240,30 @@ function Review(){
                     </div>
 
                     <div className={classes["board_header"]}>
-                        <div  onClick={() => handleSort('id')}>글번호
+                        <div onClick={() => handleSort('id')}>글번호
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
                                 </svg>
                             </span>
                         </div>
-                        <div  onClick={() => handleSort('rating')}>별점
+                        <div onClick={() => handleSort('rating')}>별점
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
                                 </svg>
                             </span>
                         </div>
-                        <div >제목</div>
+                        <div>제목</div>
                         <div>작성자</div>
-                        <div  onClick={() => handleSort('date')}>날짜
+                        <div onClick={() => handleSort('date')}>날짜
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
                                 </svg>
                             </span>
                         </div>
-                        <div  onClick={() => handleSort('views')}>조회수
+                        <div onClick={() => handleSort('views')}>조회수
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path fillRule="evenodd" d="M1.5 5.5l6 6 6-6H1.5z" />
@@ -174,7 +273,7 @@ function Review(){
                     </div>
 
                     {sortedPosts.map((post) => (
-                        <div className={classes['board_row']} key={post.id}  onClick={() => panHandler(post)}>
+                        <div className={classes['board_row']} key={post.id} onClick={() => panHandler(post)}>
                             <div>{post.id}</div>
                             <div>{renderStars(post.rating)}</div>
                             <div>{post.title}</div>
@@ -183,28 +282,13 @@ function Review(){
                             <div>{post.views}</div>
                         </div>
                     ))}
-
-                    {/*<div className={classes.pagenation}>*/}
-                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
-                    {/*        <path d="M0,-12 L-12,0 L0,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
-                    {/*        <path d="M12,-12 L0,0 L12,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
-                    {/*    </svg>*/}
-                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
-                    {/*        <path d="M5,-12 L-7,0 L5,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
-                    {/*    </svg>*/}
-                    {/*    {pageNum.map((num) => (*/}
-                    {/*        <div key={num}>{num}</div>*/}
-                    {/*    ))}*/}
-                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
-                    {/*        <path d="M-5,-12 L7,0 L-5,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
-                    {/*    </svg>*/}
-                    {/*    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 30 30">*/}
-                    {/*        <path d="M0,-12 L12,0 L0,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
-                    {/*        <path d="M-12,-12 L0,0 L-12,12" fill="none" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
-                    {/*    </svg>*/}
-                    {/*</div>*/}
                 </div>
-                <footer></footer>
+
+                <div className={classes.writeWrap}>
+                    <div></div>
+                    <div className={classes.wrapBtn} onClick={() => {navi("/WriteReview")}}>글쓰기</div>
+                </div>
+                <footer className={classes.footer}></footer>
             </div>
 
             {pan && selectedPost && (
@@ -218,6 +302,23 @@ function Review(){
                                 <span>작성자: {selectedPost.author}</span>
                                 <span>날짜: {selectedPost.date}</span>
                                 <span>조회수: {selectedPost.views}</span>
+                            </div>
+                            <div className={classes.reviewImgWrap}>
+                                <Swiper
+                                    modules={[Navigation]}
+                                    navigation={true}
+                                    loop={true}
+                                    slidesPerView={1}
+                                    spaceBetween={10}
+                                    className={classes.reviewImg}
+                                >
+                                    {reviewImages[selectedPost.id]?.map((image) => (
+                                        <SwiperSlide key={image.id} className={classes.reviewImgContent}>
+                                            <div className={classes.ImgFill} style={{ backgroundImage: `url(${image.src})` }}></div>
+                                            <p className={classes.imageCaption}>{image.caption}</p>
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
                             </div>
                             <div className={classes.postContent}>
                                 {selectedPost.content}

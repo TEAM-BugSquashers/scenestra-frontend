@@ -1,16 +1,16 @@
 
 import classes from './Sidebar.module.css';
 import {axiosLogout} from "../../api/axios.js";
-import {Navigate, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function Sidebar({ isOpen, toggleSidebar }) {
-  const navigate = useNavigate();
+  const navi = useNavigate();
 
   const handleLogout = () => {
     axiosLogout().then(res => {
       if (res.status === 200) {
         alert("로그아웃 되었습니다.");
-        navigate("/login")
+        navi("/login")
       }
     }).catch(err => {
       alert(err.message);
@@ -22,11 +22,20 @@ function Sidebar({ isOpen, toggleSidebar }) {
       <div className={`${classes.sidebar} ${isOpen ? classes.open : ''}`}>
         <nav className={classes.nav}>
           <ul>
-            <li><a href="/">My Page</a></li>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/services">Review</a></li>
+            <li>
+              <a onClick={()=> {navi("/");
+              toggleSidebar();}}>MY PAGE</a>
+            </li>
+            <li>
+              <a onClick={()=> {navi("/about");
+              toggleSidebar();}}>ABOUT US</a>
+            </li>
+            <li>
+              <a onClick={()=> {navi("/roomSelect");
+              toggleSidebar();}}>REVIEW</a>
+            </li>
           </ul>
-          <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout()}}>Logout</button>
+          <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout(); toggleSidebar();}}>Logout</button>
         </nav>
       </div>
       

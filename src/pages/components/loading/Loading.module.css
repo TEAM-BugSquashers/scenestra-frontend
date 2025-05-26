@@ -1,0 +1,16 @@
+.loadingWrap{
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    text-align: center;
+}
+
+.textWrap{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    color: #e6dfe6;
+    font-family: 'Noto Sans KR', sans-serif;
+}
