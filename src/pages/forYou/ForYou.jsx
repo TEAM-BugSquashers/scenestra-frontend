@@ -157,7 +157,6 @@ function ForYou() {
             genre: 'BEST',
             type: 'best'
         });
-
         // NEW 슬라이드 추가 (고정)
         movieSlides.push({
             id: 'new',
@@ -178,8 +177,9 @@ function ForYou() {
         const selectedMovie = currentMovies.find(movie => movie.movieId === movieId);
 
         if (selectedMovie) {
-            // API 데이터 구조를 PopUp에서 사용할 형태로 변환
+            // movieId를 포함한 객체로 전달
             const movieForPopup = {
+                movieId: selectedMovie.movieId, // 이 부분 추가
                 id: selectedMovie.movieId,
                 title: selectedMovie.title,
                 image: selectedMovie.posterUrl,
@@ -191,7 +191,6 @@ function ForYou() {
             handleSelectMovie(movieForPopup);
         }
     };
-
     const getCurrentMoviesData = () => {
         const currentSlide = movies[activeIndex];
 

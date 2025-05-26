@@ -5,21 +5,26 @@ import {axiosBindMovie} from "../../api/axios.js";
 function MoviePopUp({movie, onClose}) {
     const [movieData,setMovieData] = useState(null);
 
-    useEffect(()=>{
+    useEffect(() => {
+        if (!movie || !movie.movieId) {
+            setMovieData(null); // 영화가 없으면 데이터도 초기화
+            return;
+        }
 
-        if (!movie) return;
+        // 새로운 영화가 선택되면 기존 데이터 즉시 초기화
+        setMovieData(null);
 
         const combineMovie = async () => {
             try {
                 const response = await axiosBindMovie(movie.movieId);
                 setMovieData(response.data.payload);
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching movie data:', error);
             }
         }
 
         combineMovie();
-    },[movie])
+    }, [movie]);
 
     if(!movie) return null;
 
@@ -37,7 +42,10 @@ function MoviePopUp({movie, onClose}) {
                             <div className={classes.xLeft}></div>
                             <div className={classes.xRight}></div>
                         </div>
+                        <div className={classes.titleBox}>
+                            <div className={classes.cBox}></div>
                         <h1 className={`${classes["movieTitle"]} wTitle`}>{movieData?.title}</h1>
+                        </div>
                         <div className={`${classes["releaseYear"]} body2 wSub`}>개봉: {movieData?.openDate.slice(0,4)}년</div>
                         <div className={`${classes["movieDesc"]} body2`}>
                             감독: {movieData?.director}
