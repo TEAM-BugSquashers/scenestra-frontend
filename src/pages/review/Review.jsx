@@ -286,7 +286,7 @@ function Review(){
 
                 <div className={classes.writeWrap}>
                     <div></div>
-                    <div className={classes.wrapBtn} onClick={() => {navi("/WriteReview")}}>글쓰기</div>
+                    <div className={classes.wrapBtn} onClick={() => {navi("/write")}}>글쓰기</div>
                 </div>
                 <footer className={classes.footer}></footer>
             </div>
