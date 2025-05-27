@@ -1,11 +1,11 @@
 import classes from "./UserRegistration.module.css";
-import {useState, useRef} from "react";
-import {axiosChkUsername, axiosJoin} from "../api/axios.js";
+import {useState, useRef, useEffect} from "react";
+import {axiosChkUsername, axiosGenres, axiosJoin} from "../api/axios.js";
 import {useNavigate} from "react-router-dom";
 
 
 function UserRegistration() {
-    // state: form field
+    // states
     const [formData, setFormData] = useState({
         id: '',
         pw: '',
@@ -14,34 +14,43 @@ function UserRegistration() {
         mobile: '',
         email: ''
     });
-
-    // state: genre selection
+    const [allGenres, setAllGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
-
-    // state: hovered genre selection
     const [hoveredGenre, setHoveredGenre] = useState(null);
 
-    // genre that was just unselected
+    // loading/error states
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // just-unselected genre ref
     const justUnselectedRef = useRef({
         id: null,
         mouseLeft: false
     });
 
-    // all genres --- USE AXIOS FUNCTION
-    const genres = [
-        { id: 'family', label: '가족' },
-        { id: 'performance', label: '공연' },
-        { id: 'horror', label: '공포(호러)' },
-        { id: 'drama', label: '드라마' },
-        { id: 'mystery', label: '미스터리' },
-        { id: 'crime', label: '범죄' },
-        { id: 'thriller', label: '스릴러' },
-        { id: 'animation', label: '애니메이션' },
-        { id: 'action', label: '액션' },
-        { id: 'comedy', label: '코미디' },
-        { id: 'fantasy', label: '판타지' },
-        { id: 'scifi', label: 'SF' }
-    ];
+    // load all genres
+    useEffect(() => {
+        const fetchAllGenres = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+
+                // set all genres
+                const genresResponse = await axiosGenres();
+                const allGenresData = genresResponse.data.payload.map(genre => ({
+                    value: String(genre.genreId),
+                    label: genre.name
+                }));
+                setAllGenres(allGenresData);
+            } catch (error) {
+                console.error("Failed to fetch genre selection:", error);
+                setError("장르 정보를 불러오는데 실패했습니다.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchAllGenres();
+    }, []);
 
     // handle input changes
     const handleInputChange = (e) => {
@@ -63,7 +72,7 @@ function UserRegistration() {
             // if unchecked, genre is removed from selected
             setSelectedGenres(selectedGenres.filter(genre => genre !== id));
 
-            // genre marked as just unselected
+            // attach just-unselected ref
             justUnselectedRef.current = {
                 id: id,
                 mouseLeft: false
@@ -127,27 +136,40 @@ function UserRegistration() {
         }
     };
 
-    const navigate = useNavigate();
+    // validate form data
+    const validateForm = () => {
+        if (formData.pw !== formData.chkPw) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return false;
+        }
+
+        if (selectedGenres.length !== 3) {
+            alert('선호하는 장르 3개를 선택해부세요.');
+            return false;
+        }
+
+        // email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email || '')) {
+            alert('올바른 이메일 주소를 입력해주세요.');
+            return false;
+        }
+
+        return true;
+    }
 
     // handle form submit
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // requirement 1. three-genre selection
-        if (selectedGenres.length !== 3) {
-            alert('선호하는 장르 3개 선택해주세요');
+        // validate
+        if (!validateForm()) {
             return;
         }
 
-        // requirement 2. password/password-check agreement
-        if (formData.pw !== formData.chkPw) {
-            alert("비밀번호가 일치하지 않습니다.");
-            return;
-        }
-
-        // form submission processed
         try {
-            const response = await axiosJoin(
+            const userResponse = await axiosJoin(
                 formData.id,
                 formData.pw,
                 formData.email,
@@ -155,24 +177,30 @@ function UserRegistration() {
                 formData.name,
                 selectedGenres
             );
-            console.log(response);
 
-            if (response.status === 201 || response.status === 200) {
-                alert('회원가입에 성공했습니다');
+            console.log(userResponse);
+
+            if (userResponse.status === 201 || userResponse.status === 200) {
+                alert('회원가입에 성공했습니다.');
                 navigate('/login');
             } else {
-                alert(`회원가입에 실패했습니다. 상태 코드: ${response.status}`);
+                console.log('Failed to register user:', userResponse.status)
+                alert('회원가입에 실패했습니다.')
             }
         } catch (error) {
-            alert('회원가입 중 오류가 발생했습니다');
-            console.log('error: ', error);
+            if (error.response.data.payload !== undefined) {
+                console.log('register error:', error.response.data.payload);
+                alert(error.response.data.payload);
+            } else {
+                alert("회원가입 중 오류가 발생했습니다.");
+            }
         }
     };
 
     // handle id duplication check
     const isIdFilled = formData.id.trim() !== '';
 
-    const handleIdCheck = (e) => {
+    const handleIdCheck = async (e) => {
         e.preventDefault();
 
         // prevent empty id field
@@ -187,24 +215,24 @@ function UserRegistration() {
             return;
         }
 
-
-        // axiosChkUsername(formData.id).then(response => {
-
-            // console.log(response);
-
-        //     if (response.status === 200) {
-        //         alert(`사용할 수 있는 아이디입니다.`)
-        //     }
-        // })
-        //     .catch(error => {
-        //         if (error.response && error.response.status === 400) {
-        //             alert(`이미 사용 중인 아이디입니다.`);
-        //             setFormData(prev => ({ ...prev, id: '' }));
-        //         } else {
-        //             alert(`오류가 발생했습니다. 다시 시도해주세요.`);
-        //             console.error(error);
-        //         }
-        //     });
+        try {
+            await axiosChkUsername(formData.id).then(idResponse => {
+                if (idResponse.status === 200) {
+                    alert('사용할 수 있는 아이디입니다.')
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 400) {
+                    alert('이미 사용 중인 아이디입니다.');
+                    setFormData(prev => ({ ...prev, id: ''}));
+                } else {
+                    alert('오류가 발생했습니다. 다시 시도해주세요.');
+                    console.log(error.response.data.payload);
+                }
+            })
+        } catch (idError) {
+            console.log(idError);
+        }
     };
 
     const isFormComplete = () => {
@@ -218,6 +246,16 @@ function UserRegistration() {
             selectedGenres.length === 3
         );
     };
+
+    // loading state
+    if (isLoading) {
+        return <div className={classes["loading"]}>로딩 중...</div>;
+    }
+
+    // error state
+    if (error) {
+        return <div className={classes["error"]}>{error}</div>;
+    }
 
     return (
         <>
@@ -348,24 +386,24 @@ function UserRegistration() {
                                         <div className={`${classes["horLine"]} bBg`}></div>
                                     </div>
                                     <div className={classes["genreBox"]}>
-                                        {genres.map(genre => (
-                                            <div key={genre.id} style={{ display: 'contents' }}>
+                                        {allGenres.map(genre => (
+                                            <div key={genre.value} style={{ display: 'contents' }}>
                                                 <input
                                                     type="checkbox"
                                                     name="chkGenre"
-                                                    id={genre.id}
-                                                    value={genre.id}
-                                                    checked={selectedGenres.includes(genre.id)}
+                                                    id={genre.value}
+                                                    value={genre.value}
+                                                    checked={selectedGenres.includes(genre.value)}
                                                     onChange={handleGenreChange}
-                                                    disabled={
-                                                        !selectedGenres.includes(genre.id) && selectedGenres.length >= 3
-                                                    }
+                                                    // disabled={
+                                                    //     !selectedGenres.includes(genre.value) && selectedGenres.length >= 3
+                                                    // }
                                                 />
                                                 <label className={classes["genreChkBx"]}
-                                                       htmlFor={genre.id}
-                                                       style={getGenreLabelStyle(genre.id)}
-                                                       onMouseEnter={() => handleMouseEnter(genre.id)}
-                                                       onMouseLeave={() => handleMouseLeave(genre.id)}
+                                                       htmlFor={genre.value}
+                                                       style={getGenreLabelStyle(genre.value)}
+                                                       onMouseEnter={() => handleMouseEnter(genre.value)}
+                                                       onMouseLeave={() => handleMouseLeave(genre.value)}
                                                 >
                                                     {genre.label}
                                                 </label>
