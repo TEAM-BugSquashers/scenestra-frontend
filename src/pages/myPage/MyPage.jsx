@@ -1,128 +1,81 @@
 import classes from './MyPage.module.css';
-import {useEffect, useState} from "react";
-import {axiosGenres, axiosInfo, axiosMe} from "../api/axios.js";
+import {useEffect, useRef, useState} from "react";
+import {axiosGenres, axiosInfo, axiosMe, axiosPassword, axiosPreferredGenres} from "../api/axios.js";
 
 function MyPage() {
-
-    axiosInfo().then(response => {
-        console.log(response);
-    })
-    // axiosGenres().then(response => {
-    //     // console.log(response.data.payload);
-    //
-    //     const tmp = response.data.payload.map(genre => ({
-    //         value: genre.genreId,
-    //         label: genre.name
-    //     }));
-    //
-    //     console.log(tmp);
-    //
-    //     const tmp = response.data.payload.userGenres;
-    //
-    //     const tmp2 = tmp.map(ob => ob.genreId);
-    //
-    //     console.log(tmp2);
-        // const userGenres = response.data.payload.userGenres;
-        // const tmp =
-        // for (let i=0; i<userGenres.length; i++) {
-        //     console.log(userGenres[i].genreId);
-        // }
-    // })
-
-
-    // Original user data (simulating from database)
-    // const originalProfileData = {
-    //     userId: "appleseed",
-    //     userPw: "JohnDoe",
-    //     userName: "John Doe",
-    //     userMobile: "000-1111-2222",
-    //     userEmail: "john.doe@email.com"
-    // };
-
-    // const originalGenreData = ["family", "performance", "horror"];
-
-    // All available genres
-    // const allGenres = [
-    //     { value: "family", label: "가족" },
-    //     { value: "performance", label: "공연" },
-    //     { value: "horror", label: "공포(호러)" },
-    //     { value: "drama", label: "드라마" },
-    //     { value: "mystery", label: "미스터리" },
-    //     { value: "crime", label: "범죄" },
-    //     { value: "thriller", label: "스릴러" },
-    //     { value: "animation", label: "애니메이션" },
-    //     { value: "action", label: "액션" },
-    //     { value: "comedy", label: "코미디" },
-    //     { value: "fantasy", label: "판타지" },
-    //     { value: "scifi", label: "SF" }
-    // ];
-
     // states
-    const [formData, setFormData] = useState([]);
-    // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
+    const [formData, setFormData] = useState({});
+    const [allGenres, setAllGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
+    const [hoveredGenre, setHoveredGenre] = useState(null);
+
+    // password states
+    const [currentPassword, setCurrentPassword] = useState('********');
+    const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    // const [showPasswordMask, setShowPasswordMask] = useState(true);
+
+    // edit mode states
     const [isEditMode, setIsEditMode] = useState(false);
-    // // backup for cancel functionality
-    const [backupData, setBackupData] = useState([]);
-    // const [backupGenres, setBackupGenres] = useState(originalGenreData);
+    const [isPwEditMode, setIsPwEditMode] = useState(false);
+
+    // backup states for cancel functionality
+    const [backupData, setBackupData] = useState({});
     const [backupGenres, setBackupGenres] = useState([]);
 
-    // load data: fetch user profile
+    // loading/error states
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // just-unselected genre ref
+    const justUnselectedRef = useRef({
+        id: null,
+        mouseLeft: false
+    });
+
+    // load (in background) user profile data
     useEffect(() => {
-        const fetchUserProfile = async () =>
-        {
+        const fetchUserData = async () => {
             try {
-                const response = await axiosMe();
-                setFormData(response.data.payload);
-                setBackupData(response.data.payload);
-            } catch (error) {
-                console.error("failed to retrieve user profile: "+error);
-            }
-        }
-        fetchUserProfile();
-    },[])
+                setIsLoading(true);
+                setError(null);
 
-    // console.log("formData: "+formData);
+                // fetch user profile and genres together
+                const [profileResponse, genresResponse] = await Promise.all([
+                    axiosMe(),
+                    axiosGenres()
+                ]);
 
-    // load data: fetch user genre
-    useEffect(() => {
-        const fetchUserGenre = async () => {
-            try {
-                const response = await axiosMe();
-                const userGenre = response.data.payload.userGenres.map(genre => String(genre.genreId));
-                setSelectedGenres(userGenre);
-                setBackupGenres(userGenre);
-            } catch (error) {
-                console.error("failed to retrieve user genre: "+error);
-            }
-        }
-        fetchUserGenre();
-    }, [])
+                // set user profile
+                const profileData = profileResponse.data.payload;
+                setFormData(profileData);
+                setBackupData(profileData);
 
-    // console.log("selectedGenres: "+selectedGenres);
+                // set selected genres
+                const userGenres = profileData.userGenres?.map(genre => String(genre.genreId)) || [];
+                    // ? safety checks if userGenres exists before attempting .map; [] is a fallback
+                setSelectedGenres(userGenres);
+                setBackupGenres(userGenres);
 
-    // load data: fetch all genres
-    const [allGenres, setAllGenres] = useState([]);
-    useEffect(() => {
-        const fetchAllGenres = async () => {
-            try {
-                const response = await axiosGenres();
-                const allGenres = response.data.payload.map(genre => ({
+                // set all genres
+                const allGenresData = genresResponse.data.payload.map(genre => ({
                     value: String(genre.genreId),
                     label: genre.name
                 }));
-                setAllGenres(allGenres);
+                setAllGenres(allGenresData);
+
             } catch (error) {
-                console.error("failed to compile genres: "+error);
+                console.error("Failed to fetch user data:", error);
+                setError("사용자 정보를 불러오는데 실패했습니다.");
+            } finally {
+                setIsLoading(false);
             }
-        }
-        fetchAllGenres();
-    }, [])
+        };
 
-console.log(allGenres);
+        fetchUserData();
+    }, []);
 
-    // Current and past reservation data
+    // mock reservation data
     const currResData = {
         num: "A000-1111-2222",
         date: "2025년 2월 5일",
@@ -150,12 +103,27 @@ console.log(allGenres);
         }
     ];
 
-    // Handle input changes
+    // handle input changes
     const handleInputChange = (e) => {
         const { id, value } = e.target;
-        setFormData({ ...formData, [id]: value });
+        setFormData(prev => ({ ...prev, [id]: value }));
     };
-    // Handle genre changes
+
+    // handle password field changes
+    const handlePasswordChange = (e) => {
+        setIsPwEditMode(true);
+        const { value } = e.target;
+        setCurrentPassword(value);
+        // if (!isPwEditMode && value !== '********') {
+        //     setIsPwEditMode(true);
+        // }
+        // if (showPasswordMask && value !== '********') {
+        //     setShowPasswordMask(false);
+        //     setIsPwEditMode(true);
+        // }
+    };
+
+    // handle genre selection changes
     const handleGenreChange = (e) => {
         const { id, checked } = e.target;
 
@@ -164,468 +132,541 @@ console.log(allGenres);
                 alert('선호하는 장르는 3개까지만 선택할 수 있습니다.');
                 return;
             }
-            setSelectedGenres([...selectedGenres, id]);
+            setSelectedGenres(prev => [...prev, id]);
         } else {
-            setSelectedGenres(selectedGenres.filter(genre => genre !== id));
+            setSelectedGenres(prev => prev.filter(genre => genre !== id));
+
+            // attach just-unselected ref
+            justUnselectedRef.current = {
+                id: id,
+                mouseLeft: false
+            };
+
+            // reset hover state for just-unselected if hovered
+            if (hoveredGenre === id) {
+                setHoveredGenre(null);
+            }
         }
     };
 
-    // Handle edit profile button
-    const handleEditProfile = () => {
+    // handle genre label mouse events
+    const handleMouseEnter = (id) => {
+        // clear unselected ref if re-entering after unselection
+        if (justUnselectedRef.current.id === id && justUnselectedRef.current.mouseLeft) {
+            justUnselectedRef.current = { id: null, mouseLeft: false };
+        }
+        setHoveredGenre(id);
+    };
+
+    const handleMouseLeave = (id) => {
+        if (justUnselectedRef.current.id === id) {
+            justUnselectedRef.current.mouseLeft = true;
+        }
+        setHoveredGenre(null);
+    };
+
+    // urghhhhhhh genre label styling based on state
+    const getGenreLabelStyle = (id) => {
+        if (selectedGenres.includes(id)) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white',
+                borderColor: '#32271e'
+            };
+        } else if (justUnselectedRef.current.id === id && !justUnselectedRef.current.mouseLeft) {
+            return {
+                backgroundColor: 'white',
+                color: '#b2a69b',
+                borderColor: '#b2a69b'
+            };
+        } else if (hoveredGenre === id) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white',
+                borderColor: '#32271e'
+            };
+        } else {
+            return {
+                backgroundColor: 'white',
+                color: '#b2a69b',
+                borderColor: '#b2a69b'
+            };
+        }
+    };
+
+    // handle reservation cancellation
+    const handleCancelRes = () => {
+        if (window.confirm("정말 예약을 취소하시겠습니까?")) {
+            // TODO: Add API call to cancel reservation
+            alert("상영관 예약이 취소되었습니다.");
+        }
+    };
+
+    // validate form data
+    const validateForm = () => {
+        // check password validation if password was changed
+        if (isPwEditMode) {
+            if (!currentPassword.trim()) {
+                alert('현재 비밀번호를 입력해주세요.');
+                return false;
+            }
+            if (!newPassword.trim()) {
+                alert('새로운 비밀번호를 입력해주세요.');
+                return false;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('새로운 비밀번호가 일치하지 않습니다.');
+                return false;
+            }
+        }
+
+        // check genre selection
+        if (selectedGenres.length !== 3) {
+            alert('선호하는 장르 3개를 선택해주세요.');
+            return false;
+        }
+
+        // email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email || '')) {
+            alert('올바른 이메일 주소를 입력해주세요.');
+            return false;
+        }
+
+        return true;
+    };
+
+    // // input styling based on state
+    // const getInputStyle = (element) => {
+    //     if (element instanceof HTMLInputElement) {
+    //         return {
+    //             pointerEvents: 'none'
+    //         }
+    //     }
+    //     return {};
+    // }
+
+    // handle profile editing
+    const handleEditProfile = async () => {
         if (!isEditMode) {
-            // Enter edit mode
+            // enter edit mode
             setIsEditMode(true);
             setBackupData({ ...formData });
             setBackupGenres([...selectedGenres]);
-            setFormData({ ...formData, userPw: '' }); // Clear password for editing
-            setConfirmPassword('');
-        } else {
-            // Save changes
-            if (formData.userPw !== '' && formData.userPw !== confirmPassword) {
-                alert('비밀번호가 일치하지 않습니다.');
+        } else { // aka. if not in edit mode,
+            // validate and save changes
+            if (!validateForm()) {
                 return;
             }
 
-            if (selectedGenres.length !== 3) {
-                alert('선호하는 장르 3개를 선택해주세요.');
-                return;
+            try {
+                // update profile info
+                const infoResponse = await axiosInfo(formData.email, formData.mobile);
+                if (infoResponse.status !== 200) {
+                    throw new Error(`Unexpected response status: ${infoResponse.status}`);
+                }
+
+                // update password if changed
+                if (isPwEditMode) {
+                    // const pwResponse = await axiosPassword(currentPassword, newPassword);
+                    // if (pwResponse.status === 403) {
+                    //     alert('현재 비밀번호가 틀렸습니다.');
+                    //     return;
+                    // } else if (pwResponse.status !== 200) {
+                    //     throw new Error(`Password update failed: ${pwResponse.status}`);
+                    // }
+                    try {
+                        await axiosPassword(currentPassword, newPassword)
+                            .then((res)=> {
+                                if(res.status) {
+                                    // alert("ok")
+                                    return;
+                                }
+                            })
+                            .catch(err => {
+                                alert(err.response.data.payload);
+                            });
+                        // if (pwResponse.status !== 200) {
+                        //     throw new Error(`Password update failed: ${pwResponse.status}`);
+                        // }
+                    } catch (pwError) {
+                        if (pwError.response && pwError.response.status === 403) {
+                            alert('현재 비밀번호가 틀렸습니다.');
+                            return;
+                        } else {
+                            throw pwError;
+                        }
+                    }
+                }
+
+                // update preferred genres
+                const genreResponse = await axiosPreferredGenres(selectedGenres);
+                if (genreResponse.status !== 200) {
+                    throw new Error(`Genre update failed: ${genreResponse.status}`);
+                }
+
+                // success - exit edit mode and reset states
+                setIsEditMode(false);
+                setIsPwEditMode(false);
+                setCurrentPassword('********');
+                setNewPassword('');
+                setConfirmPassword('');
+
+                alert('회원정보가 성공적으로 수정되었습니다.');
+
+            } catch (error) {
+                console.error('Profile update error:', error);
+                alert('회원정보 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
             }
-
-            // Update password if changed
-            const updatedData = { ...formData };
-            if (formData.userPw === '') {
-                updatedData.userPw = backupData.userPw; // Keep original password
-            }
-
-            setFormData(updatedData);
-            setIsEditMode(false);
-            setConfirmPassword('');
-
-            console.log("Saving updated user data:", {
-                ...updatedData,
-                selectedGenres
-            });
         }
     };
 
-    // Handle cancel edit
+    // handle edit cancellation
     const handleCancelEdit = () => {
         setFormData({ ...backupData });
         setSelectedGenres([...backupGenres]);
+        setCurrentPassword('********');
+        setNewPassword('');
         setConfirmPassword('');
         setIsEditMode(false);
+        setIsPwEditMode(false);
     };
 
-    // Get display password (masked or editable)
-    const getDisplayPassword = () => {
-        if (isEditMode) {
-            return formData.userPw;
-        }
-        return '********';
-    };
+    // loading state
+    if (isLoading) {
+        return <div className={classes["loading"]}>로딩 중...</div>;
+    }
 
+    // error state
+    if (error) {
+        return <div className={classes["error"]}>{error}</div>;
+    }
 
-        // // Original user data (simulating from database)
-        // const originalProfileData = {
-        //     userId: "appleseed",
-        //     userPw: "JohnDoe",
-        //     userName: "John Doe",
-        //     userMobile: "000-1111-2222",
-        //     userEmail: "john.doe@email.com"
-        // };
-        //
-        // const originalGenreData = ["family", "performance", "horror"];
-        //
-        // // All available genres
-        // const allGenres = [
-        //     { value: "family", label: "가족" },
-        //     { value: "performance", label: "공연" },
-        //     { value: "horror", label: "공포(호러)" },
-        //     { value: "drama", label: "드라마" },
-        //     { value: "mystery", label: "미스터리" },
-        //     { value: "crime", label: "범죄" },
-        //     { value: "thriller", label: "스릴러" },
-        //     { value: "animation", label: "애니메이션" },
-        //     { value: "action", label: "액션" },
-        //     { value: "comedy", label: "코미디" },
-        //     { value: "fantasy", label: "판타지" },
-        //     { value: "scifi", label: "SF" }
-        // ];
-        //
-        // // State for form data
-        // const [formData, setFormData] = useState(originalProfileData);
-        // const [selectedGenres, setSelectedGenres] = useState(originalGenreData);
-        // const [confirmPassword, setConfirmPassword] = useState('');
-        //
-        // // Edit mode state
-        // const [isEditMode, setIsEditMode] = useState(false);
-        //
-        // // Backup for cancel functionality
-        // const [backupData, setBackupData] = useState(originalProfileData);
-        // const [backupGenres, setBackupGenres] = useState(originalGenreData);
-        //
-        // // Current and past reservation data
-        // const currResData = {
-        //     num: "A000-1111-2222",
-        //     date: "2025년 2월 5일",
-        //     time: "12:00",
-        //     room: "Theater A",
-        //     movie: "Cars 2",
-        //     name: "John Doe",
-        //     mobile: "000-1111-2222"
-        // };
-        //
-        // const pastResData = [
-        //     {
-        //         num: "B000-1111-2222",
-        //         date: "2025년 2월 5일",
-        //         time: "12:00",
-        //         room: "Theater A",
-        //         movie: "Cars 2",
-        //     },
-        //     {
-        //         num: "C000-1111-2222",
-        //         date: "2025년 2월 5일",
-        //         time: "12:00",
-        //         room: "Theater A",
-        //         movie: "Cars 2",
-        //     }
-        // ];
-        //
-        // // Handle input changes
-        // const handleInputChange = (e) => {
-        //     const { id, value } = e.target;
-        //     setFormData({ ...formData, [id]: value });
-        // };
-        //
-        // // Handle genre changes
-        // const handleGenreChange = (e) => {
-        //     const { id, checked } = e.target;
-        //
-        //     if (checked) {
-        //         if (selectedGenres.length >= 3) {
-        //             alert('선호하는 장르는 3개까지만 선택할 수 있습니다.');
-        //             return;
-        //         }
-        //         setSelectedGenres([...selectedGenres, id]);
-        //     } else {
-        //         setSelectedGenres(selectedGenres.filter(genre => genre !== id));
-        //     }
-        // };
-        //
-        // // Handle edit profile button
-        // const handleEditProfile = () => {
-        //     if (!isEditMode) {
-        //         // Enter edit mode
-        //         setIsEditMode(true);
-        //         setBackupData({ ...formData });
-        //         setBackupGenres([...selectedGenres]);
-        //         setFormData({ ...formData, userPw: '' }); // Clear password for editing
-        //         setConfirmPassword('');
-        //     } else {
-        //         // Save changes
-        //         if (formData.userPw !== '' && formData.userPw !== confirmPassword) {
-        //             alert('비밀번호가 일치하지 않습니다.');
-        //             return;
-        //         }
-        //
-        //         if (selectedGenres.length !== 3) {
-        //             alert('선호하는 장르 3개를 선택해주세요.');
-        //             return;
-        //         }
-        //
-        //         // Update password if changed
-        //         const updatedData = { ...formData };
-        //         if (formData.userPw === '') {
-        //             updatedData.userPw = backupData.userPw; // Keep original password
-        //         }
-        //
-        //         setFormData(updatedData);
-        //         setIsEditMode(false);
-        //         setConfirmPassword('');
-        //
-        //         console.log("Saving updated user data:", {
-        //             ...updatedData,
-        //             selectedGenres
-        //         });
-        //     }
-        // };
-        //
-        // // Handle cancel edit
-        // const handleCancelEdit = () => {
-        //     setFormData({ ...backupData });
-        //     setSelectedGenres([...backupGenres]);
-        //     setConfirmPassword('');
-        //     setIsEditMode(false);
-        // };
-        //
-        // // Get display password (masked or editable)
-        // const getDisplayPassword = () => {
-        //     if (isEditMode) {
-        //         return formData.userPw;
-        //     }
-        //     return '********';
-        // };
+    return (
+        <div className={classes["body"]}>
+            <div className={classes["sectionWrap"]}>
+                {/* Top Section */}
+                <section className={`${classes["top"]} bTitle`}>
+                    <div className={classes["horLine"]}></div>
+                    <h2 className={classes["barTitle"]}>MY PAGE</h2>
+                    <div className={classes["horLine"]}></div>
+                </section>
 
-        return (
-            <div className={classes["body"]}>
-                <div className={`${classes["sectionWrap"]}`}>
-                    {/* Top Section */}
-                    <section className={`${classes["top"]} bTitle`}>
-                        <div className={classes["horLine"]}></div>
-                        <h2 className={classes["barTitle"]}>MY PAGE</h2>
-                        <div className={classes["horLine"]}></div>
-                    </section>
+                {/* Bottom Section */}
+                <section className={classes["bottom"]}>
+                    {/* Left - Current Reservation */}
+                    <article className={classes["left"]}>
+                        <div className={`${classes["currWrap"]} ${classes["contentBox"]}`}>
+                            <div className={classes["conBoxBar"]}>
+                                <div className={classes["horLine"]}></div>
+                                <div className={classes["barTitle"]}>MY RESERVATION</div>
+                                <div className={classes["horLine"]}></div>
+                            </div>
 
-                    {/* Bottom Section */}
-                    <section className={classes["bottom"]}>
-
-                        {/* Left - Current Reservation */}
-                        <article className={classes["left"]}>
-                            <div className={`${classes["currWrap"]} ${classes["contentBox"]}`}>
-                                {/* Title bar */}
-                                <div className={`${classes["conBoxBar"]}`}>
-                                    <div className={classes["horLine"]}></div>
-                                    <div className={`${classes["barTitle"]}`}>MY RESERVATION</div>
-                                    <div className={classes["horLine"]}></div>
+                            <div className={classes["currBox"]}>
+                                <div className={classes["currBoxLeft"]}>
+                                    <div className={classes["currBoxTop"]}>
+                                        <div className={classes["num"]}>
+                                            예약번호 <span style={{ color: '#b2a69b' }}>{currResData.num}</span>
+                                        </div>
+                                        <div className={classes["date"]}>
+                                            날짜 <span style={{ color: '#b2a69b' }}>{currResData.date}</span>
+                                        </div>
+                                        <div className={classes["time"]}>
+                                            시간 <span style={{ color: '#b2a69b' }}>{currResData.time}</span>
+                                        </div>
+                                        <div className={classes["room"]}>
+                                            방 <span style={{ color: '#b2a69b' }}>{currResData.room}</span>
+                                        </div>
+                                        <div className={classes["movie"]}>
+                                            영화 <span style={{ color: '#b2a69b' }}>{currResData.movie}</span>
+                                        </div>
+                                    </div>
+                                    <div className={classes["currBoxBot"]}>
+                                        <div className={classes["name"]}>
+                                            예약자 <span style={{ color: '#b2a69b' }}>{currResData.name}</span>
+                                        </div>
+                                        <div className={classes["mobile"]}>
+                                            전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
+                                        onClick={handleCancelRes}
+                                    >
+                                        CANCEL RESERVATION
+                                    </button>
                                 </div>
-
-                                {/* Content */}
-                                <div className={classes["currBox"]}>
-                                    {/* current left, reservation info */}
-                                    <div className={classes["currBoxLeft"]}>
-                                        <div className={classes["currBoxTop"]}>
-                                            <div className={classes["num"]}>
-                                                예약번호 <span style={{ color: '#b2a69b' }}>{currResData.num}</span>
-                                            </div>
-                                            <div className={classes["date"]}>
-                                                날짜 <span style={{ color: '#b2a69b' }}>{currResData.date}</span>
-                                            </div>
-                                            <div className={classes["time"]}>
-                                                시간 <span style={{ color: '#b2a69b' }}>{currResData.time}</span>
-                                            </div>
-                                            <div className={classes["room"]}>
-                                                방 <span style={{ color: '#b2a69b' }}>{currResData.room}</span>
-                                            </div>
-                                            <div className={classes["movie"]}>
-                                                영화 <span style={{ color: '#b2a69b' }}>{currResData.movie}</span>
-                                            </div>
-                                        </div>
-                                        <div className={classes["currBoxBot"]}>
-                                            <div className={classes["name"]}>
-                                                예약자 <span style={{ color: '#b2a69b' }}>{currResData.name}</span>
-                                            </div>
-                                            <div className={classes["mobile"]}>
-                                                전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
-                                            </div>
-                                        </div>
-                                        <button type="submit" className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}>
-                                            CANCEL RESERVATION
-                                        </button>
-                                    </div>
-                                    {/* current right, theater image */}
-                                    <div className={classes["currBoxRight"]}>
-                                        <img src="/api/placeholder/150/120"
-                                             className={classes["pastImg"]}
-                                             alt="Theater Image"
-                                        />
-                                    </div>
+                                <div className={classes["currBoxRight"]}>
+                                    <img
+                                        src="/api/placeholder/150/120"
+                                        className={classes["pastImg"]}
+                                        alt="Theater Image"
+                                    />
                                 </div>
                             </div>
-                        </article>
+                        </div>
+                    </article>
 
-                        {/* Right */}
-                        <article className={classes["right"]}>
-                            {/* Profile */}
-                            <div className={`${classes["profileWrap"]} ${classes["contentBox"]}`}>
-                                {/* Title bar */}
-                                <div className={`${classes["conBoxBar"]}`}>
-                                    <div className={classes["horLine"]}></div>
-                                    <div className={`${classes["barTitle"]}`}>MY PROFILE</div>
-                                    <div className={classes["horLine"]}></div>
-                                </div>
+                    {/* Right */}
+                    <article className={classes["right"]}>
+                        {/* Profile */}
+                        <div className={`${classes["profileWrap"]} ${classes["contentBox"]}`}>
+                            <div className={classes["conBoxBar"]}>
+                                <div className={classes["horLine"]}></div>
+                                <div className={classes["barTitle"]}>MY PROFILE</div>
+                                <div className={classes["horLine"]}></div>
+                            </div>
 
-                                {/* Form Fields */}
-                                <div className={classes["userProfile"]}>
-                                    {/* User ID */}
-                                    <div className={classes["idWrap"]}>
-                                        <div className={classes["formField"]}>
-                                            <input
-                                                type="text"
-                                                id="userId"
-                                                value={formData.username}
-                                                readOnly
-                                                placeholder=" "
-                                            />
-                                            <label htmlFor="userId">아이디</label>
-                                        </div>
-                                    </div>
-
-                                    {/* Password */}
+                            <div className={classes["userProfile"]}>
+                                {/* User ID */}
+                                <div className={classes["idWrap"]}>
                                     <div className={classes["formField"]}>
                                         <input
-                                            type={isEditMode ? "password" : "text"}
-                                            id="userPw"
-                                            value={getDisplayPassword()}
-                                            onChange={handleInputChange}
-                                            readOnly={!isEditMode}
+                                            type="text"
+                                            id="username"
+                                            value={formData.username || ''}
+                                            readOnly
                                             placeholder=" "
+                                            disabled={isEditMode}
+                                            style={
+                                                !isEditMode ? {pointerEvents: 'none'} : {}
+                                            }
                                         />
-                                        <label htmlFor="userPw">비밀번호</label>
+                                        <label htmlFor="username">아이디</label>
                                     </div>
+                                </div>
 
-                                    {/* Confirm Password - only show in edit mode */}
-                                    {isEditMode && (
+                                {/* Current Password */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="password"
+                                        id="currentPassword"
+                                        value={currentPassword}
+                                        // value={showPasswordMask && !isEditMode ? '********' : currentPassword}
+                                        onChange={handlePasswordChange}
+                                        onKeyDown={(e) => {
+                                            if (isEditMode && e.key === 'Enter') {
+                                                handleEditProfile();
+                                            }
+                                        }}
+                                        readOnly={!isEditMode}
+                                        placeholder=" "
+                                        style={
+                                            !isEditMode ? {pointerEvents: 'none'} : {}
+                                        }
+                                    />
+                                    <label htmlFor="currentPassword">
+                                        {isPwEditMode ? "현재 비밀번호" : "비밀번호"}
+                                    </label>
+                                </div>
+
+                                {/* New Password - only show when editing password */}
+                                {isPwEditMode && (
+                                    <>
                                         <div className={classes["formField"]}>
                                             <input
                                                 type="password"
-                                                id="chkPw"
-                                                value={confirmPassword}
-                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                id="newPassword"
+                                                value={newPassword}
+                                                onChange={(e) => setNewPassword(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (isEditMode && e.key === 'Enter') {
+                                                        handleEditProfile();
+                                                    }
+                                                }}
                                                 placeholder=" "
                                             />
-                                            <label htmlFor="chkPw">비밀번호 확인</label>
-                                        </div>
-                                    )}
-
-                                    {/* Name */}
-                                    <div className={classes["formField"]}>
-                                        <input
-                                            type="text"
-                                            id="userName"
-                                            value={formData.realName}
-                                            readOnly
-                                            placeholder=" "
-                                        />
-                                        <label htmlFor="userName">이름</label>
-                                    </div>
-
-                                    {/* Mobile */}
-                                    <div className={classes["formField"]}>
-                                        <input
-                                            type="text"
-                                            id="userMobile"
-                                            value={formData.mobile}
-                                            onChange={handleInputChange}
-                                            readOnly={!isEditMode}
-                                            placeholder=" "
-                                        />
-                                        <label htmlFor="userMobile">전화번호</label>
-                                    </div>
-
-                                    {/* Email */}
-                                    <div className={classes["formField"]}>
-                                        <input
-                                            type="text"
-                                            id="userEmail"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            readOnly={!isEditMode}
-                                            placeholder=" "
-                                        />
-                                        <label htmlFor="userEmail">이메일 주소</label>
-                                    </div>
-
-                                    {/*Genres */}
-                                    <div className={classes["genre"]}>
-                                        <div className={classes["genreBar"]}>
-                                            <div className={classes["genreTitle"]}>선호하는 장르 3개 선택해주세요</div>
-                                            <div className={classes["horLine"]}></div>
+                                            <label htmlFor="newPassword">새로운 비밀번호</label>
                                         </div>
 
-                                        <div className={classes["genreBox"]}>
-                                            {(isEditMode ? allGenres : allGenres.filter(genre => selectedGenres.includes(genre.value))).map((genre) => (
-                                                <div key={genre.value}>
-                                                    <input
-                                                        type="checkbox"
-                                                        name="chkGenre"
-                                                        id={genre.value}
-                                                        value={genre.value}
-                                                        checked={selectedGenres.includes(genre.value)}
-                                                        onChange={handleGenreChange}
-                                                        // disabled={!isEditMode || (!selectedGenres.includes(genre.value) && selectedGenres.length >= 3)}
-                                                        disabled={!isEditMode}
-                                                    />
-                                                    <label className={classes["genreChkBx"]}
-                                                        htmlFor={genre.value}
-                                                        style={{
-                                                            backgroundColor: selectedGenres.includes(genre.value) ? '#32271e' : 'white', color: selectedGenres.includes(genre.value) ? 'white' : '#b2a69b', borderColor: selectedGenres.includes(genre.value) ? '#32271e' : '#b2a69b', cursor: isEditMode ? 'pointer' : 'default'
-                                                            }}
-                                                    >
-                                                        {genre.label}
-                                                    </label>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Buttons */}
-                                <button
-                                    type="submit"
-                                    className={`${classes["bigBtn"]} ${classes["btn1"]}`}
-                                    onClick={handleEditProfile}
-                                >
-                                    {isEditMode ? 'SAVE EDIT' : 'EDIT PROFILE'}
-                                </button>
-
-                                {isEditMode && (
-                                    <button
-                                        type="submit"
-                                        className={classes["cancelBtn"]}
-                                        onClick={handleCancelEdit}
-                                    >
-                                        CANCEL EDIT
-                                    </button>
-                                )}
-                            </div>
-
-                            {/* Past Reservations */}
-                            <div className={`${classes["pastWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}>
-                                {/* Title bar */}
-                                <div className={`${classes["conBoxBar"]} ${classes["wTitle"]}`}>
-                                    <div className={classes["horLine"]}></div>
-                                    <div className={`${classes["barTitle"]} ${classes["subtitle"]}`}>PAST RESERVATIONS</div>
-                                    <div className={classes["horLine"]}></div>
-                                </div>
-
-                                {/* Past reservation boxes */}
-                                {pastResData.map((reservation, index) => (
-                                    <div
-                                        key={index}
-                                        className={`${classes["pastBox"]} ${index === pastResData.length - 1 ? classes["marBotDel"] : ''}`}
-                                    >
-                                        <div className={classes["pastNum"]}>{reservation.num}</div>
-
-                                        <div className={classes["pastBoxLeft"]}>
-                                            <div className={classes["pastDate"]}>
-                                                날짜 <span style={{ color: '#b2a69b' }}>{reservation.date}</span>
-                                            </div>
-                                            <div className={classes["pastTime"]}>
-                                                시간 <span style={{ color: '#b2a69b' }}>{reservation.time}</span>
-                                            </div>
-                                            <div className={classes["pastRoom"]}>
-                                                방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
-                                            </div>
-                                            <div className={classes["pastMovie"]}>
-                                                영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className={classes["pastBoxRight"]}>
-                                            <img src="/api/placeholder/150/120"
-                                                className={classes["pastImg"]}
-                                                alt="Theater Image"
+                                        <div className={classes["formField"]}>
+                                            <input
+                                                type="password"
+                                                id="confirmPassword"
+                                                value={confirmPassword}
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (isEditMode && e.key === 'Enter') {
+                                                        handleEditProfile();
+                                                    }
+                                                }}
+                                                placeholder=" "
                                             />
+                                            <label htmlFor="confirmPassword">새로운 비밀번호 확인</label>
+                                        </div>
+                                    </>
+                                )}
+
+                                {/* Name */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="text"
+                                        id="realName"
+                                        value={formData.realName || ''}
+                                        readOnly
+                                        placeholder=" "
+                                        disabled={isEditMode}
+                                        style={
+                                            !isEditMode ? {pointerEvents: 'none'} : {}
+                                        }
+                                    />
+                                    <label htmlFor="realName">이름</label>
+                                </div>
+
+                                {/* Mobile */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="text"
+                                        id="mobile"
+                                        value={formData.mobile || ''}
+                                        onChange={handleInputChange}
+                                        onKeyDown={(e) => {
+                                            if (isEditMode && e.key === 'Enter') {
+                                                handleEditProfile();
+                                            }
+                                        }}
+                                        readOnly={!isEditMode}
+                                        placeholder=" "
+                                        style={
+                                            !isEditMode ? {pointerEvents: 'none'} : {}
+                                        }
+                                    />
+                                    <label htmlFor="mobile">전화번호</label>
+                                </div>
+
+                                {/* Email */}
+                                <div className={classes["formField"]}>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        value={formData.email || ''}
+                                        onChange={handleInputChange}
+                                        onKeyDown={(e) => {
+                                            if (isEditMode && e.key === 'Enter') {
+                                                handleEditProfile();
+                                            }
+                                        }}
+                                        readOnly={!isEditMode}
+                                        placeholder=" "
+                                        style={
+                                            !isEditMode ? {pointerEvents: 'none'} : {}
+                                        }
+                                    />
+                                    <label htmlFor="email">이메일 주소</label>
+                                </div>
+
+                                {/* Genres */}
+                                <div className={classes["genre"]}>
+                                    <div className={classes["genreBar"]}>
+                                        <div className={classes["genreTitle"]}>
+                                            선호하는 장르 3개 선택해주세요
+                                        </div>
+                                        <div className={classes["horLine"]}></div>
+                                    </div>
+
+                                    <div className={classes["genreBox"]}>
+                                        {(isEditMode ? allGenres : allGenres.filter(genre =>
+                                            selectedGenres.includes(genre.value)
+                                        )).map((genre) => (
+                                            <div key={genre.value}>
+                                                <input
+                                                    type="checkbox"
+                                                    name="chkGenre"
+                                                    id={genre.value}
+                                                    value={genre.value}
+                                                    checked={selectedGenres.includes(genre.value)}
+                                                    onChange={handleGenreChange}
+                                                    disabled={!isEditMode}
+                                                />
+                                                <label
+                                                    className={classes["genreChkBx"]}
+                                                    htmlFor={genre.value}
+                                                    style={{
+                                                        ...getGenreLabelStyle(genre.value),
+                                                        ...(isEditMode ? {cursor: 'pointer'} : {})
+                                                    }}
+                                                    onMouseEnter={() => handleMouseEnter(genre.value)}
+                                                    onMouseLeave={() => handleMouseLeave(genre.value)}
+                                                >
+                                                    {genre.label}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <button
+                                type="button"
+                                className={`${classes["bigBtn"]} ${classes["btn1"]}`}
+                                onClick={handleEditProfile}
+                            >
+                                {isEditMode ? 'SAVE EDIT' : 'EDIT PROFILE'}
+                            </button>
+
+                            {isEditMode && (
+                                <button
+                                    type="button"
+                                    className={classes["cancelBtn"]}
+                                    onClick={handleCancelEdit}
+                                >
+                                    CANCEL EDIT
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Past Reservations */}
+                        <div className={`${classes["pastWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}>
+                            <div className={`${classes["conBoxBar"]} ${classes["wTitle"]}`}>
+                                <div className={classes["horLine"]}></div>
+                                <div className={`${classes["barTitle"]} ${classes["subtitle"]}`}>
+                                    PAST RESERVATIONS
+                                </div>
+                                <div className={classes["horLine"]}></div>
+                            </div>
+
+                            {pastResData.map((reservation, index) => (
+                                <div
+                                    key={reservation.num}
+                                    className={`${classes["pastBox"]} ${
+                                        index === pastResData.length - 1 ? classes["marBotDel"] : ''
+                                    }`}
+                                >
+                                    <div className={classes["pastNum"]}>{reservation.num}</div>
+
+                                    <div className={classes["pastBoxLeft"]}>
+                                        <div className={classes["pastDate"]}>
+                                            날짜 <span style={{ color: '#b2a69b' }}>{reservation.date}</span>
+                                        </div>
+                                        <div className={classes["pastTime"]}>
+                                            시간 <span style={{ color: '#b2a69b' }}>{reservation.time}</span>
+                                        </div>
+                                        <div className={classes["pastRoom"]}>
+                                            방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                        </div>
+                                        <div className={classes["pastMovie"]}>
+                                            영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </article>
-                    </section>
-                </div>
+
+                                    <div className={classes["pastBoxRight"]}>
+                                        <img
+                                            src="/api/placeholder/150/120"
+                                            className={classes["pastImg"]}
+                                            alt="Theater Image"
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </article>
+                </section>
             </div>
-        );
+        </div>
+    );
 }
 
-export default MyPage
+export default MyPage;

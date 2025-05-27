@@ -115,9 +115,16 @@
     box-sizing: border-box;
 
     outline: none;
+    /*pointer-events: none;*/
+    /*user-select: none;*/
 
     display: flex;
     align-items: center;
+}
+.formField input:disabled {
+    background-color: rgb(178 166 155 / 10%);
+    color: #b2a69b;
+    cursor: not-allowed;
 }
 .formField > label {
     color: #b2a69b;
@@ -128,7 +135,7 @@
     left: 10px;
     transform: translateY(-50%);
 
-    pointer-events: none;
+    /*pointer-events: none;*/
     transition: all 0.2s ease;
 
     display: block;
@@ -274,7 +281,11 @@ input[type="checkbox"]:checked + label {
     border-radius: 10px;
 }
 .cancelResBtn {
+    background-color: transparent;
+    color: #b2a69b;
+
     margin-top: 0;
+    border: 1px solid;
 }
 .cancelBtn {
     width: fit-content;
@@ -293,6 +304,11 @@ input[type="checkbox"]:checked + label {
 
 .bigBtn:hover {
     background-color: #32271e;
+    cursor: pointer;
+}
+.cancelResBtn:hover {
+    background-color: #b2a69b;
+    color: white;
 }
 .cancelBtn:hover {
     color: #32271e;
