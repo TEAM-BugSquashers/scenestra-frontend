@@ -21,8 +21,8 @@
 
 .closeComposeWrap{
     position: absolute;
-    top: 2px;
-    right: 30px;
+    top: 6px;
+    right: 7px;
     width: 25px;
     height: 25px;
     font-size: 1.5rem;
@@ -32,8 +32,32 @@
     cursor: pointer;
     color: #32271e;
     transition: color 0.2s;
-    border: 1px solid black;
+    font-weight: 700;
+    /*border: 1px solid black;*/
     border-radius: 50%;
+}
+
+.topExLeft {
+    width:20px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: left;
+    transform: rotateZ(-45deg) translate(-50%, -50%);
+    /*transform: rotateZ(-45deg);*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+.topExRight {
+    width:20px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: left;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /*transform: rotateZ(45deg);*/
+    transform: rotateZ(45deg) translate(-50%, -50%);
 }
 
 .titleInputWrap{
@@ -45,11 +69,16 @@
     height: 40px;
     border-radius: 10px;
     outline: none;
-    border: none;
     padding: 10px;
-    background-color: #32271e;
+    background-color: white;
     color: #32271e;
+    border: 1px solid #32271e;
     font-size: 1.25rem;
+}
+
+.titleInputWrap input::placeholder{
+    font-size: 1rem;
+    color: #b2a69b;
 }
 
 .starPoint{
@@ -63,10 +92,10 @@
 }
 
 .fileSelectBox {
-    margin-top: 10px;
-    width: 150px;
-    height: 100px;
-    background-color: #333;
+    /*margin-top: 10px;*/
+    width: 100%;
+    height: 100%;
+    background-color: #b2a69b;
     color: white;
     border-radius: 10px;
     display: flex;
@@ -78,7 +107,7 @@
 }
 
 .fileSelectBox:hover {
-    background-color: #555;
+    background-color: #32271e;
 }
 
 .imageSwiper {
@@ -101,7 +130,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #f5f5f5;
+    /*background-color: #f5f5f5;*/
     border-radius: 10px;
 }
 
@@ -116,21 +145,51 @@
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #32271e;
-    color: white;
+    background-color: transparent;
+    color: #32271e;
     border: none;
     border-radius: 50%;
     width: 25px;
     height: 25px;
-    font-size: 1.25rem;
+    font-size: 1rem;
+    font-weight: 1;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
 }
 
 .removeImageBtn:hover {
-    background-color: rgba(255, 0, 0, 0.9);
+    /*background-color: rgba(255, 0, 0, 0.9);*/
+}
+
+.xWrap{
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+}
+.exLeft {
+    width: 15px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: center;
+    /*transform: rotateZ(-45deg) translate(-50%, -50%);*/
+    transform: rotateZ(-45deg);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+.exRight {
+    width: 15px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: rotateZ(45deg);
+    /*transform: rotateZ(45deg) translate(-50%, -50%);*/
 }
 
 .imageName {
@@ -175,43 +234,49 @@
 }
 
 .contentInputWrap textarea{
-    width: 100%;
+    display: block;
+    width: 590px;
     height: 250px;
     border-radius: 10px;
     outline: none;
-    border: none;
     padding: 10px;
-    background-color: #32271e;
-    color: #b2a69b;
+    background-color: white;
+    border: 1px solid #32271e;
+    color: #32271e;
     caret-color: transparent;
     font-size: 1rem;
+    resize: none;
+    scrollbar-gutter: stable
 }
 
-.contentInputWrap textarea:not(:placeholder-shown) {
-    caret-color: black;
-}
-.contentInputWrap textarea:placeholder-shown{
-    caret-color: transparent;
-}
-.contentInputWrap textarea::placeholder{
-    font-size: 1.25rem;
-}
+.contentInputWrap textarea::-webkit-scrollbar { width: 8px;}
+.contentInputWrap textarea::-webkit-scrollbar-track { background: transparent;   margin: 3px; border-radius: 10px;}
+
+.contentInputWrap textarea::-webkit-scrollbar-thumb { background: #b2a69b;border-radius: 10px;}
+
+.contentInputWrap textarea:not(:placeholder-shown) { caret-color: black;}
+.contentInputWrap textarea:placeholder-shown{ caret-color: transparent;}
+.contentInputWrap textarea::placeholder{ font-size: 1rem; color: #b2a69b;}
+.contentInputWrap textarea:focus{ caret-color: #32271e;}
 
 .enrollContent{
     margin: 10px auto 0;
     width: 200px;
-    height: 30px;
+    height: 40px;
     border-radius: 10px;
-    background-color: #32271e;
-    color: #b2a69b;
-    font-size: 1.125rem;
+    background-color: white;
+    border: 1px solid #32271e;
+    color: #32271e;
+    font-size: 1rem;
+    font-family: 'Noto Serif KR', serif;
     text-align: center;
-    line-height: 30px;
+    line-height: 40px;
     transition: all 0.2s;
+    cursor: pointer;
 }
 
 .enrollContent:hover{
-    background-color: #b2a69b;
-    color: #32271e;
+    background-color: #32271e ;
+    color: white;
 }
 

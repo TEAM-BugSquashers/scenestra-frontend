@@ -17,6 +17,7 @@
     transform: translate(-50%, -50%);
     font-family: 'Belleza', sans-serif;
     cursor: pointer;
+    z-index: 10002;
 }
 
 .rightSection{
@@ -97,7 +98,6 @@
 .search_bar {
     display: flex;
     align-items: center;
-    background-color: #2a2a2a;
     border-radius: 10px;
     overflow: hidden;
     height: 40px;

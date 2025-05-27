@@ -50,7 +50,11 @@ function WriteReview({onClose}) {
         <>
             <div className={classes.writingPan}>
                 <div className={classes.composeWrap}>
-                    <div className={classes.closeComposeWrap} onClick={onClose}>×</div>
+                    <div className={classes.closeComposeWrap} onClick={onClose}>
+                        {/*×*/}
+                        <div className={classes.topExLeft}></div>
+                        <div className={classes.topExRight}></div>
+                    </div>
                     <div className={classes.titleInputWrap}>
                         <input placeholder={"제목을 적으시오"} />
                     </div>
@@ -60,7 +64,7 @@ function WriteReview({onClose}) {
                             <span
                                 key={star}
                                 onClick={() => rating(star)}
-                                style={{ color: selectedStar >= star ? 'gold' : 'gray', cursor: 'pointer' }}
+                                style={{ color: selectedStar >= star ? 'gold' : '#b2a69b', cursor: 'pointer' }}
                             >
                                 ★
                             </span>
@@ -107,7 +111,12 @@ function WriteReview({onClose}) {
                                             onClick={() => removeImage(index)}
                                             className={classes.removeImageBtn}
                                         >
-                                            ×
+                                            {/*×*/}
+                                            <div className={classes.xWrap}>
+                                                <div className={classes.exLeft}></div>
+                                                <div className={classes.exRight}></div>
+                                            </div>
+
                                         </button>
                                         {/*<div className={classes.imageName}>*/}
                                         {/*    {image.name}*/}
@@ -122,7 +131,7 @@ function WriteReview({onClose}) {
                         <textarea placeholder={"내용을 적으시오"} />
                     </div>
 
-                    <div className={classes.enrollContent} onClick={onClose}>등록</div>
+                    <div className={classes.enrollContent} onClick={onClose}>POST REVIEW</div>
                 </div>
             </div>
         </>

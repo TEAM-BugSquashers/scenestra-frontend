@@ -132,3 +132,21 @@ export const axiosGenreId = async (genreId) => {
         const response = await instance.get(`/movies/genres/${genreId}`);
         return response;
 }
+
+export const axiosTheaters = async () => {
+    try {
+        const response = await instance.get(`/theaters`);
+        return response;
+    }catch (error) {
+        throw error;
+    }
+}
+
+export const axiosTheaterId = async (theaterId) => {
+    try {
+        const response = await instance.get(`/theaters/capacity?num=${theaterId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
