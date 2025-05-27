@@ -6,7 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-function WriteReview() {
+function WriteReview({onClose}) {
     const [selectedStar, setSelectedStar] = useState(0);
     const [selectedImages, setSelectedImages] = useState([]);
     const fileInputRef = useRef(null);
@@ -50,11 +50,10 @@ function WriteReview() {
         <>
             <div className={classes.writingPan}>
                 <div className={classes.composeWrap}>
+                    <div className={classes.closeComposeWrap} onClick={onClose}>×</div>
                     <div className={classes.titleInputWrap}>
                         <input placeholder={"제목을 적으시오"} />
                     </div>
-
-
 
                     <div className={classes.starPoint}>
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -77,49 +76,53 @@ function WriteReview() {
                         style={{ display: 'none' }}
                     />
 
-                    <div className={classes.fileSelectBox} onClick={handleFileSelect}>
-                        이미지 선택 ({selectedImages.length}개)
-                    </div>
+                    <div className={classes.imageSwiper}>
+                        <Swiper
+                            modules={[Navigation, Pagination]}
+                            spaceBetween={10}
+                            slidesPerView={3}
+                            navigation
+                            pagination={{ clickable: true }}
+                            className={classes.swiper}
+                        >
+                            {/* 첫 번째 슬라이드: 이미지 선택 박스 */}
+                            <SwiperSlide>
+                                <div className={classes.imageSlide}>
+                                    <div className={classes.fileSelectBox} onClick={handleFileSelect}>
+                                        이미지 선택 ({selectedImages.length}개)
+                                    </div>
+                                </div>
+                            </SwiperSlide>
 
-                    {selectedImages.length > 0 && (
-                        <div className={classes.imageSwiper}>
-                            <Swiper
-                                modules={[Navigation, Pagination]}
-                                spaceBetween={10}
-                                slidesPerView={1}
-                                navigation
-                                pagination={{ clickable: true }}
-                                className={classes.swiper}
-                            >
-                                {selectedImages.map((image, index) => (
-                                    <SwiperSlide key={index}>
-                                        <div className={classes.imageSlide}>
-                                            <img
-                                                src={image.url}
-                                                alt={image.name}
-                                                className={classes.previewImage}
-                                            />
-                                            <button
-                                                onClick={() => removeImage(index)}
-                                                className={classes.removeImageBtn}
-                                            >
-                                                ×
-                                            </button>
-                                            <div className={classes.imageName}>
-                                                {image.name}
-                                            </div>
-                                        </div>
-                                    </SwiperSlide>
-                                ))}
-                            </Swiper>
-                        </div>
-                    )}
+                            {/* 선택된 이미지들 */}
+                            {selectedImages.map((image, index) => (
+                                <SwiperSlide key={index}>
+                                    <div className={classes.imageSlide}>
+                                        <img
+                                            src={image.url}
+                                            alt={image.name}
+                                            className={classes.previewImage}
+                                        />
+                                        <button
+                                            onClick={() => removeImage(index)}
+                                            className={classes.removeImageBtn}
+                                        >
+                                            ×
+                                        </button>
+                                        {/*<div className={classes.imageName}>*/}
+                                        {/*    {image.name}*/}
+                                        {/*</div>*/}
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
 
                     <div className={classes.contentInputWrap}>
                         <textarea placeholder={"내용을 적으시오"} />
                     </div>
 
-                    <div className={classes.enrollContent}>등록</div>
+                    <div className={classes.enrollContent} onClick={onClose}>등록</div>
                 </div>
             </div>
         </>

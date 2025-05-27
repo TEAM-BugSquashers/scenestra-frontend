@@ -8,19 +8,36 @@
     z-index: 5;
 }
 .composeWrap{
-    width: 700px;
+    width: 650px;
     position: absolute;
     right: 50%;
     top: 50%;
     transform: translate(50%, -50%);
-    padding: 0 2.5vw;
-    background-color: #e6dfe6;
+    padding: 30px;
+    background-color: white;
     z-index: 9;
-    border-radius: 10px;
+    border-radius: 20px;
+}
+
+.closeComposeWrap{
+    position: absolute;
+    top: 2px;
+    right: 30px;
+    width: 25px;
+    height: 25px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #32271e;
+    transition: color 0.2s;
+    border: 1px solid black;
+    border-radius: 50%;
 }
 
 .titleInputWrap{
-    margin-top: 15px;
+    /*margin-top: 15px;*/
 }
 
 .titleInputWrap input{
@@ -30,12 +47,13 @@
     outline: none;
     border: none;
     padding: 10px;
-    background-color: #b2a69b;
+    background-color: #32271e;
     color: #32271e;
+    font-size: 1.25rem;
 }
 
 .starPoint{
-    margin-top: 15px;
+    margin-top: 10px;
     display: flex;
     gap:3px;
 }
@@ -45,8 +63,8 @@
 }
 
 .fileSelectBox {
-    margin-top: 20px;
-    width: 200px;
+    margin-top: 10px;
+    width: 150px;
     height: 100px;
     background-color: #333;
     color: white;
@@ -64,9 +82,9 @@
 }
 
 .imageSwiper {
-    margin-top: 20px;
+    margin-top: 10px;
     width: 100%;
-    height: 230px;
+    height: 150px;
 }
 
 .swiper {
@@ -96,15 +114,15 @@
 
 .removeImageBtn {
     position: absolute;
-    top: 10px;
-    right: 40px;
+    top: 0;
+    right: 0;
     background-color: #32271e;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 1.2rem;
+    width: 25px;
+    height: 25px;
+    font-size: 1.25rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -145,11 +163,15 @@
     background-color: #666 !important;
 }
 
+.swiper :global(.swiper-pagination) {
+    position: absolute !important;
+    bottom: 0 !important;
+}
 
 
 
 .contentInputWrap{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .contentInputWrap textarea{
@@ -159,9 +181,10 @@
     outline: none;
     border: none;
     padding: 10px;
-    background-color: #b2a69b;
-    color: #32271e;
+    background-color: #32271e;
+    color: #b2a69b;
     caret-color: transparent;
+    font-size: 1rem;
 }
 
 .contentInputWrap textarea:not(:placeholder-shown) {
@@ -175,14 +198,20 @@
 }
 
 .enrollContent{
-    margin:15px auto 20px;
+    margin: 10px auto 0;
     width: 200px;
     height: 30px;
     border-radius: 10px;
-    background-color: #b2a69b;
-    color: #32271e;
+    background-color: #32271e;
+    color: #b2a69b;
     font-size: 1.125rem;
     text-align: center;
     line-height: 30px;
+    transition: all 0.2s;
+}
+
+.enrollContent:hover{
+    background-color: #b2a69b;
+    color: #32271e;
 }
 

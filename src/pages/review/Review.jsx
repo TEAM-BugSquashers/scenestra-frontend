@@ -348,12 +348,9 @@ function Review(){
             {/*    </div>*/}
             {/*) }*/}
             {showWriteForm && (
-                <div className={classes.pan} onClick={() => setShowWriteForm(false)}>
-                    <div className={classes.popup} onClick={(e) => e.stopPropagation()}>
-                        <WriteReview />
-                    </div>
-                </div>
+                <WriteReview onClose={() => setShowWriteForm(false)} />
             )}
+
 
         </>
     );
