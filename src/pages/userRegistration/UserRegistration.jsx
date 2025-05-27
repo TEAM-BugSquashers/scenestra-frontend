@@ -28,12 +28,51 @@ function UserRegistration() {
         mouseLeft: false
     });
 
+    // left image transition
+    const [loaded, setLoaded] = useState(false);
+
+    // useEffect(() => {
+    //     setLoaded(true);
+    // }, []);
+
+    useEffect(() => {
+        // Add a small delay to see the transition
+        setTimeout(() => {
+            setLoaded(true);
+        }, 100);
+        setTimeout(() => {
+            setLoaded(false);
+        }, 600);
+    }, []);
+
+    // left image state
+    // const [currentIndex, setCurrentIndex] = useState(0);
+
+    // left image array
+    // const imageClasses = [
+    //     'imgEight',
+    //     'imgThree',
+    //     'imgFive',
+    //     'imgSeven',
+    //     'imgNine',
+    //     'imgEleven',
+    //     'imgOne'
+    // ]
+
+    // transition for left image
+    // useEffect(() => {
+    //     setInterval(() => {
+    //         setCurrentIndex(prevIndex => (prevIndex +1) % imageClasses.length);
+    //     }, 1000);
+    // }, [imageClasses.length]);
+
     // load all genres
     useEffect(() => {
         const fetchAllGenres = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
+                // setLoaded(true);
 
                 // set all genres
                 const genresResponse = await axiosGenres();
@@ -84,7 +123,7 @@ function UserRegistration() {
             }
         }
     };
-
+    console.log("loaded:", loaded);
     // handle genre label mouse enter
     const handleMouseEnter = (id) => {
         // if re-entry after unselection, 'unselected flag' is cleared
@@ -261,9 +300,23 @@ function UserRegistration() {
         <>
             <div className={classes["totalMargin"]}>
                 <div className={classes["totalLeft"]}>
-                    <div className={`${classes["leftQuote"]} ${classes["quoteLast"]}`}><em>SCENESTRA</em></div>
-                    <div className={`${classes["leftQuote"]} `}>Scene and space, exclusively yours.</div>
-                    {/*<div className={`${classes["leftQuote"]}`}>exclusively yours.</div>*/}
+                    <div className={classes["leftBox"]}>
+                        {/*<img src="/img/8.jpeg" className={`${classes["img8"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        <img src="/img/8.jpeg" className={`${classes["img8"]} ${loaded ? `${classes["fadeIn"]}` : `${classes["fadeOut"]}`}`} alt={"image"}/>
+
+                        {/*<img src="/img/3.jpg" className={`${classes["img3"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        {/*<img src="/img/5.jpg" className={`${classes["img5"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        {/*<img src="/img/7.jpg" className={`${classes["img7"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        {/*<img src="/img/9.jpeg" className={`${classes["img9"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        {/*<img src="/img/11.jpg" className={`${classes["img11"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        {/*<img src="/img/1.jpg" className={`${classes["img1"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        <div className={classes["leftQuoteBox"]}>
+                            <div className={`${classes["leftQuote"]} ${classes["leftLogo"]}`}><em>SCENESTRA</em></div>
+                            <div className={`${classes["leftQuote"]} `}>Scene and space, exclusively yours.</div>
+                            {/*<div className={`${classes["leftQuote"]}`}>SCENE AND SPACE, EXCLUSIVELY YOURS.</div>*/}
+                        </div>
+
+                    </div>
                 </div>
                 <div className={classes["totalMid"]}></div>
                 <div className={classes["totalRight"]}>
