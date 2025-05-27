@@ -11,7 +11,7 @@ function AllMovie() {
     const {id} = useParams();
 
     useEffect(() => {
-        if(id === undefined) return; // null 대신 undefined 체크
+        if(id === undefined) return;
 
         const fetchMovieData = async () => {
             try{
@@ -34,20 +34,32 @@ function AllMovie() {
 
     return(
         <>
+            {/* 비디오는 첫 번째 장르의 것만 한 번 표시 */}
+            {movieData.length > 0 && (
+                <div className={classes.videoWrap}>
+                    <video
+                        src={movieData[0].videoUrl}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline>
+                    </video>
+                </div>
+            )}
+
+            {/* 영화 목록 */}
             <div className={classes.wrap}>
                 {movieData.map((genre) => (
-                    // 각 장르별로 영화들을 렌더링
                     genre.movies.map((movie) => (
                         <div className={classes.movieArea}
-                             key={movie.movieId} // 영화의 고유 ID 사용
+                             key={movie.movieId}
                              style={{ backgroundImage: `url(${movie.posterUrl})` }}
                              onClick={() => handleSelectMovie(movie)}>
-                            {/* 영화 제목이나 다른 정보를 표시하고 싶다면: */}
-                            {/* <div className={classes.movieTitle}>{movie.title}</div> */}
                         </div>
                     ))
                 ))}
             </div>
+
             <MoviePopUp movie={selectedMovieData}
                         onClose={handleClosePopUp}/>
         </>

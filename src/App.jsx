@@ -39,12 +39,12 @@ function App() {
           <Route path="/seeAllMoive" element={<SeeAllMovie />} />
           <Route path="/roomSelect" element={<RoomSelect />} />
           <Route path="/review" element={<Review />} />
+          <Route path="/review/:id" element={<Review />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<UserRegistration />} />
           <Route path="/myPage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/review/:id" element={<Review />} />
         </Routes>
       </main>
       

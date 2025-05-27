@@ -32,18 +32,16 @@ function ReviewSelect(){
 
                 <div className={classes.nav}>
                     {theaterData.map((theater) => (
-                        <a
+                        <div
                             key={theater.theaterId}
                             onClick={() => navi("/Review/"+theater.theaterId)}
-                            className={classes.a}
+                            className={classes.simpleCard}
                         >
-                            <div>
-                                <div>
-                                    <img src={theater.image} alt={theater.name} />
-                                </div>
-                                <span>{theater.name}</span>
+                            <img src={theater.image} alt={theater.name} />
+                            <div className={classes.simpleOverlay}>
+                                <div className={classes.theaterName}>{theater.name}</div>
                             </div>
-                        </a>
+                        </div>
                     ))}
                 </div>
             </div>
