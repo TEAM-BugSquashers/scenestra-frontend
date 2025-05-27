@@ -5,6 +5,7 @@ import Room from './room/Room.jsx';
 import TimeSelect from "./timeSelect/TimeSelect.jsx";
 import PeopleNumber from "./peopleNo/PeopleNumber.jsx";
 import 'react-calendar/dist/Calendar.css';
+import ResultPopUp from "./resultPopUp/ResultPopUp.jsx";
 
 
 function Reservation() {
@@ -13,6 +14,10 @@ function Reservation() {
     // 리액트캘린더 이벤트와 관련된 부분
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
+    const [ isPopupOpen, setIsPopupOpen ] = useState(false);
+
+    const openPopup = () => setIsPopupOpen(true);
+    const closePopup = () => setIsPopupOpen(false);
 
     const isDateStepActive = selectedRoom !== null; // 방 선택 후 활성화
     const isTimeStepActive = selectedRoom !== null && selectedDate !== null; // 방+날짜 선택 후 활성화
@@ -158,7 +163,7 @@ function Reservation() {
                              />
                         </div>
                     </div>
-                    {/* 선택된 날짜 출력 */}
+                    {/* 선택된 날짜 시간 출력 */}
                     {selectedDate && (
                         <div className={classes.box}>
                             <div className={`${classes["sectionTitle"]} subtitle`}>예약일시</div>
@@ -178,9 +183,14 @@ function Reservation() {
                     </div>
                 </div>
                 <div className={classes.btnBox}>
-                    <button className={`${classes["reserveBtn"]} btn2 ${!isReserveButtonActive ? classes.disabledbtn : ''}`}>
+                    <button className={`${classes["reserveBtn"]} btn2 ${!isReserveButtonActive ? classes.disabledbtn : ''}`}
+                    onClick={openPopup}>
                         RESERVE NOW
                     </button>
+                    <ResultPopUp
+                        isOpen={isPopupOpen}
+                        onClose={closePopup}
+                    />
                 </div>
             </div>
         </>

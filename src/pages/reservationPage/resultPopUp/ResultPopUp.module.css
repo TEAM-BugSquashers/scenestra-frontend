@@ -1,0 +1,60 @@
+* {
+    color: #32271e;
+}
+.overlay {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(000,000,000,0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.popUp {
+    width: 650px;
+    height: 400px;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    padding: 30px;
+}
+.popXBox {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+.xLeft {
+    width: 20px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: left;
+    transform: rotateZ(45deg) translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+.xRight{
+    width: 20px;
+    height: 1px;
+    background-color: #32271e;
+    transform-origin: left;
+    transform: rotateZ(-45deg) translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+.popupTitle {
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    margin-bottom: 10px;
+}
+.descBox {
+    border-top: 3px solid #726254;
+    margin-top: 10px;
+}
