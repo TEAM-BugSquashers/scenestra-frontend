@@ -8,7 +8,6 @@
     border-radius: 20px;
     margin: 100px auto 0;
     padding-bottom: 30px;
-
 }
 .RTitle {
     font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
@@ -82,6 +81,7 @@
 :global(.react-calendar__tile--now:enabled:hover),
 :global(.react-calendar__tile--now:enabled:focus) {
     background: #32271e;
+    color: #fff;
 }
 .outerBox :global(.react-calendar) {
     width: 350px;
@@ -105,3 +105,6 @@
     list-style: decimal;
 }
 
+.disabled {
+    pointer-events: none;
+}

@@ -24,7 +24,7 @@ function PeopleNumber() {
     return(
         <>
             <input type="button" value="-" className={classes.nBtn} onClick={handleMinus}/>
-            <input type="text" value={num} className={classes.number}/>
+            <input type="text" value={num} className={classes.number} readOnly/>
             <input type="button" value="+" className={classes.nBtn} onClick={handlePlus}/>
         </>
     );

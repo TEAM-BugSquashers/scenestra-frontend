@@ -1,7 +1,6 @@
 import classes from "./Room.module.css";
 import React, { useState } from "react";
 
-
 function Room() {
     const roomData = [
         {id: 1, url: '/roomImg/room1.jpg', name: 'SERENE', peopleNo: '2~3인'},
@@ -9,7 +8,7 @@ function Room() {
         {id: 3, url: '/roomImg/room3.jpg', name: 'ASTRAL', peopleNo: '4~5인'},
         {id: 4, url: '/roomImg/room4.jpg', name: 'VERDANT', peopleNo: '8~10인'}
     ];
-    const [selectedRoomId, setSelectedRoomId] = useState(1);
+    const [selectedRoomId, setSelectedRoomId] = useState(null);
 
     return(
         <div className={classes.roomContainer}>

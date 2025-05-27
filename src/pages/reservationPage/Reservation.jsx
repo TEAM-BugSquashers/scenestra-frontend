@@ -9,9 +9,17 @@ import 'react-calendar/dist/Calendar.css';
 // import {axiosgroupedByGenre} from "../api/axios.js";
 
 function Reservation() {
-
+    const [selectedTime, setSelectedTime] = useState(null);
+    const [selectedTimeInfo, setSelectedTimeInfo] = useState(null);
     // 리액트캘린더 이벤트와 관련된 부분
     const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedRoom, setSelectedRoom] = useState(null);
+
+    const isRoomStepActive = true; // 항상 활성화
+    const isDateStepActive = selectedRoom !== null; // 방 선택 후 활성화
+    const isTimeStepActive = selectedRoom !== null && selectedDate !== null; // 방+날짜 선택 후 활성화
+    const isReserveButtonActive = selectedRoom !== null && selectedDate !== null && selectedTimeInfo !== null;
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -23,9 +31,7 @@ function Reservation() {
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
-        console.log('선택된 날짜:', date);
     };
-
     const getDateClass = ({ date, view }) => {
         if (view === 'month') {
             const checkDate = new Date(date);
@@ -41,7 +47,6 @@ function Reservation() {
         }
         return null;
     };
-
     const tileDisabled = ({ date, view }) => {
         if (view === 'month') {
             const checkDate = new Date(date);
@@ -51,7 +56,6 @@ function Reservation() {
         }
         return false;
     };
-
     const formatDate = (date) => {
         return date.toLocaleDateString('ko-KR', {
             year: 'numeric',
@@ -60,6 +64,13 @@ function Reservation() {
             weekday: 'long'
         });
     };
+
+    // 타임셀렉에 들어갈 임시 영화데이터
+    const [selectedMovie, setSelectedMovie] = useState({
+        title: "어벤져스: 엔드게임",
+        duration: 141, // 분 단위
+        poster: "" // 포스터 이미지 경로 (나중에 추가)
+    });
 
     return (
         <>
@@ -76,8 +87,8 @@ function Reservation() {
                         <div className={`${classes["sectionTitle"]} subtitle`}>선택한영화</div>
                         <div className={classes.selectedMovie}>
                             <div className={classes.movieImg}></div>
-                            <h2>영화제목</h2>
-                            <div>상영시간</div>
+                            <h2>{selectedMovie.title}</h2>
+                            <div>{selectedMovie.duration} 분</div>
                         </div>
                     </div>
                     <div className={classes.box}>
@@ -89,10 +100,13 @@ function Reservation() {
                     <div>
                         <div className={`${classes["sectionTitle"]} subtitle`}>상영관선택</div>
                         <div className={classes.box}>
-                            <Room />
+                            <Room
+                                selectedRoom={selectedRoom}
+                                setSelectedRoom={setSelectedRoom}
+                            />
                         </div>
                     </div>
-                    <div className={classes.box}>
+                    <div className={`${classes.box} ${!isDateStepActive ? classes.disabled : ''}`}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>날짜선택</div>
                         <div className={`${classes["reserveBox"]} box`}>
                             <div className={classes.reservationInfo}>
@@ -122,18 +136,31 @@ function Reservation() {
                             />
                         </div>
                     </div>
-                    <div className={classes.box}>
+                    <div className={`${classes.box} ${!isTimeStepActive ? classes.disabled : ''}`}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>시간선택</div>
                         <div className={classes.box}>
-                             <TimeSelect />
+                             <TimeSelect
+                                movieDuration={selectedMovie.duration}
+                                selectedTime={selectedTime}
+                                setSelectedTime={setSelectedTime}
+                                onTimeSelect={(timeInfo) => {
+                                    setSelectedTimeInfo(timeInfo);
+                                }}
+                             />
+                            <div>선택불가능한 시간입니다</div>
                         </div>
                     </div>
                     {/* 선택된 날짜 출력 */}
                     {selectedDate && (
                         <div className={classes.box}>
                             <div className={`${classes["sectionTitle"]} subtitle`}>예약일시</div>
-                            <div className={classes.selectedDate}>
+                            <div>
                                 {formatDate(selectedDate)}
+                                {selectedTimeInfo && (
+                                    <div>
+                                        선택시간: {selectedTimeInfo.startTime} ~ {selectedTimeInfo.endTime}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}

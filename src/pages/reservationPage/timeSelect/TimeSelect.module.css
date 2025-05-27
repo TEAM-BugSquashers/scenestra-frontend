@@ -23,9 +23,39 @@
     background: #b2a69b;
     cursor: pointer;
 }
+.clickBox.selected {background: #32271e;}
+.clickBox:hover {background: #726254;}
+.clickBox.unavailable {
+    background: #d9d9d9;
+    cursor: not-allowed;
+}
+.clickBox.unavailable:hover {background: #d9d9d9;}
+
+
 .timeSelectBox {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.selectable {
+    width: 20px;
+    height: 20px;
+    background: #b2a69b;
+}
+.end {
+    width: 20px;
+    height: 20px;
+    background: #d9d9d9;
+}
+.sbox{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+.selectableBox {
+    width: 100%;
+    display: flex;
+    margin: 10px 0 0 142px;
+    gap: 20px;
 }
