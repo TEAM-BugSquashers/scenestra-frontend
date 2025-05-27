@@ -125,7 +125,7 @@ function Reservation() {
                     <div className={classes.box}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>시간선택</div>
                         <div className={classes.box}>
-                            {/* <TimeSelect /> */}
+                             <TimeSelect />
                         </div>
                     </div>
                     {/* 선택된 날짜 출력 */}
