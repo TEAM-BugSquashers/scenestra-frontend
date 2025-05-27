@@ -304,6 +304,7 @@ input[type="checkbox"]:checked + label {
 
 .bigBtn:hover {
     background-color: #32271e;
+    cursor: pointer;
 }
 .cancelResBtn:hover {
     background-color: #b2a69b;

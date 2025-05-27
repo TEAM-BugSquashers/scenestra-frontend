@@ -583,7 +583,10 @@ function MyPage() {
                                                 <label
                                                     className={classes["genreChkBx"]}
                                                     htmlFor={genre.value}
-                                                    style={getGenreLabelStyle(genre.value)}
+                                                    style={{
+                                                        ...getGenreLabelStyle(genre.value),
+                                                        ...(isEditMode ? {cursor: 'pointer'} : {})
+                                                    }}
                                                     onMouseEnter={() => handleMouseEnter(genre.value)}
                                                     onMouseLeave={() => handleMouseLeave(genre.value)}
                                                 >
