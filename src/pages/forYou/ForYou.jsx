@@ -6,22 +6,28 @@ import 'swiper/css/pagination';
 
 import { Mousewheel, Pagination } from 'swiper/modules';
 import MoviePopUp from "../components/moviePopUp/MoviePopUp.jsx";
-import {Route, useNavigate} from "react-router-dom";
-import {axiosTest} from "../api/axios.js";
+import { Route, useNavigate } from "react-router-dom";
+import { axiosRecommend, axiosTest } from "../api/axios.js";
 import useMoviePopUp from "../hooks/useMoviePopUp.jsx";
 
-const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => {
+const MovieSlide = ({ movieSrc, genre, isActive, currentMoviesData, onSelectMovie }) => {
     const movieRef = useRef(null);
     const navigate = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
-        if(movieRef.current) {
-            if(isActive) {
-                movieRef.current.play();
-            }
-            else {
-                movieRef.current.pause();
+        if (movieRef.current) {
+            const video = movieRef.current;
+
+            if (isActive) {
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Video play failed:", error);
+                    });
+                }
+            } else {
+                video.pause();
             }
         }
     }, [isActive]);
@@ -29,17 +35,18 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
     const handleMouseEnter = () => {
         setIsHovered(true);
     }
+
     const contentStyle = {
-        bottom: isHovered ? '115%' : '40%',
+        bottom: isHovered ? '110%' : '40%',
         transition: 'bottom 0.5s ease'
     };
+
     const handleContainerClick = () => {
         setIsHovered(false);
     }
+
     return (
-        <div className={classes.movieContainer}
-            onClick={handleContainerClick}
-        >
+        <div className={classes.movieContainer} onClick={handleContainerClick}>
             <video
                 ref={movieRef}
                 className={classes.backgroundMovie}
@@ -50,33 +57,37 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
                 <source src={movieSrc} type="video/mp4" />
             </video>
             <div className={classes.bottomContainer}
-                onMouseEnter={handleMouseEnter}
-                    onClick={(e) => e.stopPropagation()}
+                 onMouseEnter={handleMouseEnter}
+                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={classes.movieContent} style={contentStyle}>
                     <div className={classes.line1} />
-                    <h2 className={classes.genreTitle}>{genre}</h2>
+                    <h1 className={classes.genreTitle}>{genre}</h1>
                     <div className={classes.line2} />
                 </div>
                 {isHovered && (
                     <div className={classes.topMovies}>
                         <div className={classes.postersContainer}>
-                            {topPostData.map(poster => (
-                                <div
-                                    key={poster.id}
-                                    className={classes.posterItem}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onSelectMovie(poster.id);
-                                    }}
-                                >
-                                    <img
-                                        src={poster.image}
-                                        alt={poster.title}
-                                        className={classes.posterImage}
-                                    />
-                                </div>
-                            ))}
+                            {currentMoviesData && currentMoviesData.length > 0 ? (
+                                currentMoviesData.slice(0, 7).map(movie => (
+                                    <div
+                                        key={movie.movieId}
+                                        className={classes.posterItem}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onSelectMovie(movie.movieId);
+                                        }}
+                                    >
+                                        <img
+                                            src={movie.posterUrl}
+                                            alt={movie.title}
+                                            className={classes.posterImage}
+                                        />
+                                    </div>
+                                ))
+                            ) : (
+                                <div>Loading movies...</div>
+                            )}
                             <button
                                 className={classes.allMovieShowBtn}
                                 onClick={(e) => {
@@ -94,74 +105,104 @@ const MovieSlide = ({movieSrc, genre, isActive, topPostData, onSelectMovie}) => 
     );
 };
 
-function ForYou(){
-    const [activeIndex, setActiveIndex ] = useState(0);
-    const [selectedMovieData, handleSelectMovie, handleClosePopUp ] = useMoviePopUp();
+function ForYou() {
+    const [moviesData, setMoviesData] = useState({
+        bestMovies: [],
+        genreMovies: [],
+        newMovies: []
+    });
+
     useEffect(() => {
-        axiosTest()
+        const fetchMoviesData = async () => {
+            try {
+                const response = await axiosRecommend();
+                console.log("Recommend Movies: ", response.data);
+
+                setMoviesData({
+                    bestMovies: response.data.payload.bestMovies || [],
+                    genreMovies: response.data.payload.genreMovies || [],
+                    newMovies: response.data.payload.newMovies || []
+                });
+
+            } catch (error) {
+                console.error("Error fetching movies: ", error);
+            }
+        };
+
+        fetchMoviesData();
+        axiosTest();
     }, []);
 
-    const movies = [
-        {id: 1, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/WarNapoleon.mp4', genre: 'WAR' },
-        {id: 2, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/CrimeNightmare+Alley.mp4', genre: 'CRIME' },
-        {id: 3, url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/FantasyTheLordOfTheRings.mp4', genre: 'FANTASY' },
-        {id: 4, url:'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/WarNapoleon.mp4', genre: 'BEST'},
-        {id: 5, url:'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/CrimeNightmare+Alley.mp4', genre: 'NEW' }
-    ];
-    const topPostData = [
-        {
-            id: 1,
-            image: '/posterimage/더랍스터.jpg',
-            title:'더랍스터',
-            director: '감독이름',
-            genre: '장르',
-            runtime: '상영시간',
-            releaseYear: '개봉연도'
-        },
-        {
-            id: 2,
-            image: '/posterimage/엑시트.jpg',
-            title:'엑시트',
-            director: '감독이름',
-            genre: '장르',
-            runtime: '상영시간',
-            releaseYear: '개봉연도'
-        },
-        {
-            id: 3,
-            image: '/posterimage/파묘.jpg',
-            title:'파묘',
-            director: '감독이름',
-            genre: '장르',
-            runtime: '상영시간',
-            releaseYear: '개봉연도'
-        },
-        {
-            id: 4,
-            image: '/posterimage/CallMeByYourName.jpg',
-            title:'CallMeByYourName',
-            director: '감독이름',
-            genre: '장르',
-            runtime: '상영시간',
-            releaseYear: '개봉연도'
-        },
-        {
-            id: 5,
-            image: '/posterimage/하얼빈.jpg',
-            title:'하얼빈',
-            director: '감독이름',
-            genre: '장르',
-            runtime: '상영시간',
-            releaseYear: '개봉연도'
-        }
-    ]
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [selectedMovieData, handleSelectMovie, handleClosePopUp] = useMoviePopUp();
+
+    // 동적으로 movies 배열 생성
+    const movies = React.useMemo(() => {
+        const movieSlides = [];
+
+        moviesData.genreMovies.forEach((genreData, index) => {
+            movieSlides.push({
+                id: genreData.genreId,
+                url: genreData.videoUrl,
+                genre: genreData.engName,
+                genreId: genreData.genreId
+            });
+        });
+
+        movieSlides.push({
+            id: 'best',
+            url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/Bestinsideout.mp4',
+            genre: 'BEST',
+            type: 'best'
+        });
+        movieSlides.push({
+            id: 'new',
+            url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/NewCatcintheMuseum.mp4',
+            genre: 'NEW',
+            type: 'new'
+        });
+
+        return movieSlides;
+    }, [moviesData.genreMovies]);
 
     const handleSlideChange = (swiper) => {
         setActiveIndex(swiper.activeIndex);
     }
+
     const onSelectMovie = (movieId) => {
-        const selectedMovie = topPostData.find(movie => movie.id === movieId);
-        handleSelectMovie(selectedMovie);
+        const currentMovies = getCurrentMoviesData();
+        const selectedMovie = currentMovies.find(movie => movie.movieId === movieId);
+
+        if (selectedMovie) {
+            // movieId를 포함한 객체로 전달
+            const movieForPopup = {
+                movieId: selectedMovie.movieId, // 이 부분 추가
+                id: selectedMovie.movieId,
+                title: selectedMovie.title,
+                image: selectedMovie.posterUrl,
+                showTime: selectedMovie.showTime,
+                director: selectedMovie.director,
+                openDate: selectedMovie.openDate,
+                numAudience: selectedMovie.numAudience
+            };
+            handleSelectMovie(movieForPopup);
+        }
+    };
+    const getCurrentMoviesData = () => {
+        const currentSlide = movies[activeIndex];
+
+        if (!currentSlide) return [];
+
+        if (currentSlide.type === 'best') {
+            return moviesData.bestMovies;
+        } else if (currentSlide.type === 'new') {
+            return moviesData.newMovies;
+        } else if (currentSlide.genreId) {
+            const genreData = moviesData.genreMovies.find(genre => genre.genreId === currentSlide.genreId);
+            return genreData ? genreData.movies : [];
+        }
+
+        return [];
     };
 
     return (
@@ -171,6 +212,7 @@ function ForYou(){
                     <MoviePopUp
                         movie={selectedMovieData}
                         onClose={handleClosePopUp}
+                        onClick={(e) => e.stopPropagation()}
                     />
                     <Swiper
                         direction={'vertical'}
@@ -191,7 +233,7 @@ function ForYou(){
                                     movieSrc={movie.url}
                                     genre={movie.genre}
                                     isActive={index === activeIndex}
-                                    topPostData={topPostData}
+                                    currentMoviesData={getCurrentMoviesData()}
                                     onSelectMovie={onSelectMovie}
                                 />
                             </SwiperSlide>

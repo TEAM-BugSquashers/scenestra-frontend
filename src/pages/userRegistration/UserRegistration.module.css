@@ -121,7 +121,6 @@
 .formField input:focus + label,
 .formField input:not(:placeholder-shown) + label {
     color: #b2a69b;
-    font-family: 'Pretendard-Regular', sans-serif;
     font-size: 0.625rem;
     top: 11px;
     left: 10px;
@@ -151,9 +150,9 @@
     align-items: center;
     justify-content: center;
 }
-.idWrap button:hover {
-    background-color: #32271e;
-}
+/*.idWrap button:hover {*/
+/*    background-color: #32271e;*/
+/*}*/
 /* genreBar */
 .genreTitle {
     margin: 10px 10px 10px 0;
@@ -167,12 +166,13 @@ input[type="checkbox"] {
     width: calc((100% - 20px)/3);
     height: 40px;
 
-    font-family: 'Pretendard-Regular', sans-serif;
     font-size: 1rem;
 
     border: 1px solid;
     border-radius: 10px;
     box-sizing: border-box;
+
+    cursor: pointer;
 
     display: flex;
     justify-content: center;
@@ -204,6 +204,14 @@ form > button {
     border: none;
     border-radius: 10px;
 }
-form > button:hover {
+/*form > button:hover {*/
+/*    background-color: #32271e;*/
+/*}*/
+form .valid {
     background-color: #32271e;
+    cursor: pointer;
+}
+.formField > .mobileLbl {
+    font-size: 0.625rem;
+    top: 11px;
 }

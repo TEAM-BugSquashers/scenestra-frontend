@@ -53,9 +53,31 @@ export const axiosLogout = async () => {
     }
 }
 
+// // 유저 api // //
+export const axiosPreferredGenres = async ([x, y, z]) => {
+    try {
+        const response = await instance.put("/users/preferred-genres", [ x, y, z ]);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosPassword = async (oldPassword, newPassword) => {
+    try {
+        const response = await instance.put("/users/password", {
+            oldPassword,
+            newPassword
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const axiosInfo = async (email, mobile) => {
     try {
-        const response = await instance.post("/users/info", {
+        const response = await instance.put("/users/info", {
             email,
             mobile
         });
@@ -133,6 +155,15 @@ export const axiosGenreId = async (genreId) => {
         return response;
 }
 
+
+export const axiosRecommend = async() => {
+    try {
+        const response = await instance.get("/movies/recommend");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
 export const axiosTheaters = async () => {
     try {
         const response = await instance.get(`/theaters`);
