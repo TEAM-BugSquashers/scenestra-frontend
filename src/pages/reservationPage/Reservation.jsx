@@ -6,7 +6,6 @@ import TimeSelect from "./timeSelect/TimeSelect.jsx";
 import PeopleNumber from "./peopleNo/PeopleNumber.jsx";
 import 'react-calendar/dist/Calendar.css';
 
-// import {axiosgroupedByGenre} from "../api/axios.js";
 
 function Reservation() {
     const [selectedTime, setSelectedTime] = useState(null);
@@ -15,7 +14,6 @@ function Reservation() {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
 
-    const isRoomStepActive = true; // 항상 활성화
     const isDateStepActive = selectedRoom !== null; // 방 선택 후 활성화
     const isTimeStepActive = selectedRoom !== null && selectedDate !== null; // 방+날짜 선택 후 활성화
     const isReserveButtonActive = selectedRoom !== null && selectedDate !== null && selectedTimeInfo !== null;
@@ -31,6 +29,17 @@ function Reservation() {
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
+        // 날짜가 바뀌면 시간 선택 초기화
+        setSelectedTime(null);
+        setSelectedTimeInfo(null);
+    };
+
+    const handleRoomSelect = (roomId) => {
+        setSelectedRoom(roomId);
+        // 방이 바뀌면 날짜와 시간 선택 초기화
+        setSelectedDate(null);
+        setSelectedTime(null);
+        setSelectedTimeInfo(null);
     };
     const getDateClass = ({ date, view }) => {
         if (view === 'month') {
@@ -102,7 +111,7 @@ function Reservation() {
                         <div className={classes.box}>
                             <Room
                                 selectedRoom={selectedRoom}
-                                setSelectedRoom={setSelectedRoom}
+                                setSelectedRoom={handleRoomSelect}
                             />
                         </div>
                     </div>
@@ -147,7 +156,6 @@ function Reservation() {
                                     setSelectedTimeInfo(timeInfo);
                                 }}
                              />
-                            <div>선택불가능한 시간입니다</div>
                         </div>
                     </div>
                     {/* 선택된 날짜 출력 */}
@@ -170,7 +178,9 @@ function Reservation() {
                     </div>
                 </div>
                 <div className={classes.btnBox}>
-                    <button className={`${classes["reserveBtn"]} btn2`}>RESERVE NOW</button>
+                    <button className={`${classes["reserveBtn"]} btn2 ${!isReserveButtonActive ? classes.disabledbtn : ''}`}>
+                        RESERVE NOW
+                    </button>
                 </div>
             </div>
         </>

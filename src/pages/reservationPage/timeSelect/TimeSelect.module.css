@@ -1,7 +1,3 @@
-.timeContainer {
-    width: 100%;
-}
-
 .timeTextRow {
     display: flex;
     margin-bottom: 5px;
@@ -12,9 +8,7 @@
     font-size: 0.875rem;
     text-align: center;
 }
-.timeBox {
-    display: flex;
-}
+.timeBox {display: flex;}
 
 .clickBox {
     width: 45px;
@@ -30,7 +24,6 @@
     cursor: not-allowed;
 }
 .clickBox.unavailable:hover {background: #d9d9d9;}
-
 
 .timeSelectBox {
     width: 100%;
@@ -58,4 +51,16 @@
     display: flex;
     margin: 10px 0 0 142px;
     gap: 20px;
+}
+.selectableBox {
+    position: relative;
+}
+.error {
+    width: 200px;
+    height: 30px;
+    color: darkred;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
 }

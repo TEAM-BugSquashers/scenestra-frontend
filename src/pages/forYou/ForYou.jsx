@@ -140,7 +140,6 @@ function ForYou() {
     const movies = React.useMemo(() => {
         const movieSlides = [];
 
-        // 장르 영화들 추가 (genreMovies 배열에서)
         moviesData.genreMovies.forEach((genreData, index) => {
             movieSlides.push({
                 id: genreData.genreId,
@@ -150,14 +149,12 @@ function ForYou() {
             });
         });
 
-        // BEST 슬라이드 추가 (고정)
         movieSlides.push({
             id: 'best',
             url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/Bestinsideout.mp4',
             genre: 'BEST',
             type: 'best'
         });
-        // NEW 슬라이드 추가 (고정)
         movieSlides.push({
             id: 'new',
             url: 'https://scenestra.s3.ap-northeast-2.amazonaws.com/video/NewCatcintheMuseum.mp4',

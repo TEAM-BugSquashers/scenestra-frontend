@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import classes from './TimeSelect.module.css';
 
 function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect}) {
-
     // 시간선택불가능한 영역 표시용 임시데이터
     const [unavailableSlots, setUnavailableSlots ] = useState([0, 1, 2, 3, 16,17,18]);
+
+    // 에러 메시지 상태 추가
+    const [errorMessage, setErrorMessage] = useState('');
 
     const getSlotsNeeded = (duration) => {
         return Math.ceil(duration / 30);
@@ -24,7 +26,11 @@ function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect
     const timeSlots = generateTimeSlots();
 
     const handleTimeClick = (index) => {
+        // 에러 상태 초기화
+        setErrorMessage('');
+
         if(unavailableSlots.includes(index)) {
+            setErrorMessage("선택불가능한 시간입니다");
             return;
         }
 
@@ -36,7 +42,7 @@ function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect
         // 연속 칸 확인: 현재 인덱스부터 필요한 칸만큼 선택 가능한지 체크
         for(let i = 0; i < slotsNeeded; i++) {
             if(index + i >= timeSlots.length || unavailableSlots.includes(index + i)) {
-                console.log("필요한 시간이 부족합니다");
+                setErrorMessage("선택불가능한 시간입니다");
                 return;
             }
         }
@@ -105,6 +111,7 @@ function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect
                         <div className={classes.end}></div>
                         마감
                     </div>
+                    <div className={classes.error}>{errorMessage}</div>
                 </div>
             </div>
         </>

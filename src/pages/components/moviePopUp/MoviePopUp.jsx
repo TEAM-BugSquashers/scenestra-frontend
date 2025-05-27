@@ -1,9 +1,11 @@
 import classes from './MoviePopUp.module.css';
 import React, {useEffect, useState} from 'react';
 import {axiosBindMovie} from "../../api/axios.js";
+import { useNavigate } from "react-router-dom";
 
 function MoviePopUp({movie, onClose}) {
     const [movieData,setMovieData] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!movie || !movie.movieId) {
@@ -58,7 +60,9 @@ function MoviePopUp({movie, onClose}) {
                         <div className={`${classes["movieDesc"]} body2`}>
                             상영시간: {movieData?.showTime}분
                         </div>
-                        <div className={`${classes["selectMovieBtn"]} btn2`}>영화선택</div>
+                        <div
+                            onClick={() => {navigate("/reservation");}}
+                            className={`${classes["selectMovieBtn"]} btn2`}>영화선택</div>
                     </div>
                 </div>
             </div>

@@ -22,15 +22,15 @@
     height: 40px;
     border-radius: 10px;
     font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
-    background-color: #b2a69b;
+    background-color: #32271e;
     border: none;
     font-weight: 700;
     color: #fff;
     cursor: pointer;
 }
-.reserveBtn:hover {
-    background-color: #32271e;
-}
+/*.reserveBtn:hover {*/
+/*    background-color: #32271e;*/
+/*}*/
 .btnBox {
     display: flex;
     justify-content: center;
@@ -73,7 +73,8 @@
     margin-top: 10px;
 }
 .box { margin: 15px 0; }
-/*캘린더css*/
+
+
 .outerBox :global(.react-calendar__tile--active ) {background: #32271e;}
 .outerBox :global(.react-calendar__tile--now ) {background: #b2a69b;}
 .outerBox :global(.react-calendar__tile--active:enabled:hover),
@@ -106,5 +107,9 @@
 }
 
 .disabled {
+    pointer-events: none;
+}
+.disabledbtn {
+    background: #b2a69b;
     pointer-events: none;
 }
