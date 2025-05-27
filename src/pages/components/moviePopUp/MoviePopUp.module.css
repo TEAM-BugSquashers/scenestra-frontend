@@ -1,9 +1,9 @@
 .moviePopUp {
     position: fixed;
-    width: 600px;
-    height: 480px;
+    width: 650px;
+    height: 520px;
     background-color: #fff;
-    border-radius: 30px;
+    border-radius: 20px;
     top: 9%;
     left: 50%;
     transform: translate(-50%, 0%);
@@ -11,6 +11,7 @@
     padding: 30px;
     gap: 30px;
     z-index: 1001;
+    box-shadow: 7px 7px 15px rgba(000,000,000,0.5);
 }
 .movieDetailImg {
     border-radius: 10px;
@@ -28,17 +29,34 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
 }
 .movieTitle {
-    margin: 0 0 10px 0;
+    width: 300px;
+    margin: 10px 0;
+    word-wrap: break-word;
+    word-break: keep-all;
+    line-height: 1.1; /* 줄 간격 조정 */
+    white-space: normal;
+}
+.cBox {
+    width: 12px;
+    height: 100%;
+    background: #32271e;
+    margin-right: 10px;
+}
+.titleBox {
+    display: flex;
 }
 .releaseYear {
     display: inline;
     margin-bottom: 20px;
+    color: #726254;
+    text-align: right;
 }
 .movieDesc {
     margin-top: 5px;
+    color: #32271e;
 }
 .popXBox {
     width: 30px;
@@ -74,12 +92,13 @@
     font-size: 0.875rem;
     line-height: 40px;
     text-align: center;
-    background-color: #b2a69b;
+    background-color: #32271e;
     border-radius: 10px;
     margin-top: 40px;
-    opacity: 0.6;
     cursor: pointer;
     color: #fff;
+    position: absolute;
+    bottom: 0;
 }
 .selectMovieBtn:hover {
     opacity: 1;
@@ -91,7 +110,7 @@
     top: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(255,255,255,0.2);
-    backdrop-filter: blur(5px);
+    background-color: rgba(000,000,000,0.5);
+    backdrop-filter: blur(3px);
     z-index: 5;
 }

@@ -1,0 +1,55 @@
+.rBox {
+    width: calc((100% - 20px)/4);
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.rImg {
+    overflow: hidden;
+}
+.rImg img {
+    width: 100%;
+    cursor: pointer;
+    transform: scale(1);
+    transition: all 0.3s;
+    display: block;
+}
+.rImg img:hover {
+    transform: scale(1.1);
+}
+
+.rName {
+    font-size: 1rem;
+    color: #32271e;
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    cursor: pointer;
+}
+.innerBox {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+.roomContainer {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.chkBox {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #32271e;
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+}
+.checkMark {
+    color: #32271e;
+    margin: 0;
+    position: absolute;
+    top: -3px;
+    left: 1px;
+    font-size: 1.25rem;
+}
+

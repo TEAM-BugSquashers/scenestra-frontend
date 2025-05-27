@@ -13,6 +13,7 @@ import Login from "./pages/login/Login.jsx";
 import UserRegistration from "./pages/userRegistration/UserRegistration.jsx";
 import Admin from "./pages/admin/Admin.jsx";
 import AllMovie from "./pages/allMovie/AllMovie.jsx";
+import Reservation from "./pages/reservationPage/Reservation.jsx";
 import MyPage from "./pages/myPage/MyPage.jsx";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/allMovie/:id" element={<AllMovie />} />
           <Route path="/seeAllMovie" element={<SeeAllMovie />} />
           <Route path="/" element={<ForYou />} />
+          <Route path="/reservation" element={<Reservation />} />
           <Route path="/seeAllMoive" element={<SeeAllMovie />} />
           <Route path="/roomSelect" element={<RoomSelect />} />
           <Route path="/review" element={<Review />} />

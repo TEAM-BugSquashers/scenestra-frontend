@@ -154,3 +154,13 @@ export const axiosGenreId = async (genreId) => {
         const response = await instance.get(`/movies/genres/${genreId}`);
         return response;
 }
+
+
+export const axiosRecommend = async() => {
+    try {
+        const response = await instance.get("/movies/recommend");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
