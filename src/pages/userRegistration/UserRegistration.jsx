@@ -28,36 +28,30 @@ function UserRegistration() {
         mouseLeft: false
     });
 
-    // left image transition
+    // left image state
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    // loaded state for signup form appear
     const [loaded, setLoaded] = useState(false);
 
-    // useEffect(() => {
-    //     setLoaded(true);
-    // }, []);
-
-    useEffect(() => {
-        // Add a small delay to see the transition
-        setTimeout(() => {
-            setLoaded(true);
-        }, 100);
-        setTimeout(() => {
-            setLoaded(false);
-        }, 600);
-    }, []);
-
-    // left image state
-    // const [currentIndex, setCurrentIndex] = useState(0);
-
     // left image array
-    // const imageClasses = [
-    //     'imgEight',
-    //     'imgThree',
-    //     'imgFive',
-    //     'imgSeven',
-    //     'imgNine',
-    //     'imgEleven',
-    //     'imgOne'
-    // ]
+    const imageClasses = [
+        'imgEight',
+        'imgThree',
+        'imgFive',
+        'imgSeven',
+        'imgNine',
+        'imgEleven',
+        'imgOne',
+        'imgEight',
+        'imgThree',
+        'imgFive',
+        'imgSeven',
+        'imgNine',
+        'imgEleven',
+        'imgOne',
+        'imgEight'
+    ]
 
     // transition for left image
     // useEffect(() => {
@@ -65,6 +59,41 @@ function UserRegistration() {
     //         setCurrentIndex(prevIndex => (prevIndex +1) % imageClasses.length);
     //     }, 1000);
     // }, [imageClasses.length]);
+    //
+    // const getImageStyle = (index) => {
+    //     return {
+    //         opacity: index === currentIndex ? 1 : 0,
+    //         zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
+    //     }
+    // }
+
+    useEffect(() => {
+
+        if (currentIndex < imageClasses.length - 1) {
+            // const time = (currentIndex + 0.1) * 100;
+            const logBase = (number, base) => Math.log(number) / Math.log(base);
+            const time = logBase(5, (currentIndex+3)*0.4) * 100;
+            // const time = Math.log(currentIndex) * 100;
+            // const time = Math.pow(1.5, currentIndex) * 100;
+            const timeout = setTimeout(() => {
+                setCurrentIndex(prevIndex => prevIndex + 1);
+            }, time);
+            return () => clearTimeout(timeout);
+        }
+
+        // load signup form
+        setTimeout(() => {
+            setLoaded(true);
+        }, 753.86);
+
+    }, [currentIndex, imageClasses.length]);
+
+    const getImageStyle = (index) => {
+        return {
+            opacity: index === currentIndex ? 1 : 0,
+            zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
+        }
+    }
 
     // load all genres
     useEffect(() => {
@@ -123,7 +152,6 @@ function UserRegistration() {
             }
         }
     };
-    console.log("loaded:", loaded);
     // handle genre label mouse enter
     const handleMouseEnter = (id) => {
         // if re-entry after unselection, 'unselected flag' is cleared
@@ -302,14 +330,108 @@ function UserRegistration() {
                 <div className={classes["totalLeft"]}>
                     <div className={classes["leftBox"]}>
                         {/*<img src="/img/8.jpeg" className={`${classes["img8"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-                        <img src="/img/8.jpeg" className={`${classes["img8"]} ${loaded ? `${classes["fadeIn"]}` : `${classes["fadeOut"]}`}`} alt={"image"}/>
+                        {/*<img src="/img/8.jpeg" className={`${classes["img8"]} ${loaded ? `${classes["fadeIn"]}` : `${classes["fadeOut"]}`}`} alt={"image"}/>*/}
+                        {/*<img src="/img/8.jpeg" className={`${classes["img8"]} ${appear ? `${classes["fadeIn"]}` : ""} ${disappear ? `${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
 
-                        {/*<img src="/img/3.jpg" className={`${classes["img3"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+
+                        {/*<img src="/img/3.jpg" className={`${classes["img3"]} ${loaded ? `${classes["fadeIn"]}` : `${classes["fadeOut"]}`}`} alt={"image"}/>*/}
+                        {/*<img src="/img/3.jpg" className={`${classes["img3"]} ${appear ? `${classes["fadeIn"]}` : ""} ${disappear ? `${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
                         {/*<img src="/img/5.jpg" className={`${classes["img5"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
                         {/*<img src="/img/7.jpg" className={`${classes["img7"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
                         {/*<img src="/img/9.jpeg" className={`${classes["img9"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
                         {/*<img src="/img/11.jpg" className={`${classes["img11"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
                         {/*<img src="/img/1.jpg" className={`${classes["img1"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
+                        <img
+                            src="./img/8.jpeg"
+                            alt=""
+                            className={classes["imgEight"]}
+                            style={getImageStyle(0)}
+                        />
+                        <img
+                            src="./img/3.jpg"
+                            alt=""
+                            className={classes["imgThree"]}
+                            style={getImageStyle(1)}
+                        />
+                        <img
+                            src="./img/5.jpg"
+                            alt=""
+                            className={classes["imgFive"]}
+                            style={getImageStyle(2)}
+                        />
+                        <img
+                            src="./img/7.jpg"
+                            alt=""
+                            className={classes["imgSeven"]}
+                            style={getImageStyle(3)}
+                        />
+                        <img
+                            src="./img/9.jpeg"
+                            alt=""
+                            className={classes["imgNine"]}
+                            style={getImageStyle(4)}
+                        />
+                        <img
+                            src="./img/11.jpg"
+                            alt=""
+                            className={classes["imgEleven"]}
+                            style={getImageStyle(5)}
+                        />
+                        <img
+                            src="./img/1.jpg"
+                            alt=""
+                            className={classes["imgOne"]}
+                            style={getImageStyle(6)}
+                        />
+                        <img
+                            src="./img/8.jpeg"
+                            alt=""
+                            className={classes["imgEight"]}
+                            style={getImageStyle(7)}
+                        />
+                        <img
+                            src="./img/3.jpg"
+                            alt=""
+                            className={classes["imgThree"]}
+                            style={getImageStyle(8)}
+                        />
+                        <img
+                            src="./img/5.jpg"
+                            alt=""
+                            className={classes["imgFive"]}
+                            style={getImageStyle(9)}
+                        />
+                        <img
+                            src="./img/7.jpg"
+                            alt=""
+                            className={classes["imgSeven"]}
+                            style={getImageStyle(10)}
+                        />
+                        <img
+                            src="./img/9.jpeg"
+                            alt=""
+                            className={classes["imgNine"]}
+                            style={getImageStyle(11)}
+                        />
+                        <img
+                            src="./img/11.jpg"
+                            alt=""
+                            className={classes["imgEleven"]}
+                            style={getImageStyle(12)}
+                        />
+                        <img
+                            src="./img/1.jpg"
+                            alt=""
+                            className={classes["imgOne"]}
+                            style={getImageStyle(13)}
+                        />
+                        <img
+                            src={"./img/8.jpg"}
+                            alt=""
+                            className={classes["empty"]}
+                            style={getImageStyle(14)}
+                        />
+
                         <div className={classes["leftQuoteBox"]}>
                             <div className={`${classes["leftQuote"]} ${classes["leftLogo"]}`}><em>SCENESTRA</em></div>
                             <div className={`${classes["leftQuote"]} `}>Scene and space, exclusively yours.</div>
@@ -318,9 +440,15 @@ function UserRegistration() {
 
                     </div>
                 </div>
-                <div className={classes["totalMid"]}></div>
+                <div
+                    className={classes["totalMid"]}
+                    // style={ !loaded ? {opacity: '0'} : {opacity: '1'}}
+                ></div>
                 <div className={classes["totalRight"]}>
-                    <div className={`${classes["main"]} wBg wMain`}>
+                    <div
+                        className={`${classes["main"]} wBg wMain`}
+                        // style={ !loaded ? {opacity: '0'} : {opacity: '1'}}
+                    >
                         <section className={classes["topBar"]}>
                             <div className={`${classes["horLine"]} bBg`}></div>
                             <div className={classes["barTitle"]}>SIGN UP</div>

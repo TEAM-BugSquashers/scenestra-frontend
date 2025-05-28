@@ -224,7 +224,7 @@ form .valid {
 }
 /* totalLeft */
 .leftBox {
-    border: 1px solid red;
+    /*border: 1px solid red;*/
 
     width: 500px;
     height: 500px;
@@ -236,7 +236,7 @@ form .valid {
 .leftBox img {
     width: 100%;
 
-    opacity: 0;
+    /*opacity: 0;*/
     /*transition: opacity 0.2s linear;*/
 
     position: absolute;
@@ -244,77 +244,79 @@ form .valid {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.leftBox .img8.fadeIn {
-    opacity: 1;
-    /*transition-delay: 0.5s;*/
-    transition: opacity 0.5s linear 0s;
-}
-.leftBox .img3.fadeIn {
-    opacity: 1;
-    transition-delay: 1s;
-    /*transition: opacity 1s linear;*/
-}
-.leftBox .img5.fadeIn {
-    opacity: 1;
-    transition-delay: 1.5s;
-    /*transition: opacity 1.5s linear;*/
-}
-.leftBox .img7.fadeIn {
-    opacity: 1;
-    transition-delay: 2s;
-    /*transition: opacity 2s linear;*/
-}
-.leftBox .img9.fadeIn {
-    opacity: 1;
-    transition-delay: 2.5s;
-    /*transition: opacity 2.5s linear;*/
-}
-.leftBox .img11.fadeIn {
-    opacity: 1;
-    transition-delay: 3s;
-    /*transition: opacity 3s linear;*/
-}
-.leftBox .img1.fadeIn {
-    opacity: 1;
-    transition-delay: 3.5s;
-    /*transition: opacity 3.5s linear;*/
-}
-/* fadeOut */
-.leftBox .img8.fadeOut {
+.empty {
     opacity: 0;
-    /*transition-delay: 1s;*/
-    transition: opacity 0s linear 0.2s;
 }
-.leftBox .img3.fadeOut {
-    opacity: 0;
-    transition-delay: 1.5s;
-    /*transition: opacity 1s linear;*/
-}
-.leftBox .img5.fadeOut {
-    opacity: 0;
-    transition-delay: 2s;
-    /*transition: opacity 1.5s linear;*/
-}
-.leftBox .img7.fadeOut {
-    opacity: 0;
-    transition-delay: 2.5s;
-    /*transition: opacity 2s linear;*/
-}
-.leftBox .img9.fadeOut {
-    opacity: 0;
-    transition-delay: 3s;
-    /*transition: opacity 2.5s linear;*/
-}
-.leftBox .img11.fadeOut {
-    opacity: 0;
-    transition-delay: 3.5s;
-    /*transition: opacity 3s linear;*/
-}
-.leftBox .img1.fadeOut {
-    opacity: 0;
-    transition-delay: 4s;
-    /*transition: opacity 3.5s linear;*/
-}
+/*.leftBox .img8.fadeIn {*/
+/*    opacity: 1;*/
+/*    !*transition-delay: 0.5s;*!*/
+/*    transition: opacity 0.5s linear 0s;*/
+/*}*/
+/*.leftBox .img8.fadeOut {*/
+/*    opacity: 0;*/
+/*    !*transition-delay: 1s;*!*/
+/*    transition: opacity 0s linear 0s;*/
+/*}*/
+/*.leftBox .img3.fadeIn {*/
+/*    opacity: 1;*/
+/*    !*transition-delay: 1s;*!*/
+/*    transition: opacity 1s linear 0.7s;*/
+/*}*/
+/*.leftBox .img3.fadeOut {*/
+/*    opacity: 0;*/
+/*    !*transition-delay: 1.5s;*!*/
+/*    transition: opacity 0s linear 1s;*/
+/*}*/
+/*.leftBox .img5.fadeIn {*/
+/*    opacity: 1;*/
+/*    transition-delay: 1.5s;*/
+/*    !*transition: opacity 1.5s linear;*!*/
+/*}*/
+/*.leftBox .img7.fadeIn {*/
+/*    opacity: 1;*/
+/*    transition-delay: 2s;*/
+/*    !*transition: opacity 2s linear;*!*/
+/*}*/
+/*.leftBox .img9.fadeIn {*/
+/*    opacity: 1;*/
+/*    transition-delay: 2.5s;*/
+/*    !*transition: opacity 2.5s linear;*!*/
+/*}*/
+/*.leftBox .img11.fadeIn {*/
+/*    opacity: 1;*/
+/*    transition-delay: 3s;*/
+/*    !*transition: opacity 3s linear;*!*/
+/*}*/
+/*.leftBox .img1.fadeIn {*/
+/*    opacity: 1;*/
+/*    transition-delay: 3.5s;*/
+/*    !*transition: opacity 3.5s linear;*!*/
+/*}*/
+/*.leftBox .img5.fadeOut {*/
+/*    opacity: 0;*/
+/*    transition-delay: 2s;*/
+/*    !*transition: opacity 1.5s linear;*!*/
+/*}*/
+/*.leftBox .img7.fadeOut {*/
+/*    opacity: 0;*/
+/*    transition-delay: 2.5s;*/
+/*    !*transition: opacity 2s linear;*!*/
+/*}*/
+/*.leftBox .img9.fadeOut {*/
+/*    opacity: 0;*/
+/*    transition-delay: 3s;*/
+/*    !*transition: opacity 2.5s linear;*!*/
+/*}*/
+/*.leftBox .img11.fadeOut {*/
+/*    opacity: 0;*/
+/*    transition-delay: 3.5s;*/
+/*    !*transition: opacity 3s linear;*!*/
+/*}*/
+/*.leftBox .img1.fadeOut {*/
+/*    opacity: 0;*/
+/*    transition-delay: 4s;*/
+/*    !*transition: opacity 3.5s linear;*!*/
+/*}*/
 .leftBox .leftQuoteBox {
     width: 100%;
     height: 100%;
