@@ -1,32 +1,40 @@
 import classes from "./Room.module.css";
 import React from "react";
 
-function Room({ selectedRoom, setSelectedRoom}) {
+function Room({ selectedRoom, setSelectedRoom, roomData}) {
+
+
     const handleRoomSelect = (roomId) => {
         setSelectedRoom(roomId);
     }
-    const roomData = [
-        {id: 1, url: '/roomImg/room1.jpg', name: 'SERENE', peopleNo: '2~3인'},
-        {id: 2, url: '/roomImg/room2.jpg', name: 'CELESTIA', peopleNo: '2~3인'},
-        {id: 3, url: '/roomImg/room3.jpg', name: 'ASTRAL', peopleNo: '4~5인'},
-        {id: 4, url: '/roomImg/room4.jpg', name: 'VERDANT', peopleNo: '8~10인'}
-    ];
-
+    const peopleNo = (name) => {
+        switch(name) {
+            case 'SERENE':
+            case 'CELESTIA':
+                return '2~3인';
+            case 'ASTRAL':
+                return '4~5인';
+            case 'VERDANT':
+                return '8~10인';
+            default:
+                return '2~3인';
+        }
+    };
     return(
         <div className={classes.roomContainer}>
             {roomData.map(room => (
-                <div key={room.id} className={classes.rBox}>
-                    <div className={classes.rImg} onClick={() => handleRoomSelect(room.id)}>
-                        <img src={room.url} alt={room.name} />
+                <div key={room.theaterId} className={classes.rBox}>
+                    <div className={classes.rImg} onClick={() => handleRoomSelect(room.theaterId)}>
+                        <img src={room.image} alt={room.name} />
                     </div>
-                    <div className={classes.innerBox} onClick={() => handleRoomSelect(room.id)}>
+                    <div className={classes.innerBox} onClick={() => handleRoomSelect(room.theaterId)}>
                         <div
-                            className={`${classes.chkBox} ${selectedRoom === room.id ? classes.checked : ''}`}
+                            className={`${classes.chkBox} ${selectedRoom === room.theaterId ? classes.checked : ''}`}
                         >
-                            {selectedRoom === room.id && <div className={classes.checkMark}>✓</div>}
+                            {selectedRoom === room.theaterId && <div className={classes.checkMark}>✓</div>}
                         </div>
                         <div className={classes.rName}>
-                            {room.name} ({room.peopleNo})
+                            {room.name} ({peopleNo(room.name)})
                         </div>
                     </div>
                 </div>

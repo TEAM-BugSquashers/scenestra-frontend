@@ -15,6 +15,8 @@ import Admin from "./pages/admin/Admin.jsx";
 import AllMovie from "./pages/allMovie/AllMovie.jsx";
 import Reservation from "./pages/reservationPage/Reservation.jsx";
 import MyPage from "./pages/myPage/MyPage.jsx";
+import Result from "./pages/reservationPage/resultPage/Result.jsx";
+
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,6 +45,7 @@ function App() {
           <Route path="/myPage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/result" element={<Result />} />
         </Routes>
       </main>
       

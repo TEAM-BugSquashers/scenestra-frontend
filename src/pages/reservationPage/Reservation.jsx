@@ -1,11 +1,15 @@
 import classes from './Reservation.module.css';
 import Calendar from 'react-calendar';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Room from './room/Room.jsx';
 import TimeSelect from "./timeSelect/TimeSelect.jsx";
 import PeopleNumber from "./peopleNo/PeopleNumber.jsx";
 import 'react-calendar/dist/Calendar.css';
 import ResultPopUp from "./resultPopUp/ResultPopUp.jsx";
+import {useLocation, useNavigate} from "react-router-dom";
+import {axiosRecommend, axiosRoom} from "../api/axios.js";
+
+
 
 
 function Reservation() {
@@ -15,13 +19,45 @@ function Reservation() {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [ isPopupOpen, setIsPopupOpen ] = useState(false);
+    const [ selectedMovie, setSelectedMovie ] = useState(null);
+    const [roomData, setRoomData] = useState([]);
+    const [selectedPeople, setSelectedPeople] = useState(null);
+
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchRoomData = async () => {
+            try {
+                const response = await axiosRoom();
+                console.log("RoomData: ", response.data.payload);
+                setRoomData(response.data.payload)
+            } catch (error) {
+                console.error("Error fetching movies: ", error);
+            }
+        };
+
+        fetchRoomData();
+    }, []);
+
+    useEffect(()=> {
+        if(location.state?.selectedMovie) {
+            setSelectedMovie(location.state.selectedMovie);
+        } else {
+            navigate('/');
+        }
+    }, [location.state, navigate]);
 
     const openPopup = () => setIsPopupOpen(true);
     const closePopup = () => setIsPopupOpen(false);
 
-    const isDateStepActive = selectedRoom !== null; // 방 선택 후 활성화
-    const isTimeStepActive = selectedRoom !== null && selectedDate !== null; // 방+날짜 선택 후 활성화
-    const isReserveButtonActive = selectedRoom !== null && selectedDate !== null && selectedTimeInfo !== null;
+
+    const isRoomStepActive = selectedPeople !== null;
+    const isDateStepActive = selectedPeople !== null && selectedRoom !== null;
+    const isTimeStepActive = selectedPeople !== null && selectedRoom !== null && selectedDate !== null;
+    const isReserveButtonActive = selectedPeople !== null && selectedRoom !== null && selectedDate !== null && selectedTimeInfo !== null;
+
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -41,7 +77,13 @@ function Reservation() {
 
     const handleRoomSelect = (roomId) => {
         setSelectedRoom(roomId);
-        // 방이 바뀌면 날짜와 시간 선택 초기화
+        setSelectedDate(null);
+        setSelectedTime(null);
+        setSelectedTimeInfo(null);
+    };
+    const handlePeopleSelect = (peopleCount) => {
+        setSelectedPeople(peopleCount);
+        setSelectedRoom(null);
         setSelectedDate(null);
         setSelectedTime(null);
         setSelectedTimeInfo(null);
@@ -78,13 +120,26 @@ function Reservation() {
             weekday: 'long'
         });
     };
+    // 상영관 금액 가져오기
 
-    // 타임셀렉에 들어갈 임시 영화데이터
-    const [selectedMovie, setSelectedMovie] = useState({
-        title: "어벤져스: 엔드게임",
-        duration: 141, // 분 단위
-        poster: "" // 포스터 이미지 경로 (나중에 추가)
-    });
+
+    if (!selectedMovie) {
+        return (
+            <div className={classes.outerBox}>
+                <div className={classes.titleBox}>
+                    <div className={classes.line1}></div>
+                    <h2 className={classes.RTitle}>RESERVATION</h2>
+                    <div className={classes.line2}></div>
+                </div>
+                <div className={classes.innerBox}>
+                    <div>영화를 먼저 선택해주세요.</div>
+                    <button onClick={() => navigate('/')} className="btn2">
+                        영화 선택하러 가기
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -100,23 +155,32 @@ function Reservation() {
                     <div>
                         <div className={`${classes["sectionTitle"]} subtitle`}>선택한영화</div>
                         <div className={classes.selectedMovie}>
-                            <div className={classes.movieImg}></div>
-                            <h2>{selectedMovie.title}</h2>
-                            <div>{selectedMovie.duration} 분</div>
+                            <div className={classes.movieImg}><img src={selectedMovie.poster} alt={selectedMovie.title} /></div>
+                           <div className={classes.movieDesc}>
+                               <h2>{selectedMovie.title}</h2>
+                                <p>감독: {selectedMovie.director}</p>
+                               <p>장르: {selectedMovie.genreNames}</p>
+                               <p>상영시간: {selectedMovie.showTime} 분</p>
+                           </div>
                         </div>
                     </div>
                     <div className={classes.box}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>총 예약인원</div>
                         <div className={classes.box}>
-                            <PeopleNumber />
+                            <PeopleNumber
+                                selectedPeople={selectedPeople}
+                                setSelectedPeople={handlePeopleSelect}
+                            />
                         </div>
                     </div>
-                    <div>
+                    <div className={`${classes.box} ${!isRoomStepActive ? classes.disabled : ''}`}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>상영관선택</div>
                         <div className={classes.box}>
                             <Room
                                 selectedRoom={selectedRoom}
                                 setSelectedRoom={handleRoomSelect}
+                                roomData={roomData}
+                                selectedPeople={selectedPeople}
                             />
                         </div>
                     </div>
@@ -154,7 +218,7 @@ function Reservation() {
                         <div className={`${classes["sectionTitle"]} subtitle`}>시간선택</div>
                         <div className={classes.box}>
                              <TimeSelect
-                                movieDuration={selectedMovie.duration}
+                                movieDuration={selectedMovie.showTime}
                                 selectedTime={selectedTime}
                                 setSelectedTime={setSelectedTime}
                                 onTimeSelect={(timeInfo) => {
@@ -190,6 +254,9 @@ function Reservation() {
                     <ResultPopUp
                         isOpen={isPopupOpen}
                         onClose={closePopup}
+                        reservationData={selectedDate}
+                        timeInfo={selectedTimeInfo}
+                        movieInfo={selectedMovie}
                     />
                 </div>
             </div>

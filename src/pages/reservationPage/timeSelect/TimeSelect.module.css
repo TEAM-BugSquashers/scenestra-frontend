@@ -41,7 +41,7 @@
     height: 20px;
     background: #d9d9d9;
 }
-.sbox{
+.sBox{
     display: flex;
     gap: 5px;
     align-items: center;

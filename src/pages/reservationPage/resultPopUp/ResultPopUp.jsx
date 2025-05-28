@@ -1,29 +1,35 @@
 import classes from './ResultPopUp.module.css';
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-function ResultPopUp({ isOpen, onClose}) {
+function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo }) {
+    const navigate = useNavigate();
+
     if(!isOpen) return null;
 
     return (
         <>
             <div className={classes.overlay}>
                 <div className={classes.popUp}>
-                    <h2 className={classes.popupTitle}>MAKE A RESERVATION?</h2>
-                    <div className={classes.popXBox} onClick={onClose}>
-                        <div className={classes.xLeft}></div>
-                        <div className={classes.xRight}></div>
-                    </div>
+                    <h2 className={classes.popupTitle}>MAKE A RESERVATION</h2>
                     {/*팝업내용*/}
                     <div className={classes.descBox}>
-                        <p>영화:</p>
+                        <p>영화: {movieInfo.title} </p>
                         <p>상영관:</p>
-                        <p>날짜:</p>
-                        <p>시간:</p>
-                        <p>현장결제금액:</p>
+                        <p>날짜: {reservationData?.toLocaleDateString('ko-KR',{
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            weekday: 'long'
+                        })}</p>
+                        <p>시간: {timeInfo?.startTime} ~ {timeInfo?.endTime}</p>
+                        <p>현장결제금액:  원</p>
                     </div>
                     <div className={classes.btnBox}>
-                        <button>CANCEL</button>
-                        <button>RESERVATE</button>
+                        <button className={`${classes["closeBtn"]} btn2`} onClick={onClose} >CANCEL</button>
+                        <button
+                            onClick={() => {navigate("/result");}}
+                            className={`${classes["reserveBtn"]} btn2`}>RESERVATION</button>
                     </div>
                 </div>
             </div>

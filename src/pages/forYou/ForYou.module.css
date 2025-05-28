@@ -78,6 +78,7 @@
     font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
     margin: 0 20px;
     cursor: pointer;
+    color: #fff;
 }
 .forYouSwiper :global(.swiper-pagination) {
     display: none;

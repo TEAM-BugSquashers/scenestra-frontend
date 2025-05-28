@@ -3,7 +3,7 @@ import classes from './TimeSelect.module.css';
 
 function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect}) {
     // 시간선택불가능한 영역 표시용 임시데이터
-    const [unavailableSlots, setUnavailableSlots ] = useState([0, 1, 2, 3, 16,17,18]);
+    const [unavailableSlots, setUnavailableSlots ] = useState([]);
 
     // 에러 메시지 상태 추가
     const [errorMessage, setErrorMessage] = useState('');
@@ -29,7 +29,7 @@ function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect
         // 에러 상태 초기화
         setErrorMessage('');
 
-        if(unavailableSlots.includes(index)) {
+        if(unavailableSlots && unavailableSlots.includes(index)) {
             setErrorMessage("선택불가능한 시간입니다");
             return;
         }
@@ -103,11 +103,11 @@ function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect
                     ))}
                 </div>
                 <div className={classes.selectableBox}>
-                    <div className={classes.sbox}>
+                    <div className={classes.sBox}>
                         <div className={classes.selectable}></div>
                         선택가능
                     </div>
-                    <div className={classes.sbox}>
+                    <div className={classes.sBox}>
                         <div className={classes.end}></div>
                         마감
                     </div>

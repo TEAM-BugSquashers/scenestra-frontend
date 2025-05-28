@@ -28,6 +28,24 @@ function MoviePopUp({movie, onClose}) {
         combineMovie();
     }, [movie]);
 
+    const handleMovieSelect = () => {
+        if (movieData) {
+            navigate("/reservation", {
+                state: {
+                    selectedMovie: {
+                        title: movieData.title,
+                        showTime: movieData.showTime,
+                        poster: movieData.posterUrl,
+                        director: movieData.director,
+                        genreNames: movieData.genreNames,
+                        openDate: movieData.openDate,
+                        movieId: movie.movieId
+                    }
+                }
+            });
+        }
+    };
+
     if(!movie) return null;
 
     return (
@@ -61,7 +79,7 @@ function MoviePopUp({movie, onClose}) {
                             상영시간: {movieData?.showTime}분
                         </div>
                         <div
-                            onClick={() => {navigate("/reservation");}}
+                            onClick={handleMovieSelect}
                             className={`${classes["selectMovieBtn"]} btn2`}>영화선택</div>
                     </div>
                 </div>

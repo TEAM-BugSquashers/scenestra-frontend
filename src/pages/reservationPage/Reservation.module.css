@@ -28,9 +28,6 @@
     color: #fff;
     cursor: pointer;
 }
-/*.reserveBtn:hover {*/
-/*    background-color: #32271e;*/
-/*}*/
 .btnBox {
     display: flex;
     justify-content: center;
@@ -58,18 +55,16 @@
     border-bottom: 3px solid #b2a69b;
     margin-top: 10px;
 }
-.movieImg {
-    width: 100px;
-    height: 150px;
-    background: #777777;
+.movieImg img {
+    width: 150px;
 }
 .selectedMovie {
-    width: 100%;
+    width: 500px;
     border: 1px solid;
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 10px;
+    padding: 10px 15px;
     margin-top: 10px;
 }
 .box { margin: 15px 0; }
@@ -83,6 +78,9 @@
 :global(.react-calendar__tile--now:enabled:focus) {
     background: #32271e;
     color: #fff;
+}
+:global(.react-calendar__tile--active abbr) {
+    color: white !important;
 }
 .outerBox :global(.react-calendar) {
     width: 350px;
