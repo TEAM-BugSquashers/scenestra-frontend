@@ -15,6 +15,7 @@ import Admin from "./pages/admin/Admin.jsx";
 import AllMovie from "./pages/allMovie/AllMovie.jsx";
 import Reservation from "./pages/reservationPage/Reservation.jsx";
 import MyPage from "./pages/myPage/MyPage.jsx";
+import SearchResult from "./pages/searchResult/SearchResult.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,17 +33,20 @@ function App() {
       <main>
         <Routes>
           <Route path="/allMovie/:id" element={<AllMovie />} />
+          <Route path="/allMovie" element={<AllMovie />} />
           <Route path="/seeAllMovie" element={<SeeAllMovie />} />
           <Route path="/" element={<ForYou />} />
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/seeAllMoive" element={<SeeAllMovie />} />
           <Route path="/roomSelect" element={<RoomSelect />} />
           <Route path="/review" element={<Review />} />
+          <Route path="/review/:id" element={<Review />} />
           <Route path="/login" element={<Login />} />
           <Route path="/join" element={<UserRegistration />} />
           <Route path="/myPage" element={<MyPage />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/search" element={<SearchResult />} />
         </Routes>
       </main>
       

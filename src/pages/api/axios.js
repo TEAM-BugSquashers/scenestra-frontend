@@ -201,3 +201,29 @@ export const axiosRecommend = async() => {
         throw error;
     }
 }
+export const axiosTheaters = async () => {
+    try {
+        const response = await instance.get(`/theaters`);
+        return response;
+    }catch (error) {
+        throw error;
+    }
+}
+
+export const axiosTheaterDetails = async (theaterId) => {
+    try {
+        const response = await instance.get(`/theaters/${theaterId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosSearchMovies = async (title)=>{
+    try {
+        const response = await instance.get(`/movies/search?title=${title}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
