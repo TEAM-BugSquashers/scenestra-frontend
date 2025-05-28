@@ -1,6 +1,13 @@
 import classes from './MyPage.module.css';
 import {useEffect, useRef, useState} from "react";
-import {axiosGenres, axiosInfo, axiosMe, axiosPassword, axiosPreferredGenres} from "../api/axios.js";
+import {
+    axiosGenres,
+    axiosInfo,
+    axiosMe,
+    axiosPassword,
+    axiosPreferredGenres, axiosResAll, axiosResDel,
+    axiosResInProgress, axiosTheaters
+} from "../api/axios.js";
 
 function MyPage() {
     // states
@@ -8,6 +15,9 @@ function MyPage() {
     const [allGenres, setAllGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [hoveredGenre, setHoveredGenre] = useState(null);
+    const [currRes, setCurrRes] = useState([]);
+    const [pastRes, setPastRes] = useState([]);
+    const [theaterImg, setTheaterImg] = useState([]);
 
     // password states
     const [currentPassword, setCurrentPassword] = useState('********');
@@ -33,17 +43,20 @@ function MyPage() {
         mouseLeft: false
     });
 
-    // load (in background) user profile data
+    // load (in background) user profile data & reservation data
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchMyData = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
 
                 // fetch user profile and genres together
-                const [profileResponse, genresResponse] = await Promise.all([
+                const [profileResponse, genresResponse, currResResponse, allResResponse, theaterResponse] = await Promise.all([
                     axiosMe(),
-                    axiosGenres()
+                    axiosGenres(),
+                    axiosResInProgress(),
+                    axiosResAll(),
+                    axiosTheaters()
                 ]);
 
                 // set user profile
@@ -64,6 +77,44 @@ function MyPage() {
                 }));
                 setAllGenres(allGenresData);
 
+                // set current reservation
+                const currResData = currResResponse.data.payload.map(curr => ({
+                        num: curr.reservationId,
+                        date: curr.date,
+                        startTime: curr.startTime,
+                        endTime: curr.endTime,
+                        room: curr.theaterName,
+                        movie: curr.movieTitle,
+                        name: curr.username,
+                        mobile: curr.mobile,
+                        id: curr.theaterId
+                }));
+                setCurrRes(currResData);
+                console.log('current reservations:', currResResponse.data.payload);
+
+                // set all reservations
+                const allResData = allResResponse.data.payload.map(all => ({
+                    num: all.reservationId,
+                    date: all.date,
+                    startTime: all.startTime,
+                    endTime: all.endTime,
+                    room: all.theaterName,
+                    movie: all.movieTitle,
+                    id: all.theaterId
+                }));
+                const currNums = currResData.map(curr => curr.num);
+                const filteredRes = allResData.filter(all => !currNums.includes(all.num));
+                setPastRes(filteredRes);
+                // setPastRes(allResData => allResData.filter(all => all !== currRes.num));
+                // setPastRes(allRes => allRes.filter(all => all !== currRes.num));
+
+                const theaterData = theaterResponse.data.payload.map(room => ({
+                    id: room.theaterId,
+                    img: room.image
+                }));
+                setTheaterImg(theaterData);
+                console.log('hi:', theaterData);
+
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
                 setError("사용자 정보를 불러오는데 실패했습니다.");
@@ -72,36 +123,36 @@ function MyPage() {
             }
         };
 
-        fetchUserData();
+        fetchMyData();
     }, []);
 
     // mock reservation data
-    const currResData = {
-        num: "A000-1111-2222",
-        date: "2025년 2월 5일",
-        time: "12:00",
-        room: "Theater A",
-        movie: "Cars 2",
-        name: "John Doe",
-        mobile: "000-1111-2222"
-    };
+    // const currResData = {
+    //     num: "A000-1111-2222",
+    //     date: "2025년 2월 5일",
+    //     time: "12:00",
+    //     room: "Theater A",
+    //     movie: "Cars 2",
+    //     name: "John Doe",
+    //     mobile: "000-1111-2222"
+    // };
 
-    const pastResData = [
-        {
-            num: "B000-1111-2222",
-            date: "2025년 2월 5일",
-            time: "12:00",
-            room: "Theater A",
-            movie: "Cars 2",
-        },
-        {
-            num: "C000-1111-2222",
-            date: "2025년 2월 5일",
-            time: "12:00",
-            room: "Theater A",
-            movie: "Cars 2",
-        }
-    ];
+    // const pastResData = [
+    //     {
+    //         num: "B000-1111-2222",
+    //         date: "2025년 2월 5일",
+    //         time: "12:00",
+    //         room: "Theater A",
+    //         movie: "Cars 2",
+    //     },
+    //     {
+    //         num: "C000-1111-2222",
+    //         date: "2025년 2월 5일",
+    //         time: "12:00",
+    //         room: "Theater A",
+    //         movie: "Cars 2",
+    //     }
+    // ];
 
     // handle input changes
     const handleInputChange = (e) => {
@@ -195,12 +246,50 @@ function MyPage() {
     };
 
     // handle reservation cancellation
-    const handleCancelRes = () => {
-        if (window.confirm("정말 예약을 취소하시겠습니까?")) {
-            // TODO: Add API call to cancel reservation
-            alert("상영관 예약이 취소되었습니다.");
+    // const handleCancelRes = async (e) => {
+    //     const { name } = e.target;
+    //
+    //     if (window.confirm("정말 예약을 취소하시겠습니까?")) {
+    //
+    //         try {
+    //             const delResponse = await axiosResDel(name);
+    //             if (delResponse.status === 200) {
+    //                 alert("상영관 예약이 취소되었습니다.");
+    //                 window.location.reload();
+    //             } else {
+    //                 alert('오류가 발생했습니다. 다시 시도해주세요.');
+    //                 console.log(delResponse.data);
+    //             }
+    //         } catch (delError) {
+    //             console.log(delError);
+    //         }
+    //
+    //         console.log("key:", name);
+    //
+    //     }
+    // };
+
+        const handleCancelRes = async (e) => {
+            const { name } = e.target;
+
+            if(window.confirm("정말 예약을 취소하시겠습니까?")) {
+                try {
+                    await axiosResDel(name).then(delResponse => {
+                        if(delResponse.status === 200) {
+                            alert("상영관 예약이 취소되었습니다.");
+                            console.log('currRes:', currRes);
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        alert('오류가 발생했습니다. 다시 시도해주세요.');
+                        console.log(error.response.data.payload);
+                    })
+                } catch (delError) {
+                    console.log(delError);
+                }
+            }
         }
-    };
 
     // validate form data
     const validateForm = () => {
@@ -363,49 +452,79 @@ function MyPage() {
                                 <div className={classes["horLine"]}></div>
                             </div>
 
-                            <div className={classes["currBox"]}>
-                                <div className={classes["currBoxLeft"]}>
-                                    <div className={classes["currBoxTop"]}>
-                                        <div className={classes["num"]}>
-                                            예약번호 <span style={{ color: '#b2a69b' }}>{currResData.num}</span>
+                            {currRes.map((reservation, index) => (
+                                <div
+                                    key={reservation.num}
+                                    className={`${classes["currBox"]} ${index === currRes.length - 1 ? classes["marBotDel"] : ''}`}
+                                >
+                                    <div className={classes["currBoxLeft"]}>
+
+                                        <div className={classes["currBoxTop"]}>
+                                            {/*{currRes.map((curr) => (*/}
+                                            {/*    <div key={curr.num}>*/}
+                                                    <div className={classes["num"]}>
+                                                        {/*예약번호 <span style={{ color: '#b2a69b' }}>{reservation.num}</span>*/}
+                                                        예약번호 <span style={{ color: '#b2a69b' }}>
+                                                        {reservation.room.slice(0, 3)}{reservation.num}–
+                                                        {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–
+                                                        {reservation.mobile.slice(9, 13)}
+                                                        </span>
+
+                                                    </div>
+                                                    <div className={classes["date"]}>
+                                                        날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {year: "numeric",
+                                                        month: "long",
+                                                        day: "numeric"
+                                                        })}</span>
+                                                    </div>
+                                                    <div className={classes["time"]}>
+                                                        시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0,5)}</span>
+                                                    </div>
+                                                    <div className={classes["room"]}>
+                                                        상영관 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                                    </div>
+                                                    <div className={classes["movie"]}>
+                                                        영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+                                                    </div>
+                                                {/*</div>*/}
+                                            {/*))}*/}
                                         </div>
-                                        <div className={classes["date"]}>
-                                            날짜 <span style={{ color: '#b2a69b' }}>{currResData.date}</span>
+                                        <div className={classes["currBoxBot"]}>
+                                            {/*{currRes.map((curr) => (*/}
+                                            {/*    <div key={curr.num}>*/}
+                                                    <div className={classes["name"]}>
+                                                        예약자 <span style={{ color: '#b2a69b' }}>{reservation.name}</span>
+                                                    </div>
+                                                    <div className={classes["mobile"]}>
+                                                        전화번호 <span style={{ color: '#b2a69b' }}>{reservation.mobile}</span>
+                                                    </div>
+                                                {/*</div>*/}
+                                            {/*))}*/}
                                         </div>
-                                        <div className={classes["time"]}>
-                                            시간 <span style={{ color: '#b2a69b' }}>{currResData.time}</span>
-                                        </div>
-                                        <div className={classes["room"]}>
-                                            방 <span style={{ color: '#b2a69b' }}>{currResData.room}</span>
-                                        </div>
-                                        <div className={classes["movie"]}>
-                                            영화 <span style={{ color: '#b2a69b' }}>{currResData.movie}</span>
-                                        </div>
+                                        <button
+                                            name={reservation.num}
+                                            type="button"
+                                            className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
+                                            onClick={handleCancelRes}
+                                        >
+                                            CANCEL RESERVATION
+                                        </button>
                                     </div>
-                                    <div className={classes["currBoxBot"]}>
-                                        <div className={classes["name"]}>
-                                            예약자 <span style={{ color: '#b2a69b' }}>{currResData.name}</span>
-                                        </div>
-                                        <div className={classes["mobile"]}>
-                                            전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
-                                        </div>
+                                    <div className={classes["currBoxRight"]}>
+                                        {theaterImg
+                                            .filter(img => img.id === reservation.id)
+                                            .map((img) => (
+                                                <div key={img.id}>
+                                                    <img
+                                                        src={img.img}
+                                                        className={classes["pastImg"]}
+                                                        alt="Theater Image"
+                                                    />
+                                                </div>
+                                        ))}
                                     </div>
-                                    <button
-                                        type="button"
-                                        className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
-                                        onClick={handleCancelRes}
-                                    >
-                                        CANCEL RESERVATION
-                                    </button>
                                 </div>
-                                <div className={classes["currBoxRight"]}>
-                                    <img
-                                        src="/api/placeholder/150/120"
-                                        className={classes["pastImg"]}
-                                        alt="Theater Image"
-                                    />
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </article>
 
@@ -628,21 +747,27 @@ function MyPage() {
                                 <div className={classes["horLine"]}></div>
                             </div>
 
-                            {pastResData.map((reservation, index) => (
+                            {pastRes.map((reservation, index) => (
                                 <div
                                     key={reservation.num}
                                     className={`${classes["pastBox"]} ${
-                                        index === pastResData.length - 1 ? classes["marBotDel"] : ''
+                                        index === pastRes.length - 1 ? classes["marBotDel"] : ''
                                     }`}
                                 >
                                     <div className={classes["pastNum"]}>{reservation.num}</div>
+                                    {/*<div className={classes["pastNum"]}>*/}
+                                    {/*    {reservation.room.slice(0, 3)}{reservation.num}–*/}
+                                    {/*    {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–*/}
+                                    {/*    {reservation.mobile.slice(9, 13)}*/}
+                                    {/*</div>*/}
+
 
                                     <div className={classes["pastBoxLeft"]}>
                                         <div className={classes["pastDate"]}>
                                             날짜 <span style={{ color: '#b2a69b' }}>{reservation.date}</span>
                                         </div>
                                         <div className={classes["pastTime"]}>
-                                            시간 <span style={{ color: '#b2a69b' }}>{reservation.time}</span>
+                                            시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime} – {reservation.endTime}</span>
                                         </div>
                                         <div className={classes["pastRoom"]}>
                                             방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
@@ -653,11 +778,17 @@ function MyPage() {
                                     </div>
 
                                     <div className={classes["pastBoxRight"]}>
-                                        <img
-                                            src="/api/placeholder/150/120"
-                                            className={classes["pastImg"]}
-                                            alt="Theater Image"
-                                        />
+                                        {theaterImg
+                                            .filter(img => img.id === reservation.id)
+                                            .map((img) => (
+                                                <div key={img.id}>
+                                                    <img
+                                                        src={img.img}
+                                                        className={classes["pastImg"]}
+                                                        alt="Theater Image"
+                                                    />
+                                                </div>
+                                            ))}
                                     </div>
                                 </div>
                             ))}
