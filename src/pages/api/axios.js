@@ -172,3 +172,23 @@ export const axiosRoom = async() => {
         throw error;
     }
 }
+export const axiosAvailableTimes = async(theaterId, movieId, yearMonth) => {
+    try {
+        const params = {
+            theaterId: String(theaterId),
+            movieId: String(movieId),
+            yearMonth: String(yearMonth),
+        };
+
+        const response = await instance.get("/reservations/available-times", {
+            params: {
+                theaterId: theaterId,
+                movieId: movieId,
+                yearMonth: yearMonth
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}

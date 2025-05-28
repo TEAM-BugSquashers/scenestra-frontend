@@ -1,12 +1,18 @@
 import classes from "./Room.module.css";
 import React from "react";
 
-function Room({ selectedRoom, setSelectedRoom, roomData}) {
+function Room({ selectedRoom, setSelectedRoom, roomData, selectedPeople}) {
 
 
     const handleRoomSelect = (roomId) => {
         setSelectedRoom(roomId);
     }
+    const getFilteredRooms = () => {
+        if(!selectedPeople) {
+            return roomData;
+        }
+        return roomData.filter(room => selectedPeople <= room.numPeopleMax);
+    };
     const peopleNo = (name) => {
         switch(name) {
             case 'SERENE':
@@ -15,14 +21,15 @@ function Room({ selectedRoom, setSelectedRoom, roomData}) {
             case 'ASTRAL':
                 return '4~5인';
             case 'VERDANT':
-                return '8~10인';
+                return '6~10인';
             default:
                 return '2~3인';
         }
     };
+    const filteredRooms = getFilteredRooms();
     return(
         <div className={classes.roomContainer}>
-            {roomData.map(room => (
+            {filteredRooms.map(room => (
                 <div key={room.theaterId} className={classes.rBox}>
                     <div className={classes.rImg} onClick={() => handleRoomSelect(room.theaterId)}>
                         <img src={room.image} alt={room.name} />

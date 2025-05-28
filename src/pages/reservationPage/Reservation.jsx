@@ -7,12 +7,11 @@ import PeopleNumber from "./peopleNo/PeopleNumber.jsx";
 import 'react-calendar/dist/Calendar.css';
 import ResultPopUp from "./resultPopUp/ResultPopUp.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import {axiosRecommend, axiosRoom} from "../api/axios.js";
-
-
+import {axiosAvailableTimes, axiosRoom} from "../api/axios.js";
 
 
 function Reservation() {
+
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedTimeInfo, setSelectedTimeInfo] = useState(null);
     // 리액트캘린더 이벤트와 관련된 부분
@@ -23,7 +22,6 @@ function Reservation() {
     const [roomData, setRoomData] = useState([]);
     const [selectedPeople, setSelectedPeople] = useState(null);
 
-
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -31,15 +29,38 @@ function Reservation() {
         const fetchRoomData = async () => {
             try {
                 const response = await axiosRoom();
-                console.log("RoomData: ", response.data.payload);
                 setRoomData(response.data.payload)
             } catch (error) {
-                console.error("Error fetching movies: ", error);
+                console.error("Error fetching roomData: ", error);
             }
         };
 
         fetchRoomData();
     }, []);
+
+    useEffect(() => {
+        if (selectedRoom && selectedMovie) {
+            const fetchAvailableTimes = async () => {
+                try {
+                    const currentDate = new Date();
+                    const yearMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+
+                    console.log("전송할 데이터:");
+                    console.log("selectedRoom:", selectedRoom);
+                    console.log("selectedMovie.movieId:", selectedMovie.movieId);
+                    console.log("yearMonth:", yearMonth);
+
+
+                    const response = await axiosAvailableTimes(selectedRoom, selectedMovie.movieId, yearMonth);
+                    console.log("AvailableTimes: ", response.data);
+                } catch (error) {
+                    console.error("Error fetching availabletimes: ", error);
+                }
+            }
+            fetchAvailableTimes();
+        }
+    }, [selectedRoom, selectedMovie]);
+
 
     useEffect(()=> {
         if(location.state?.selectedMovie) {
@@ -70,7 +91,6 @@ function Reservation() {
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
-        // 날짜가 바뀌면 시간 선택 초기화
         setSelectedTime(null);
         setSelectedTimeInfo(null);
     };
