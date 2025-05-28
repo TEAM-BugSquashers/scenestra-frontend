@@ -103,11 +103,14 @@ function MyPage() {
                     id: all.theaterId
                 }));
                 const currNums = currResData.map(curr => curr.num);
+
+                // filter out current reservations to obtain past reservations
                 const filteredRes = allResData.filter(all => !currNums.includes(all.num));
                 setPastRes(filteredRes);
                 // setPastRes(allResData => allResData.filter(all => all !== currRes.num));
                 // setPastRes(allRes => allRes.filter(all => all !== currRes.num));
 
+                // set theater images
                 const theaterData = theaterResponse.data.payload.map(room => ({
                     id: room.theaterId,
                     img: room.image
@@ -246,29 +249,6 @@ function MyPage() {
     };
 
     // handle reservation cancellation
-    // const handleCancelRes = async (e) => {
-    //     const { name } = e.target;
-    //
-    //     if (window.confirm("정말 예약을 취소하시겠습니까?")) {
-    //
-    //         try {
-    //             const delResponse = await axiosResDel(name);
-    //             if (delResponse.status === 200) {
-    //                 alert("상영관 예약이 취소되었습니다.");
-    //                 window.location.reload();
-    //             } else {
-    //                 alert('오류가 발생했습니다. 다시 시도해주세요.');
-    //                 console.log(delResponse.data);
-    //             }
-    //         } catch (delError) {
-    //             console.log(delError);
-    //         }
-    //
-    //         console.log("key:", name);
-    //
-    //     }
-    // };
-
         const handleCancelRes = async (e) => {
             const { name } = e.target;
 
@@ -325,16 +305,6 @@ function MyPage() {
         return true;
     };
 
-    // // input styling based on state
-    // const getInputStyle = (element) => {
-    //     if (element instanceof HTMLInputElement) {
-    //         return {
-    //             pointerEvents: 'none'
-    //         }
-    //     }
-    //     return {};
-    // }
-
     // handle profile editing
     const handleEditProfile = async () => {
         if (!isEditMode) {
@@ -357,35 +327,50 @@ function MyPage() {
 
                 // update password if changed
                 if (isPwEditMode) {
-                    // const pwResponse = await axiosPassword(currentPassword, newPassword);
+                    try {
+                        const pwResponse = await axiosPassword(currentPassword, newPassword);
+                        if (pwResponse.status !== 200) {
+                            throw new Error('password update failed:', pwResponse.status);
+                        }
+                    } catch (pwError) {
+                        if (pwError.response && pwError.response.status === 403) {
+                            alert('현재 비밀번호가 틀렸습니다.');
+                            return;
+                        } else {
+                            alert(pwError.response.data.payload || '비밀번호 변경 중 오류가 발생했습니다.');
+                            return;
+                        }
+                    }
+
                     // if (pwResponse.status === 403) {
                     //     alert('현재 비밀번호가 틀렸습니다.');
                     //     return;
                     // } else if (pwResponse.status !== 200) {
                     //     throw new Error(`Password update failed: ${pwResponse.status}`);
                     // }
-                    try {
-                        await axiosPassword(currentPassword, newPassword)
-                            .then((res)=> {
-                                if(res.status) {
-                                    // alert("ok")
-                                    return;
-                                }
-                            })
-                            .catch(err => {
-                                alert(err.response.data.payload);
-                            });
-                        // if (pwResponse.status !== 200) {
-                        //     throw new Error(`Password update failed: ${pwResponse.status}`);
-                        // }
-                    } catch (pwError) {
-                        if (pwError.response && pwError.response.status === 403) {
-                            alert('현재 비밀번호가 틀렸습니다.');
-                            return;
-                        } else {
-                            throw pwError;
-                        }
-                    }
+
+                    // try {
+                    //     await axiosPassword(currentPassword, newPassword)
+                    //         .then((res)=> {
+                    //             if(res.status) {
+                    //                 // alert("ok")
+                    //                 return;
+                    //             }
+                    //         })
+                    //         .catch(err => {
+                    //             alert(err.response.data.payload);
+                    //         });
+                    //     // if (pwResponse.status !== 200) {
+                    //     //     throw new Error(`Password update failed: ${pwResponse.status}`);
+                    //     // }
+                    // } catch (pwError) {
+                    //     if (pwError.response && pwError.response.status === 403) {
+                    //         alert('현재 비밀번호가 틀렸습니다.');
+                    //         return;
+                    //     } else {
+                    //         throw pwError;
+                    //     }
+                    // }
                 }
 
                 // update preferred genres
@@ -467,12 +452,13 @@ function MyPage() {
                                                         예약번호 <span style={{ color: '#b2a69b' }}>
                                                         {reservation.room.slice(0, 3)}{reservation.num}–
                                                         {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–
-                                                        {reservation.mobile.slice(9, 13)}
+                                                        {reservation.startTime.slice(0, 2)}{reservation.startTime.slice(3, 5)}
                                                         </span>
 
                                                     </div>
                                                     <div className={classes["date"]}>
-                                                        날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {year: "numeric",
+                                                        날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
+                                                        year: "numeric",
                                                         month: "long",
                                                         day: "numeric"
                                                         })}</span>
@@ -754,20 +740,24 @@ function MyPage() {
                                         index === pastRes.length - 1 ? classes["marBotDel"] : ''
                                     }`}
                                 >
-                                    <div className={classes["pastNum"]}>{reservation.num}</div>
-                                    {/*<div className={classes["pastNum"]}>*/}
-                                    {/*    {reservation.room.slice(0, 3)}{reservation.num}–*/}
-                                    {/*    {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–*/}
-                                    {/*    {reservation.mobile.slice(9, 13)}*/}
-                                    {/*</div>*/}
+                                    {/*<div className={classes["pastNum"]}>{reservation.num}</div>*/}
+                                    <div className={classes["pastNum"]}>
+                                        {reservation.room.slice(0, 3)}{reservation.num}–
+                                        {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–
+                                        {reservation.startTime.slice(0, 2)}{reservation.startTime.slice(3, 5)}
+                                    </div>
 
 
                                     <div className={classes["pastBoxLeft"]}>
                                         <div className={classes["pastDate"]}>
-                                            날짜 <span style={{ color: '#b2a69b' }}>{reservation.date}</span>
+                                            날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric"
+                                        })}</span>
                                         </div>
                                         <div className={classes["pastTime"]}>
-                                            시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime} – {reservation.endTime}</span>
+                                            시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
                                         </div>
                                         <div className={classes["pastRoom"]}>
                                             방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
