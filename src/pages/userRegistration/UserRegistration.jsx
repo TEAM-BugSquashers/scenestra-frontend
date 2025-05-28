@@ -294,6 +294,7 @@ function UserRegistration() {
                     setFormData(prev => ({ ...prev, id: ''}));
                 } else {
                     alert('오류가 발생했습니다. 다시 시도해주세요.');
+
                     console.log(error.response.data.payload);
                 }
             })

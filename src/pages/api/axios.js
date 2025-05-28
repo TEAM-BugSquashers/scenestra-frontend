@@ -52,6 +52,43 @@ export const axiosLogout = async () => {
         throw error;
     }
 }
+// // 상영관 api // //
+export const axiosTheaters = async () => {
+    try {
+        const response = await instance.get("/theaters");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// // 예약 API // //
+export const axiosResDel = async (reservationId) => {
+    try {
+        const response = await instance.delete("reservations/"+reservationId);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosResInProgress = async () => {
+    try {
+        const response = await instance.get("/reservations/my/in-progress");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosResAll = async () => {
+    try {
+        const response = await instance.get("/reservations/my/all");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
 
 // // 유저 api // //
 export const axiosPreferredGenres = async ([x, y, z]) => {
