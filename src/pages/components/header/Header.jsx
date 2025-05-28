@@ -1,5 +1,5 @@
 import classes from './Header.module.css';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import { FaHome, FaSearch, FaPlay, FaUserAlt } from 'react-icons/fa';
 import {useState} from "react";
 
@@ -10,12 +10,19 @@ function Header({ toggleMenu, isMenuOpen }) {
         setSearchTerm(e.target.value);
     };
     const[click, setClick] = useState(false);
+
+    const handleSearch = () => {
+        if (!searchTerm.trim()) return;
+        navi(`/search?q=${encodeURIComponent(searchTerm)}`);
+    };
+
     const handleClick = () => {
         setClick(!click);
         console.log(click);
     }
 
     const navi = useNavigate();
+    const location = useLocation();
 
     return (
         <header className={classes.header}>
@@ -27,22 +34,38 @@ function Header({ toggleMenu, isMenuOpen }) {
                 <div></div>
 
                 <div className={classes.rightSection}>
+
+                        <>
                     {/* 검색바 */}
-                    <div className={classes.searchWrapper}>
-                        <div className={`${classes["search_container"]} ${click ? classes.open : ''}`}>
+                            <div
+                                className={classes.searchWrapper}
+                                style={
+                                    ["/join", "/login"].includes(location.pathname)
+                                        ? { opacity: 0, pointerEvents: 'none' }
+                                        : {}
+                                }
+                            >
+
+                            <div className={`${classes["search_container"]} ${click ? classes.open : ''}`}>
                             <div className={classes["search_bar"]}>
                                 <input
                                     type="text"
                                     placeholder="영화 제목을 검색하세요"
                                     value={searchTerm}
                                     onChange={handleSearchChange}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSearch();
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>
-                        <button className={classes["search_button"]} onClick={handleClick}>
-                            <FaSearch />
-                        </button>
+                            <button className={classes["search_button"]} onClick={handleClick}>
+                                <FaSearch />
+                            </button>
                     </div>
+                        </>
 
                     <button
                         className={`${classes.hamburgerBtn} ${classes.btn2} ${isMenuOpen ? classes.open : ''}`}

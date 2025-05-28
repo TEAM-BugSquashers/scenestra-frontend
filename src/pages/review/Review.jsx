@@ -4,7 +4,7 @@ import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation} from "swiper/modules";
 import WriteReview from "../components/writeReview/WriteReview.jsx";
 import {useParams} from "react-router-dom";
-import { axiosTheaterId} from "../api/axios.js";
+import {axiosTheaterDetails} from "../api/axios.js";
 
 function Review(){
     const {id} = useParams();
@@ -20,6 +20,8 @@ function Review(){
     const [sortDirection, setSortDirection] = useState('desc');
     const [showWriteForm, setShowWriteForm] = useState(false);
 
+
+
     useEffect(() => {
         if(id === undefined) return;
 
@@ -27,19 +29,20 @@ function Review(){
             try{
                 setLoading(true);
                 console.log("API 호출 시작, ID:", id);
-                const response = await axiosTheaterId(id);
+                const response = await axiosTheaterDetails(id);
                 console.log("API 응답:", response);
                 console.log("상영관 데이터:", response.data.payload);
+                setRoomData(response.data.payload);
 
-                const data = response.data.payload;
-
-                // URL 파라미터 id에 해당하는 상영관만 필터링
-                const targetTheater = data.find(theater => theater.theaterId === parseInt(id));
-
-                if (targetTheater) {
-                    setRoomData(targetTheater); // 배열이 아닌 단일 객체로 설정
-                    console.log("선택된 상영관:", targetTheater);
-                }
+                // const data = response.data.payload;
+                //
+                // // URL 파라미터 id에 해당하는 상영관만 필터링
+                // const targetTheater = data.find(theater => theater.theaterId === parseInt(id));
+                //
+                // if (targetTheater) {
+                //     setRoomData(targetTheater); // 배열이 아닌 단일 객체로 설정
+                //     console.log("선택된 상영관:", targetTheater);
+                // }
 
 
             } catch(error) {
@@ -121,9 +124,16 @@ function Review(){
                     {/* roomData는 이제 단일 상영관 객체 */}
                     {roomData && (
                         <>
-                            <figure className={classes.roomImg}>
-
+                            <figure
+                                className={classes.roomImg}
+                                style={{
+                                    backgroundImage: `url(${roomData.image})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                }}
+                            >
                             </figure>
+
                             <figcaption className={classes["imgDescription"]}>
                                 <h3>{roomData.name}</h3>
                                 <p>{roomData.info}</p>

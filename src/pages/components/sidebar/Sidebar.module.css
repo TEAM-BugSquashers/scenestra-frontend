@@ -28,6 +28,10 @@
   cursor: pointer;
 }
 
+.nav li:nth-child(2){
+  margin-bottom: 30px;
+}
+
 .nav a {
   text-decoration: none;
   color: #fff;

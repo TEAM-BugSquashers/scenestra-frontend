@@ -5,11 +5,28 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { useEffect } from 'react';
 
 function WriteReview({onClose}) {
     const [selectedStar, setSelectedStar] = useState(0);
     const [selectedImages, setSelectedImages] = useState([]);
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        // 팝업이 열릴 때 스크롤 막기
+        document.body.style.overflow = 'hidden';
+
+        // 컴포넌트 언마운트 시 스크롤 복원
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
+    const handleClose = () => {
+        // 닫기 전에 스크롤 복원
+        document.body.style.overflow = 'unset';
+        onClose();
+    };
 
     const rating = (index) => {
         setSelectedStar(index);
@@ -48,8 +65,8 @@ function WriteReview({onClose}) {
 
     return (
         <>
-            <div className={classes.writingPan}>
-                <div className={classes.composeWrap}>
+            <div className={classes.writingPan} onClick={onClose}>
+                <div className={classes.composeWrap} onClick={(e) => e.stopPropagation()}>
                     <div className={classes.closeComposeWrap} onClick={onClose}>
                         {/*×*/}
                         <div className={classes.topExLeft}></div>
@@ -131,7 +148,7 @@ function WriteReview({onClose}) {
                         <textarea placeholder={"내용을 적으시오"} />
                     </div>
 
-                    <div className={classes.enrollContent} onClick={onClose}>POST REVIEW</div>
+                    <div className={classes.enrollContent} onClick={handleClose}>POST REVIEW</div>
                 </div>
             </div>
         </>

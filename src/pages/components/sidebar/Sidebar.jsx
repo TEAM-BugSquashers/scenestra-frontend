@@ -1,10 +1,11 @@
 
 import classes from './Sidebar.module.css';
 import {axiosLogout} from "../../api/axios.js";
-import {useNavigate} from "react-router-dom";
+import {useNavigate,useLocation} from "react-router-dom";
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const navi = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     axiosLogout().then(res => {
@@ -22,18 +23,31 @@ function Sidebar({ isOpen, toggleSidebar }) {
       <div className={`${classes.sidebar} ${isOpen ? classes.open : ''}`}>
         <nav className={classes.nav}>
           <ul>
-            <li>
-              <a onClick={()=> {navi("/");
-              toggleSidebar();}}>MY PAGE</a>
-            </li>
+            {!["/join", "/login"].includes(location.pathname) && (
+              <>
+                <li>
+                  <a onClick={()=> {navi("/");
+                    toggleSidebar();}}>HOME</a>
+                </li>
+                <li>
+                  <a onClick={()=> {navi("/seeAllMovie");
+                    toggleSidebar();}}>BROWSE MOVIES</a>
+                </li>
+                <li>
+                  <a onClick={()=> {navi("/myPage"); toggleSidebar();}}>MY PAGE</a>
+                </li>
+              </>
+            )}
             <li>
               <a onClick={()=> {navi("/about");
               toggleSidebar();}}>ABOUT US</a>
             </li>
-            <li>
-              <a onClick={()=> {navi("/roomSelect");
-              toggleSidebar();}}>REVIEW</a>
-            </li>
+            {!["/join", "/login"].includes(location.pathname) && (
+              <li>
+                <a onClick={()=> {navi("/roomSelect");
+                toggleSidebar();}}>REVIEW</a>
+              </li>
+            )}
           </ul>
           <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout(); toggleSidebar();}}>Logout</button>
         </nav>
