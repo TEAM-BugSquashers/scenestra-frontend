@@ -24,9 +24,15 @@ function WriteReview({onClose}) {
 
     const handleClose = () => {
         // 닫기 전에 스크롤 복원
-        document.body.style.overflow = 'unset';
-        onClose();
+        if(confirm("취소?")) {
+            document.body.style.overflow = 'unset';
+            onClose();
+        }
     };
+
+    const handleSubmit = () => {
+        onClose();
+    }
 
     const rating = (index) => {
         setSelectedStar(index);
@@ -65,7 +71,7 @@ function WriteReview({onClose}) {
 
     return (
         <>
-            <div className={classes.writingPan} onClick={onClose}>
+            <div className={classes.writingPan} onClick={handleClose}>
                 <div className={classes.composeWrap} onClick={(e) => e.stopPropagation()}>
                     <div className={classes.closeComposeWrap} onClick={onClose}>
                         {/*×*/}
@@ -148,7 +154,7 @@ function WriteReview({onClose}) {
                         <textarea placeholder={"내용을 적으시오"} />
                     </div>
 
-                    <div className={classes.enrollContent} onClick={handleClose}>POST REVIEW</div>
+                    <div className={classes.enrollContent} onClick={handleSubmit}>POST REVIEW</div>
                 </div>
             </div>
         </>
