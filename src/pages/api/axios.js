@@ -1,18 +1,19 @@
 import axios from "axios";
 
-const instance = axios.create({
+let requestQueue = Promise.resolve();
+let queueCount = 0;
+
+const originalInstance = axios.create({
     baseURL: "/api",
     withCredentials: true,
     timeout: 15000
 });
 
-// 응답 인터셉터 추가
-instance.interceptors.response.use(
-    response => response, // 정상 응답은 그대로 반환
+originalInstance.interceptors.response.use(
+    response => response,
     error => {
+        // 403 에러 발생 시 로그인 페이지로 이동
         if ((window.location.href !== "/login") && error.response && error.response.status === 403) {
-            // 403 에러 발생 시 로그인 페이지로 이동
-
             if (typeof window !== "undefined") {
                 // alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
                 window.location.href = "/login";
@@ -22,6 +23,55 @@ instance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+// 원본 인스턴스의 메서드들을 래핑하여 순차 처리
+const createSequentialMethod = (method) => {
+    return function(...args) {
+        return new Promise((resolve, reject) => {
+            queueCount++;
+            const url = args[0] || '';
+            // console.log(`📝 요청 대기열 추가: ${method.toUpperCase()} ${url} (현재 대기열: ${queueCount}개)`);
+
+            requestQueue = requestQueue
+                .then(async () => {
+                    // console.log(`⏳ 요청 처리 중: ${method.toUpperCase()} ${url}`);
+
+                    try {
+                        // 원본 axios 메서드 호출
+                        const response = await originalInstance[method](...args);
+
+                        queueCount--;
+                        // console.log(`✅ 요청 처리 완료: ${method.toUpperCase()} ${url} (남은 대기열: ${queueCount}개)`);
+
+                        // 요청 간 간격
+                        await new Promise(r => setTimeout(r, 10));
+
+                        resolve(response);
+                    } catch (error) {
+                        queueCount--;
+                        // console.log(`❌ 요청 처리 실패: ${method.toUpperCase()} ${url} (남은 대기열: ${queueCount}개)`);
+
+                        // 에러는 originalInstance의 인터셉터에서 이미 처리됨
+                        reject(error);
+                    }
+                })
+                .catch(() => {
+                    // 이전 요청 실패해도 현재 요청은 진행
+                    queueCount--;
+                    reject(new Error('Queue processing failed'));
+                });
+        });
+    };
+};
+
+// 순차 처리를 위한 instance 생성
+const instance = {
+    get: createSequentialMethod('get'),
+    post: createSequentialMethod('post'),
+    put: createSequentialMethod('put'),
+    delete: createSequentialMethod('delete'),
+    patch: createSequentialMethod('patch')
+};
 
 export const axiosTest = async () => {
     try {
@@ -52,6 +102,7 @@ export const axiosLogout = async () => {
         throw error;
     }
 }
+
 // // 상영관 api // //
 export const axiosTheaters = async () => {
     try {
@@ -142,8 +193,7 @@ export const axiosJoin = async (username, password, email, mobile, realName, gen
 
 export const axiosMe = async () => {
     try {
-        const response = await instance.get
-        ("/users/me");
+        const response = await instance.get("/users/me");
         return response;
     } catch (error) {
         throw error;
@@ -158,7 +208,6 @@ export const axiosChkUsername = async (username) => {
         throw error;
     }
 }
-
 
 export const axiosgroupedByGenre = async () => {
     try {
@@ -188,10 +237,9 @@ export const axiosBindMovie = async (movieId) => {
 }
 
 export const axiosGenreId = async (genreId) => {
-        const response = await instance.get(`/movies/genres/${genreId}`);
-        return response;
+    const response = await instance.get(`/movies/genres/${genreId}`);
+    return response;
 }
-
 
 export const axiosRecommend = async() => {
     try {
