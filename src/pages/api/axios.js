@@ -15,7 +15,7 @@ originalInstance.interceptors.response.use(
         // 403 에러 발생 시 로그인 페이지로 이동
         if ((window.location.href !== "/login") && error.response && error.response.status === 403) {
             if (typeof window !== "undefined") {
-                alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
+                // alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
                 window.location.href = "/login";
             }
         }
