@@ -18,7 +18,6 @@ function MyPage() {
     const [currRes, setCurrRes] = useState([]);
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
-    // const [isBtnActive, setIsBtnActive] = useState(false);
 
     // password states
     const [currentPassword, setCurrentPassword] = useState('********');
@@ -135,182 +134,6 @@ function MyPage() {
         fetchMyData();
     }, []);
 
-
-
-
-
-
-
-
-
-
-    // useEffect(() => {
-    //     const fetchMyData = async () => {
-    //         try {
-    //             setIsLoading(true);
-    //             setError(null);
-    //
-    //             // fetch user profile and genres together
-    //             const [profileResponse, genresResponse, currResResponse, allResResponse, theaterResponse] = await Promise.all([
-    //                 axiosMe(),
-    //                 axiosGenres(),
-    //                 axiosResInProgress(),
-    //                 axiosResAll(),
-    //                 axiosTheaters(),
-    //             ]);
-    //
-    //             // set user profile
-    //             const profileData = profileResponse.data.payload;
-    //             setFormData(profileData);
-    //             setBackupData(profileData);
-    //
-    //             // set selected genres
-    //             const userGenres = profileData.userGenres?.map(genre => String(genre.genreId)) || [];
-    //                 // ? safety checks if userGenres exists before attempting .map; [] is a fallback
-    //             setSelectedGenres(userGenres);
-    //             setBackupGenres(userGenres);
-    //
-    //             // set all genres
-    //             const allGenresData = genresResponse.data.payload.map(genre => ({
-    //                 value: String(genre.genreId),
-    //                 label: genre.name
-    //             }));
-    //             setAllGenres(allGenresData);
-    //
-    //             // set current reservation
-    //             try {
-    //                 const currResData = currResResponse.data.payload.map(curr => ({
-    //                     num: curr.reservationId,
-    //                     date: curr.date,
-    //                     startTime: curr.startTime,
-    //                     endTime: curr.endTime,
-    //                     room: curr.theaterName,
-    //                     movie: curr.movieTitle,
-    //                     name: curr.username,
-    //                     mobile: curr.mobile,
-    //                     id: curr.theaterId
-    //                 }));
-    //
-    //                 if (!currResData || currResData.length === 0) {
-    //                     return;
-    //                 } else {
-    //                     setCurrRes(currResData);
-    //                     console.log('current reservations:', currResResponse.data.payload);
-    //
-    //                     try {
-    //                         const allResData = allResResponse.data.payload.map(all => ({
-    //                             num: all.reservationId,
-    //                             date: all.date,
-    //                             startTime: all.startTime,
-    //                             endTime: all.endTime,
-    //                             room: all.theaterName,
-    //                             movie: all.movieTitle,
-    //                             id: all.theaterId
-    //                         }));
-    //
-    //                         if (!allResData || allResData.length === 0) {
-    //                             return;
-    //                         } else {
-    //                             const currNums = currResData.map(curr => curr.num);
-    //
-    //                             // filter out current reservations to obtain past reservations
-    //                             const filteredRes = allResData.filter(all => !currNums.includes(all.num));
-    //                             setPastRes(filteredRes);
-    //                             // setPastRes(allResData => allResData.filter(all => all !== currRes.num));
-    //                             // setPastRes(allRes => allRes.filter(all => all !== currRes.num));
-    //                         }
-    //                     } catch (pastError) {
-    //                         console.log('pastError:', pastError);
-    //                     }
-    //                 }
-    //             } catch (currError) {
-    //                 console.log('currError:', currError);
-    //             }
-    //
-    //
-    //             // const currResData = currResResponse.data.payload.map(curr => ({
-    //             //         num: curr.reservationId,
-    //             //         date: curr.date,
-    //             //         startTime: curr.startTime,
-    //             //         endTime: curr.endTime,
-    //             //         room: curr.theaterName,
-    //             //         movie: curr.movieTitle,
-    //             //         name: curr.username,
-    //             //         mobile: curr.mobile,
-    //             //         id: curr.theaterId
-    //             // }));
-    //             // setCurrRes(currResData);
-    //             // console.log('current reservations:', currResResponse.data.payload);
-    //
-    //             // set all reservations
-    //
-    //             // const allResData = allResResponse.data.payload.map(all => ({
-    //             //     num: all.reservationId,
-    //             //     date: all.date,
-    //             //     startTime: all.startTime,
-    //             //     endTime: all.endTime,
-    //             //     room: all.theaterName,
-    //             //     movie: all.movieTitle,
-    //             //     id: all.theaterId
-    //             // }));
-    //
-    //             //     const currNums = currResData.map(curr => curr.num);
-    //             //
-    //             //     // filter out current reservations to obtain past reservations
-    //             //     const filteredRes = allResData.filter(all => !currNums.includes(all.num));
-    //             //     setPastRes(filteredRes);
-    //             //     // setPastRes(allResData => allResData.filter(all => all !== currRes.num));
-    //             //     // setPastRes(allRes => allRes.filter(all => all !== currRes.num));
-    //             // }
-    //
-    //
-    //             // set theater images
-    //             const theaterData = theaterResponse.data.payload.map(room => ({
-    //                 id: room.theaterId,
-    //                 img: room.image
-    //             }));
-    //             setTheaterImg(theaterData);
-    //             console.log('hi:', theaterData);
-    //
-    //         } catch (error) {
-    //             console.error("Failed to fetch user data:", error);
-    //             setError("사용자 정보를 불러오는데 실패했습니다.");
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     };
-    //
-    //     fetchMyData();
-    // }, []);
-
-    // mock reservation data
-    // const currResData = {
-    //     num: "A000-1111-2222",
-    //     date: "2025년 2월 5일",
-    //     time: "12:00",
-    //     room: "Theater A",
-    //     movie: "Cars 2",
-    //     name: "John Doe",
-    //     mobile: "000-1111-2222"
-    // };
-
-    // const pastResData = [
-    //     {
-    //         num: "B000-1111-2222",
-    //         date: "2025년 2월 5일",
-    //         time: "12:00",
-    //         room: "Theater A",
-    //         movie: "Cars 2",
-    //     },
-    //     {
-    //         num: "C000-1111-2222",
-    //         date: "2025년 2월 5일",
-    //         time: "12:00",
-    //         room: "Theater A",
-    //         movie: "Cars 2",
-    //     }
-    // ];
-
     //conditional for current reservation
     const hasCurrRes = currRes.length > 0;
     const hasPastRes = pastRes.length > 0;
@@ -326,13 +149,6 @@ function MyPage() {
         setIsPwEditMode(true);
         const { value } = e.target;
         setCurrentPassword(value);
-        // if (!isPwEditMode && value !== '********') {
-        //     setIsPwEditMode(true);
-        // }
-        // if (showPasswordMask && value !== '********') {
-        //     setShowPasswordMask(false);
-        //     setIsPwEditMode(true);
-        // }
     };
 
     // handle genre selection changes
@@ -576,11 +392,8 @@ function MyPage() {
                                     <div className={classes["currBoxLeft"]}>
 
                                         <div className={classes["currBoxTop"]}>
-                                            {/*{currRes.map((curr) => (*/}
-                                            {/*    <div key={curr.num}>*/}
                                                     <div className={classes["num"]}>
-                                                        {/*예약번호 <span style={{ color: '#b2a69b' }}>{reservation.num}</span>*/}
-                                                        예약번호 <span style={{ color: '#b2a69b' }}>
+                                                        예약번호&nbsp;<span style={{ color: '#b2a69b' }}>
                                                         {reservation.room.slice(0, 3)}{reservation.num}–
                                                         {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–
                                                         {reservation.startTime.slice(0, 2)}{reservation.startTime.slice(3, 5)}
@@ -588,35 +401,29 @@ function MyPage() {
 
                                                     </div>
                                                     <div className={classes["date"]}>
-                                                        날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
+                                                        날짜&nbsp;<span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
                                                         year: "numeric",
                                                         month: "long",
                                                         day: "numeric"
                                                         })}</span>
                                                     </div>
                                                     <div className={classes["time"]}>
-                                                        시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0,5)}</span>
+                                                        시간&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0,5)}</span>
                                                     </div>
                                                     <div className={classes["room"]}>
-                                                        상영관 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                                        상영관&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
                                                     </div>
                                                     <div className={classes["movie"]}>
-                                                        영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+                                                        영화&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
                                                     </div>
-                                                {/*</div>*/}
-                                            {/*))}*/}
                                         </div>
                                         <div className={classes["currBoxBot"]}>
-                                            {/*{currRes.map((curr) => (*/}
-                                            {/*    <div key={curr.num}>*/}
                                                     <div className={classes["name"]}>
-                                                        예약자 <span style={{ color: '#b2a69b' }}>{reservation.name}</span>
+                                                        예약자&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.name}</span>
                                                     </div>
                                                     <div className={classes["mobile"]}>
-                                                        전화번호 <span style={{ color: '#b2a69b' }}>{reservation.mobile}</span>
+                                                        전화번호&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.mobile}</span>
                                                     </div>
-                                                {/*</div>*/}
-                                            {/*))}*/}
                                         </div>
                                         <button
                                             name={reservation.num}
@@ -684,7 +491,6 @@ function MyPage() {
                                         type="password"
                                         id="currentPassword"
                                         value={currentPassword}
-                                        // value={showPasswordMask && !isEditMode ? '********' : currentPassword}
                                         onChange={handlePasswordChange}
                                         onKeyDown={(e) => {
                                             if (isEditMode && e.key === 'Enter') {
@@ -879,7 +685,6 @@ function MyPage() {
                                         index === pastRes.length - 1 ? classes["marBotDel"] : ''
                                     }`}
                                 >
-                                    {/*<div className={classes["pastNum"]}>{reservation.num}</div>*/}
                                     <div className={classes["pastNum"]}>
                                         {reservation.room.slice(0, 3)}{reservation.num}–
                                         {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–
@@ -890,20 +695,28 @@ function MyPage() {
                                     <div className={classes["pastBoxMain"]}>
                                         <div className={classes["pastBoxLeft"]}>
                                             <div className={classes["pastDate"]}>
-                                                날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
+                                                날짜&nbsp;<span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
                                                 year: "numeric",
                                                 month: "long",
                                                 day: "numeric"
                                             })}</span>
                                             </div>
                                             <div className={classes["pastTime"]}>
-                                                시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
+                                                시간&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
                                             </div>
                                             <div className={classes["pastRoom"]}>
-                                                방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                                방&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
                                             </div>
                                             <div className={classes["pastMovie"]}>
-                                                영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+                                                영화&nbsp;<span
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        width: '75%',
+                                                        color: '#b2a69b',
+                                                        whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis'
+                                                    }}>{reservation.movie}</span>
                                             </div>
                                         </div>
 
