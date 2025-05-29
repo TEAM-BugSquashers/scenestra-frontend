@@ -17,6 +17,7 @@ function UserRegistration() {
     const [allGenres, setAllGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [hoveredGenre, setHoveredGenre] = useState(null);
+    const [isTouched, setIsTouched] = useState(false);
 
     // loading/error states
     const [isLoading, setIsLoading] = useState(true);
@@ -30,9 +31,6 @@ function UserRegistration() {
 
     // left image state
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    // loaded state for signup form appear
-    const [loaded, setLoaded] = useState(false);
 
     // left image array
     const imageClasses = [
@@ -53,20 +51,6 @@ function UserRegistration() {
         'imgEight'
     ]
 
-    // transition for left image
-    // useEffect(() => {
-    //     setInterval(() => {
-    //         setCurrentIndex(prevIndex => (prevIndex +1) % imageClasses.length);
-    //     }, 1000);
-    // }, [imageClasses.length]);
-    //
-    // const getImageStyle = (index) => {
-    //     return {
-    //         opacity: index === currentIndex ? 1 : 0,
-    //         zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
-    //     }
-    // }
-
     useEffect(() => {
 
         if (currentIndex < imageClasses.length - 1) {
@@ -80,11 +64,6 @@ function UserRegistration() {
             }, time);
             return () => clearTimeout(timeout);
         }
-
-        // load signup form
-        setTimeout(() => {
-            setLoaded(true);
-        }, 753.86);
 
     }, [currentIndex, imageClasses.length]);
 
@@ -171,6 +150,12 @@ function UserRegistration() {
     };
 
     // genre label color change
+    const handleTouchStart = () => {
+        setIsTouched(true);
+    }
+    const handleTouchEnd = () => {
+        setIsTouched(false);
+    }
     const getGenreLabelStyle = (id) => {
         if (selectedGenres.includes(id)) {
             // selected state
@@ -180,19 +165,26 @@ function UserRegistration() {
                 borderColor: '#32271e'
             };
         } else if (justUnselectedRef.current.id === id && !justUnselectedRef.current.mouseLeft) {
-            // just unselected (mouse enter)
+            // just unselected (but mouse still enter)
             return {
                 backgroundColor: 'white',
                 color: '#b2a69b',
                 borderColor: '#b2a69b'
             };
         } else if (hoveredGenre === id) {
-            // hover state
-            return {
-                backgroundColor: '#32271e',
-                color: 'white',
-                borderColor: '#32271e'
-            };
+            if (selectedGenres.length === 3 && !isTouched) {
+                return {
+                            backgroundColor: 'white',
+                            color: '#b2a69b',
+                            borderColor: '#b2a69b'
+                        }
+            } else {
+                return {
+                    backgroundColor: '#32271e',
+                    color: 'white',
+                    borderColor: '#32271e'
+                };
+            }
         } else {
             // default state
             return {
@@ -330,18 +322,6 @@ function UserRegistration() {
             <div className={classes["totalMargin"]}>
                 <div className={classes["totalLeft"]}>
                     <div className={classes["leftBox"]}>
-                        {/*<img src="/img/8.jpeg" className={`${classes["img8"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-                        {/*<img src="/img/8.jpeg" className={`${classes["img8"]} ${loaded ? `${classes["fadeIn"]}` : `${classes["fadeOut"]}`}`} alt={"image"}/>*/}
-                        {/*<img src="/img/8.jpeg" className={`${classes["img8"]} ${appear ? `${classes["fadeIn"]}` : ""} ${disappear ? `${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-
-
-                        {/*<img src="/img/3.jpg" className={`${classes["img3"]} ${loaded ? `${classes["fadeIn"]}` : `${classes["fadeOut"]}`}`} alt={"image"}/>*/}
-                        {/*<img src="/img/3.jpg" className={`${classes["img3"]} ${appear ? `${classes["fadeIn"]}` : ""} ${disappear ? `${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-                        {/*<img src="/img/5.jpg" className={`${classes["img5"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-                        {/*<img src="/img/7.jpg" className={`${classes["img7"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-                        {/*<img src="/img/9.jpeg" className={`${classes["img9"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-                        {/*<img src="/img/11.jpg" className={`${classes["img11"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
-                        {/*<img src="/img/1.jpg" className={`${classes["img1"]} ${loaded ? `${classes["fadeIn"]} ${classes["fadeOut"]}` : ""}`} alt={"image"}/>*/}
                         <img
                             src="./img/8.jpeg"
                             alt=""
@@ -436,19 +416,16 @@ function UserRegistration() {
                         <div className={classes["leftQuoteBox"]}>
                             <div className={`${classes["leftQuote"]} ${classes["leftLogo"]}`}><em>SCENESTRA</em></div>
                             <div className={`${classes["leftQuote"]} `}>Scene and space, exclusively yours.</div>
-                            {/*<div className={`${classes["leftQuote"]}`}>SCENE AND SPACE, EXCLUSIVELY YOURS.</div>*/}
                         </div>
 
                     </div>
                 </div>
                 <div
                     className={classes["totalMid"]}
-                    // style={ !loaded ? {opacity: '0'} : {opacity: '1'}}
                 ></div>
                 <div className={classes["totalRight"]}>
                     <div
                         className={`${classes["main"]} wBg wMain`}
-                        // style={ !loaded ? {opacity: '0'} : {opacity: '1'}}
                     >
                         <section className={classes["topBar"]}>
                             <div className={`${classes["horLine"]} bBg`}></div>
@@ -577,9 +554,8 @@ function UserRegistration() {
                                                     value={genre.value}
                                                     checked={selectedGenres.includes(genre.value)}
                                                     onChange={handleGenreChange}
-                                                    // disabled={
-                                                    //     !selectedGenres.includes(genre.value) && selectedGenres.length >= 3
-                                                    // }
+                                                    onTouchStart={handleTouchStart}
+                                                    onTouchEnd={handleTouchEnd}
                                                 />
                                                 <label className={classes["genreChkBx"]}
                                                        htmlFor={genre.value}
