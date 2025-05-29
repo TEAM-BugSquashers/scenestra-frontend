@@ -6,11 +6,36 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { useEffect } from 'react';
+import {axiosWriteReview} from "../../api/axios.js";
 
 function WriteReview({onClose}) {
     const [selectedStar, setSelectedStar] = useState(0);
     const [selectedImages, setSelectedImages] = useState([]);
     const fileInputRef = useRef(null);
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+
+    const handleSubmit = async () => {
+        try {
+            // FormData 생성 (이미지 파일 전송용)
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('content', content);
+            formData.append('star', selectedStar);
+
+
+            selectedImages.forEach((image) => {
+                formData.append('images', image.file);
+            });
+
+            await axiosWriteReview(formData);
+            alert('리뷰가 등록되었습니다!');
+            onClose();
+        } catch (error) {
+            console.error('리뷰 등록 실패:', error);
+            alert('리뷰 등록에 실패했습니다.');
+        }
+    }
 
     useEffect(() => {
         // 팝업이 열릴 때 스크롤 막기
@@ -29,10 +54,6 @@ function WriteReview({onClose}) {
             onClose();
         }
     };
-
-    const handleSubmit = () => {
-        onClose();
-    }
 
     const rating = (index) => {
         setSelectedStar(index);
@@ -79,7 +100,7 @@ function WriteReview({onClose}) {
                         <div className={classes.topExRight}></div>
                     </div>
                     <div className={classes.titleInputWrap}>
-                        <input placeholder={"제목을 적으시오"} />
+                        <input placeholder={"제목을 적으시오"}  onChange={(e) => setTitle(e.target.value)} />
                     </div>
 
                     <div className={classes.starPoint}>
@@ -151,7 +172,7 @@ function WriteReview({onClose}) {
                     </div>
 
                     <div className={classes.contentInputWrap}>
-                        <textarea placeholder={"내용을 적으시오"} />
+                        <textarea placeholder={"내용을 적으시오"} onChange={(e) => setContent(e.target.value)}/>
                     </div>
 
                     <div className={classes.enrollContent} onClick={handleSubmit}>POST REVIEW</div>
