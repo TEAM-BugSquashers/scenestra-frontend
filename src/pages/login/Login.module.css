@@ -243,3 +243,29 @@
     opacity: 1;
     cursor: pointer;
 }
+/****************************/
+/**** responsive design ****/
+/****************************/
+@media (max-width: 430px) {
+    .sectionWrap {
+        flex-direction: column;
+    }
+    .sectionLeft {
+        width: 100%;
+        height: 400px;
+    }
+    .sectionRight {
+        width: 100%;
+        height: fit-content;
+    }
+    .imgBox {
+        width: 100%;
+        height: 100%
+    }
+    .rightContentWrap {
+        width: 100%;
+    }
+    .rightContentWrapBot {
+        margin-bottom: 60px;
+    }
+}
