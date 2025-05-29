@@ -122,6 +122,10 @@
     flex-direction: column;
     gap: 10px;
 }
+.pastBoxLeft > div {
+    display: flex;
+    align-items: center;
+}
 .pastBoxRight {
     width: 40%;
     height: 100%;
@@ -382,6 +386,15 @@ input[type="checkbox"]:checked + label {
         width: 100%;
         gap: 60px;
     }
+    .contentBox {
+        margin: 0 2.5vw;
+    }
+    .left > div {
+        width: calc(100% - 5vw);
+    }
+    .right > div {
+        width: calc(100% - 5vw);
+    }
     .currBox {
         height: fit-content;
 
@@ -390,9 +403,6 @@ input[type="checkbox"]:checked + label {
     }
     .currBoxLeft {
         width: 100%;
-    }
-    .currBoxLeft > div {
-        /*margin-left: calc((100% - (100% - 5vw))/2);*/
     }
     .currBoxRight {
         width: 100%;
@@ -403,15 +413,19 @@ input[type="checkbox"]:checked + label {
         align-items: center;
     }
     .currBoxRight > div {
-        /*width: calc(100% - 5vw);*/
         width: 100%;
-        /*height: 300px;*/
         height: 220px;
     }
-    .cancelResBtn:hover {
-         background-color: white;
-         color: #b2a69b;
-     }
+    .pastBoxLeft {
+        width: 50%;
+    }
+    .pastBoxLeft > div {
+        display: flex;
+        align-items: center;
+    }
+    .pastBoxRight {
+        width: 50%;
+    }
 }
 
 
