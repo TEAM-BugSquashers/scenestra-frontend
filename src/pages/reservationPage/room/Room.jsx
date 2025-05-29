@@ -17,13 +17,13 @@ function Room({ selectedRoom, setSelectedRoom, roomData, selectedPeople}) {
         switch(name) {
             case 'SERENE':
             case 'CELESTIA':
-                return '2~3인';
+                return '1~3인';
             case 'ASTRAL':
                 return '4~5인';
             case 'VERDANT':
                 return '6~10인';
             default:
-                return '2~3인';
+                return '1~3인';
         }
     };
     const filteredRooms = getFilteredRooms();

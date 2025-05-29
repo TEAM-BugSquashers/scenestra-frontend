@@ -172,19 +172,37 @@ export const axiosRoom = async() => {
         throw error;
     }
 }
-export const axiosAvailableTimes = async(theaterId, movieId, yearMonth) => {
+export const axiosCapacity = async(num) => {  // num 파라미터 추가
     try {
-        const params = {
-            theaterId: String(theaterId),
-            movieId: String(movieId),
-            yearMonth: String(yearMonth),
-        };
+        const response = await instance.get(`/theaters/capacity?num=${num}`);  // 쿼리 파라미터로 전달
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
 
-        const response = await instance.get("/reservations/available-times", {
+export const axiosAvailableDates = async(theaterId, movieId, yearMonth) => {
+    try {
+        const response = await instance.get("/reservations/available-dates", {
             params: {
                 theaterId: theaterId,
                 movieId: movieId,
                 yearMonth: yearMonth
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosAvailableTimes = async(theaterId, movieId, date) => {
+    try {
+        const response = await instance.get("/reservations/available-times", {
+            params: {
+                theaterId: theaterId,
+                movieId: movieId,
+                day: date
             }
         });
         return response;

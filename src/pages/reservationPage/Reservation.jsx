@@ -7,20 +7,21 @@ import PeopleNumber from "./peopleNo/PeopleNumber.jsx";
 import 'react-calendar/dist/Calendar.css';
 import ResultPopUp from "./resultPopUp/ResultPopUp.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import {axiosAvailableTimes, axiosRoom} from "../api/axios.js";
-
+import {axiosAvailableDates, axiosAvailableTimes, axiosCapacity, axiosRoom} from "../api/axios.js";
 
 function Reservation() {
-
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedTimeInfo, setSelectedTimeInfo] = useState(null);
-    // 리액트캘린더 이벤트와 관련된 부분
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedRoom, setSelectedRoom] = useState(null);
-    const [ isPopupOpen, setIsPopupOpen ] = useState(false);
-    const [ selectedMovie, setSelectedMovie ] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [selectedMovie, setSelectedMovie] = useState(null);
     const [roomData, setRoomData] = useState([]);
     const [selectedPeople, setSelectedPeople] = useState(null);
+    const [capacityData, setCapacityData] = useState([]);
+    const [availableDates, setAvailableDates] = useState({}); // 예약 가능한 날짜 데이터
+    const [availableTimes, setAvailableTimes] = useState({});
+    const [timeUnit, setTimeUnit] = useState(null); // timeUnit 추가
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -29,40 +30,83 @@ function Reservation() {
         const fetchRoomData = async () => {
             try {
                 const response = await axiosRoom();
-                setRoomData(response.data.payload)
+                setRoomData(response.data.payload);
             } catch (error) {
                 console.error("Error fetching roomData: ", error);
             }
         };
-
         fetchRoomData();
     }, []);
 
+    // 인원수 선택 시 필터된 데이터 가져오기
+    useEffect(() => {
+        if (!selectedPeople || selectedPeople === 0) {
+            return;
+        }
+
+        const fetchCapacity = async () => {
+            try {
+                const response = await axiosCapacity(selectedPeople);
+                console.log(response.data.payload);
+                setCapacityData(response.data.payload);
+                setRoomData(response.data.payload);
+            } catch (error) {
+                console.error("Error peopleSelected ", error);
+            }
+        };
+
+        fetchCapacity();
+    }, [selectedPeople]);
+
+    // 방과 영화가 선택되면 예약 가능한 날짜 가져오기
     useEffect(() => {
         if (selectedRoom && selectedMovie) {
-            const fetchAvailableTimes = async () => {
+            const fetchAvailableDates = async () => {
                 try {
                     const currentDate = new Date();
                     const yearMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
 
-                    console.log("전송할 데이터:");
-                    console.log("selectedRoom:", selectedRoom);
-                    console.log("selectedMovie.movieId:", selectedMovie.movieId);
-                    console.log("yearMonth:", yearMonth);
-
-
-                    const response = await axiosAvailableTimes(selectedRoom, selectedMovie.movieId, yearMonth);
-                    console.log("AvailableTimes: ", response.data);
+                    const response = await axiosAvailableDates(selectedRoom, selectedMovie.movieId, yearMonth);
+                    console.log("AvailableDates: ", response.data.payload);
+                    setAvailableDates(response.data.payload);
                 } catch (error) {
-                    console.error("Error fetching availabletimes: ", error);
+                    console.error("Error fetching availableDates: ", error);
+                    setAvailableDates({});
                 }
             }
-            fetchAvailableTimes();
+            fetchAvailableDates();
+        } else {
+            setAvailableDates({});
         }
     }, [selectedRoom, selectedMovie]);
 
+    // 방 영화 날짜가 선택되면 예약가능한 시간 가져오기
+    useEffect(() => {
+        if(selectedRoom && selectedMovie && selectedDate) {
+            const fetchAvailableTimes = async () => {
+                try {
+                    const formattedDate = selectedDate.toISOString().split('T')[0]; // "2025-05-30"
+                    const response = await axiosAvailableTimes(selectedRoom, selectedMovie.movieId, formattedDate);
 
-    useEffect(()=> {
+                    console.log("AvailableTimes: ", response.data.payload.availableTimes);
+                    console.log("TimeUnit: ", response.data.payload.timeUnit);
+
+                    setAvailableTimes(response.data.payload.availableTimes);
+                    setTimeUnit(response.data.payload.timeUnit); // timeUnit 저장
+                } catch (error) {
+                    console.error("Error fetching available times: ", error);
+                    setAvailableTimes([]);
+                    setTimeUnit(null);
+                }
+            };
+            fetchAvailableTimes();
+        } else {
+            setAvailableTimes([]);
+            setTimeUnit(null);
+        }
+    }, [selectedRoom, selectedMovie, selectedDate]);
+
+    useEffect(() => {
         if(location.state?.selectedMovie) {
             setSelectedMovie(location.state.selectedMovie);
         } else {
@@ -73,12 +117,10 @@ function Reservation() {
     const openPopup = () => setIsPopupOpen(true);
     const closePopup = () => setIsPopupOpen(false);
 
-
     const isRoomStepActive = selectedPeople !== null;
     const isDateStepActive = selectedPeople !== null && selectedRoom !== null;
     const isTimeStepActive = selectedPeople !== null && selectedRoom !== null && selectedDate !== null;
     const isReserveButtonActive = selectedPeople !== null && selectedRoom !== null && selectedDate !== null && selectedTimeInfo !== null;
-
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -101,6 +143,7 @@ function Reservation() {
         setSelectedTime(null);
         setSelectedTimeInfo(null);
     };
+
     const handlePeopleSelect = (peopleCount) => {
         setSelectedPeople(peopleCount);
         setSelectedRoom(null);
@@ -108,30 +151,63 @@ function Reservation() {
         setSelectedTime(null);
         setSelectedTimeInfo(null);
     };
+
+    // 날짜별 스타일 클래스 결정
     const getDateClass = ({ date, view }) => {
         if (view === 'month') {
             const checkDate = new Date(date);
             checkDate.setHours(0, 0, 0, 0);
 
+            // 과거 날짜
             if (checkDate <= today) {
                 return 'past-date';
             }
+
+            // 한 달 이후 날짜
             if (checkDate > oneMonthLater) {
                 return 'unavailable-date';
             }
+
+            // API에서 받은 예약 가능 여부 확인
+            const dateString = checkDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+
+            if (Object.keys(availableDates).length > 0) {
+                if (availableDates[dateString] === true) {
+                    return 'available-date';
+                } else if (availableDates[dateString] === false) {
+                    return 'unavailable-date';
+                }
+            }
+
+            // 기본적으로 예약 가능한 날짜로 표시 (API 데이터가 없을 때)
             return 'available-date';
         }
         return null;
     };
+
+    // 날짜 비활성화 여부 결정
     const tileDisabled = ({ date, view }) => {
         if (view === 'month') {
             const checkDate = new Date(date);
             checkDate.setHours(0, 0, 0, 0);
 
-            return checkDate <= today || checkDate > oneMonthLater;
+            // 과거 날짜나 한 달 이후는 항상 비활성화
+            if (checkDate <= today || checkDate > oneMonthLater) {
+                return true;
+            }
+
+            // API에서 받은 예약 가능 여부 확인
+            const dateString = checkDate.toISOString().split('T')[0];
+
+            if (Object.keys(availableDates).length > 0) {
+                return availableDates[dateString] === false;
+            }
+
+            return false; // API 데이터가 없으면 활성화
         }
         return false;
     };
+
     const formatDate = (date) => {
         return date.toLocaleDateString('ko-KR', {
             year: 'numeric',
@@ -140,8 +216,6 @@ function Reservation() {
             weekday: 'long'
         });
     };
-    // 상영관 금액 가져오기
-
 
     if (!selectedMovie) {
         return (
@@ -164,24 +238,22 @@ function Reservation() {
     return (
         <>
             <div className={classes.outerBox}>
-                {/* 가장큰박스 */}
                 <div className={classes.titleBox}>
                     <div className={classes.line1}></div>
                     <h2 className={classes.RTitle}>RESERVATION</h2>
                     <div className={classes.line2}></div>
                 </div>
                 <div className={classes.innerBox}>
-                    {/* 예약에 필요한 상세내용들 들어가는 박스 */}
                     <div>
                         <div className={`${classes["sectionTitle"]} subtitle`}>선택한영화</div>
                         <div className={classes.selectedMovie}>
                             <div className={classes.movieImg}><img src={selectedMovie.poster} alt={selectedMovie.title} /></div>
-                           <div className={classes.movieDesc}>
-                               <h2>{selectedMovie.title}</h2>
+                            <div className={classes.movieDesc}>
+                                <h2>{selectedMovie.title}</h2>
                                 <p>감독: {selectedMovie.director}</p>
-                               <p>장르: {selectedMovie.genreNames}</p>
-                               <p>상영시간: {selectedMovie.showTime} 분</p>
-                           </div>
+                                <p>장르: {selectedMovie.genreNames}</p>
+                                <p>상영시간: {selectedMovie.showTime} 분</p>
+                            </div>
                         </div>
                     </div>
                     <div className={classes.box}>
@@ -212,9 +284,8 @@ function Reservation() {
                                 <ul>
                                     <li>당일 예약은 불가능합니다.</li>
                                     <li>한 달 이내의 날짜만 선택 가능합니다</li>
-                                    <li>또 쓸 말이 있으려나... ?</li>
-                                    <li>없으려나..?</li>
-                                    <li>이 칸을 그대로 써야하나 말아야하나</li>
+                                    <li>상영관별로 예약 가능한 날짜가 다릅니다</li>
+                                    <li>회색으로 표시된 날짜는 예약이 불가능한 날입니다</li>
                                 </ul>
                             </div>
                             <Calendar
@@ -237,17 +308,18 @@ function Reservation() {
                     <div className={`${classes.box} ${!isTimeStepActive ? classes.disabled : ''}`}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>시간선택</div>
                         <div className={classes.box}>
-                             <TimeSelect
+                            <TimeSelect
                                 movieDuration={selectedMovie.showTime}
                                 selectedTime={selectedTime}
                                 setSelectedTime={setSelectedTime}
+                                availableTimes={availableTimes}
+                                timeUnit={timeUnit}
                                 onTimeSelect={(timeInfo) => {
                                     setSelectedTimeInfo(timeInfo);
                                 }}
-                             />
+                            />
                         </div>
                     </div>
-                    {/* 선택된 날짜 시간 출력 */}
                     {selectedDate && (
                         <div className={classes.box}>
                             <div className={`${classes["sectionTitle"]} subtitle`}>예약일시</div>
@@ -268,7 +340,7 @@ function Reservation() {
                 </div>
                 <div className={classes.btnBox}>
                     <button className={`${classes["reserveBtn"]} btn2 ${!isReserveButtonActive ? classes.disabledbtn : ''}`}
-                    onClick={openPopup}>
+                            onClick={openPopup}>
                         RESERVE NOW
                     </button>
                     <ResultPopUp

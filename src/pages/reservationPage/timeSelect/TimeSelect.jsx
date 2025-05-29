@@ -1,18 +1,14 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import classes from './TimeSelect.module.css';
 
-function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect}) {
+function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, onTimeSelect}) {
     // 시간선택불가능한 영역 표시용 임시데이터
     const [unavailableSlots, setUnavailableSlots ] = useState([]);
-
-    // 에러 메시지 상태 추가
     const [errorMessage, setErrorMessage] = useState('');
 
-    const getSlotsNeeded = (duration) => {
-        return Math.ceil(duration / 30);
-    };
+    // timeUnit을 직접 사용 (API에서 받아온 슬롯 수)
+    const slotsNeeded = timeUnit;
 
-    const slotsNeeded = getSlotsNeeded(movieDuration);
     const generateTimeSlots = () => {
         const slots = [];
         for(let hour = 11; hour < 23; hour++) {
@@ -25,57 +21,87 @@ function TimeSelect({ movieDuration, selectedTime, setSelectedTime, onTimeSelect
     };
     const timeSlots = generateTimeSlots();
 
+    const convertTimeToSlotIndex = (timeString) => {
+        const time = timeString.split('T')[1];
+        const [hour, minute] = time.split(':').map(Number);
+
+        const baseIndex = (hour - 11) * 2;
+
+        if (minute === 30) {
+            return baseIndex + 1;
+        }
+
+        return baseIndex;
+    };
+
+    useEffect(() => {
+        if(availableTimes && Array.isArray(availableTimes)) {
+            const allSlots = Array.from({length: timeSlots.length}, (_, i) => i);
+            const availableSlotIndices = availableTimes.map(timeString => convertTimeToSlotIndex(timeString)
+            ).filter(index => index >= 0 && index < timeSlots.length);
+            const unavailableSlotIndices = allSlots.filter(slot => !availableSlotIndices.includes(slot)
+            );
+            setUnavailableSlots(unavailableSlotIndices);
+        } else {
+            const allSlots = Array.from({ length: timeSlots.length }, (_, i) => i);
+            setUnavailableSlots(allSlots);
+        }
+    }, [availableTimes, timeSlots.length])
+
     const handleTimeClick = (index) => {
-        // 에러 상태 초기화
         setErrorMessage('');
 
-        if(unavailableSlots && unavailableSlots.includes(index)) {
+        // 1. 예약 불가능한 시간 체크 (시작 시간만)
+        if (unavailableSlots && unavailableSlots.includes(index)) {
             setErrorMessage("선택불가능한 시간입니다");
             return;
         }
-
-        if(selectedTime === index) {
+        // 2. 이미 선택된 시간 클릭 시 선택 해제
+        if (selectedTime === index) {
             setSelectedTime(null);
             onTimeSelect && onTimeSelect(null);
             return;
         }
-        // 연속 칸 확인: 현재 인덱스부터 필요한 칸만큼 선택 가능한지 체크
-        for(let i = 0; i < slotsNeeded; i++) {
-            if(index + i >= timeSlots.length || unavailableSlots.includes(index + i)) {
-                setErrorMessage("선택불가능한 시간입니다");
-                return;
-            }
+
+        // 3. 23시 종료 제한 체크
+        const endSlotIndex = index + slotsNeeded;
+        const slot23 = (23 - 11) * 2; // = 24
+
+        if (endSlotIndex > slot23) {
+            setErrorMessage("23시 이후에 끝나는 상영은 불가능합니다");
+            return;
         }
+
         setSelectedTime(index);
 
-        if(onTimeSelect) {
+        if (onTimeSelect) {
             const startTime = timeSlots[index];
-
             const endIndex = index + slotsNeeded;
             let endTime;
 
-            if(endIndex < timeSlots.length) {
+            if (endIndex < timeSlots.length) {
                 endTime = timeSlots[endIndex];
             } else {
-                const lastSlotsIndex = index + slotsNeeded - 1;
-                const lastSlot = timeSlots[lastSlotsIndex];
-                if(lastSlot.includes('30분')) {
-                    const hour = parseInt(lastSlot) + 1;
-                    endTime = `${hour}시`;
-                }else {
-                    endTime = lastSlot.replace('시', '시 30분');
+                // 23시 이후 종료시간 계산
+                const extraSlots = endIndex - timeSlots.length;
+                if (extraSlots === 1) {
+                    endTime = "23시";
+                } else if (extraSlots === 2) {
+                    endTime = "23시 30분";
+                } else {
+                    endTime = "24시";
                 }
             }
+
             onTimeSelect({
                 startTime: startTime,
                 endTime: endTime,
                 startIndex: index,
                 slotsNeeded: slotsNeeded,
-                movieDuration: movieDuration
+                timeUnit: timeUnit
             });
         }
     };
-
     return (
         <>
             <div className={classes.timeSelectBox}>
