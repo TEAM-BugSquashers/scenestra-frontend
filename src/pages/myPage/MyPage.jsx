@@ -18,6 +18,7 @@ function MyPage() {
     const [currRes, setCurrRes] = useState([]);
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
+    // const [isBtnActive, setIsBtnActive] = useState(false);
 
     // password states
     const [currentPassword, setCurrentPassword] = useState('********');
@@ -50,13 +51,10 @@ function MyPage() {
                 setIsLoading(true);
                 setError(null);
 
-                // fetch user profile and genres together
-                const [profileResponse, genresResponse, currResResponse, allResResponse, theaterResponse] = await Promise.all([
+                // fetch user profile and genres
+                const [profileResponse, genresResponse ] = await Promise.all([
                     axiosMe(),
                     axiosGenres(),
-                    axiosResInProgress(),
-                    axiosResAll(),
-                    axiosTheaters()
                 ]);
 
                 // set user profile
@@ -66,7 +64,7 @@ function MyPage() {
 
                 // set selected genres
                 const userGenres = profileData.userGenres?.map(genre => String(genre.genreId)) || [];
-                    // ? safety checks if userGenres exists before attempting .map; [] is a fallback
+                // ? safety checks if userGenres exists before attempting .map; [] is a fallback
                 setSelectedGenres(userGenres);
                 setBackupGenres(userGenres);
 
@@ -77,46 +75,54 @@ function MyPage() {
                 }));
                 setAllGenres(allGenresData);
 
-                // set current reservation
-                const currResData = currResResponse.data.payload.map(curr => ({
-                        num: curr.reservationId,
-                        date: curr.date,
-                        startTime: curr.startTime,
-                        endTime: curr.endTime,
-                        room: curr.theaterName,
-                        movie: curr.movieTitle,
-                        name: curr.username,
-                        mobile: curr.mobile,
-                        id: curr.theaterId
-                }));
-                setCurrRes(currResData);
-                console.log('current reservations:', currResResponse.data.payload);
+                try {
+                    // fetch reservations and theater images
+                    const [currResResponse, allResResponse, theaterResponse] = await Promise.all([
+                        axiosResInProgress(),
+                        axiosResAll(),
+                        axiosTheaters(),
+                    ]);
 
-                // set all reservations
-                const allResData = allResResponse.data.payload.map(all => ({
-                    num: all.reservationId,
-                    date: all.date,
-                    startTime: all.startTime,
-                    endTime: all.endTime,
-                    room: all.theaterName,
-                    movie: all.movieTitle,
-                    id: all.theaterId
-                }));
-                const currNums = currResData.map(curr => curr.num);
+                    // set current reservations
+                    const currResData = currResResponse.data.payload.map(curr => ({
+                            num: curr.reservationId,
+                            date: curr.date,
+                            startTime: curr.startTime,
+                            endTime: curr.endTime,
+                            room: curr.theaterName,
+                            movie: curr.movieTitle,
+                            name: curr.username,
+                            mobile: curr.mobile,
+                            id: curr.theaterId
+                    }));
+                    setCurrRes(currResData);
+                    console.log('current reservations:', currResResponse.data.payload);
 
-                // filter out current reservations to obtain past reservations
-                const filteredRes = allResData.filter(all => !currNums.includes(all.num));
-                setPastRes(filteredRes);
-                // setPastRes(allResData => allResData.filter(all => all !== currRes.num));
-                // setPastRes(allRes => allRes.filter(all => all !== currRes.num));
+                    // set all reservations
+                    const allResData = allResResponse.data.payload.map(all => ({
+                        num: all.reservationId,
+                        date: all.date,
+                        startTime: all.startTime,
+                        endTime: all.endTime,
+                        room: all.theaterName,
+                        movie: all.movieTitle,
+                        id: all.theaterId
+                    }));
+                    const currNums = currResData.map(curr => curr.num);
+                    // filter out current reservations to obtain past reservations
+                    const filteredRes = allResData.filter(all => !currNums.includes(all.num));
+                    setPastRes(filteredRes);
 
-                // set theater images
-                const theaterData = theaterResponse.data.payload.map(room => ({
-                    id: room.theaterId,
-                    img: room.image
-                }));
-                setTheaterImg(theaterData);
-                console.log('hi:', theaterData);
+                    // set theater images
+                    const theaterData = theaterResponse.data.payload.map(room => ({
+                        id: room.theaterId,
+                        img: room.image
+                    }));
+                    setTheaterImg(theaterData);
+                    console.log('hi:', theaterData);
+                } catch (resError) {
+                    console.log('resError:', resError)
+                }
 
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
@@ -128,6 +134,154 @@ function MyPage() {
 
         fetchMyData();
     }, []);
+
+
+
+
+
+
+
+
+
+
+    // useEffect(() => {
+    //     const fetchMyData = async () => {
+    //         try {
+    //             setIsLoading(true);
+    //             setError(null);
+    //
+    //             // fetch user profile and genres together
+    //             const [profileResponse, genresResponse, currResResponse, allResResponse, theaterResponse] = await Promise.all([
+    //                 axiosMe(),
+    //                 axiosGenres(),
+    //                 axiosResInProgress(),
+    //                 axiosResAll(),
+    //                 axiosTheaters(),
+    //             ]);
+    //
+    //             // set user profile
+    //             const profileData = profileResponse.data.payload;
+    //             setFormData(profileData);
+    //             setBackupData(profileData);
+    //
+    //             // set selected genres
+    //             const userGenres = profileData.userGenres?.map(genre => String(genre.genreId)) || [];
+    //                 // ? safety checks if userGenres exists before attempting .map; [] is a fallback
+    //             setSelectedGenres(userGenres);
+    //             setBackupGenres(userGenres);
+    //
+    //             // set all genres
+    //             const allGenresData = genresResponse.data.payload.map(genre => ({
+    //                 value: String(genre.genreId),
+    //                 label: genre.name
+    //             }));
+    //             setAllGenres(allGenresData);
+    //
+    //             // set current reservation
+    //             try {
+    //                 const currResData = currResResponse.data.payload.map(curr => ({
+    //                     num: curr.reservationId,
+    //                     date: curr.date,
+    //                     startTime: curr.startTime,
+    //                     endTime: curr.endTime,
+    //                     room: curr.theaterName,
+    //                     movie: curr.movieTitle,
+    //                     name: curr.username,
+    //                     mobile: curr.mobile,
+    //                     id: curr.theaterId
+    //                 }));
+    //
+    //                 if (!currResData || currResData.length === 0) {
+    //                     return;
+    //                 } else {
+    //                     setCurrRes(currResData);
+    //                     console.log('current reservations:', currResResponse.data.payload);
+    //
+    //                     try {
+    //                         const allResData = allResResponse.data.payload.map(all => ({
+    //                             num: all.reservationId,
+    //                             date: all.date,
+    //                             startTime: all.startTime,
+    //                             endTime: all.endTime,
+    //                             room: all.theaterName,
+    //                             movie: all.movieTitle,
+    //                             id: all.theaterId
+    //                         }));
+    //
+    //                         if (!allResData || allResData.length === 0) {
+    //                             return;
+    //                         } else {
+    //                             const currNums = currResData.map(curr => curr.num);
+    //
+    //                             // filter out current reservations to obtain past reservations
+    //                             const filteredRes = allResData.filter(all => !currNums.includes(all.num));
+    //                             setPastRes(filteredRes);
+    //                             // setPastRes(allResData => allResData.filter(all => all !== currRes.num));
+    //                             // setPastRes(allRes => allRes.filter(all => all !== currRes.num));
+    //                         }
+    //                     } catch (pastError) {
+    //                         console.log('pastError:', pastError);
+    //                     }
+    //                 }
+    //             } catch (currError) {
+    //                 console.log('currError:', currError);
+    //             }
+    //
+    //
+    //             // const currResData = currResResponse.data.payload.map(curr => ({
+    //             //         num: curr.reservationId,
+    //             //         date: curr.date,
+    //             //         startTime: curr.startTime,
+    //             //         endTime: curr.endTime,
+    //             //         room: curr.theaterName,
+    //             //         movie: curr.movieTitle,
+    //             //         name: curr.username,
+    //             //         mobile: curr.mobile,
+    //             //         id: curr.theaterId
+    //             // }));
+    //             // setCurrRes(currResData);
+    //             // console.log('current reservations:', currResResponse.data.payload);
+    //
+    //             // set all reservations
+    //
+    //             // const allResData = allResResponse.data.payload.map(all => ({
+    //             //     num: all.reservationId,
+    //             //     date: all.date,
+    //             //     startTime: all.startTime,
+    //             //     endTime: all.endTime,
+    //             //     room: all.theaterName,
+    //             //     movie: all.movieTitle,
+    //             //     id: all.theaterId
+    //             // }));
+    //
+    //             //     const currNums = currResData.map(curr => curr.num);
+    //             //
+    //             //     // filter out current reservations to obtain past reservations
+    //             //     const filteredRes = allResData.filter(all => !currNums.includes(all.num));
+    //             //     setPastRes(filteredRes);
+    //             //     // setPastRes(allResData => allResData.filter(all => all !== currRes.num));
+    //             //     // setPastRes(allRes => allRes.filter(all => all !== currRes.num));
+    //             // }
+    //
+    //
+    //             // set theater images
+    //             const theaterData = theaterResponse.data.payload.map(room => ({
+    //                 id: room.theaterId,
+    //                 img: room.image
+    //             }));
+    //             setTheaterImg(theaterData);
+    //             console.log('hi:', theaterData);
+    //
+    //         } catch (error) {
+    //             console.error("Failed to fetch user data:", error);
+    //             setError("사용자 정보를 불러오는데 실패했습니다.");
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
+    //
+    //     fetchMyData();
+    // }, []);
 
     // mock reservation data
     // const currResData = {
@@ -156,6 +310,10 @@ function MyPage() {
     //         movie: "Cars 2",
     //     }
     // ];
+
+    //conditional for current reservation
+    const hasCurrRes = currRes.length > 0;
+    const hasPastRes = pastRes.length > 0;
 
     // handle input changes
     const handleInputChange = (e) => {
@@ -250,9 +408,11 @@ function MyPage() {
 
     // handle reservation cancellation
         const handleCancelRes = async (e) => {
+            // setIsBtnActive(prev => !prev);
+
             const { name } = e.target;
 
-            if(window.confirm("정말 예약을 취소하시겠습니까?")) {
+            if (window.confirm("정말 예약을 취소하시겠습니까?")) {
                 try {
                     await axiosResDel(name).then(delResponse => {
                         if(delResponse.status === 200) {
@@ -341,36 +501,6 @@ function MyPage() {
                             return;
                         }
                     }
-
-                    // if (pwResponse.status === 403) {
-                    //     alert('현재 비밀번호가 틀렸습니다.');
-                    //     return;
-                    // } else if (pwResponse.status !== 200) {
-                    //     throw new Error(`Password update failed: ${pwResponse.status}`);
-                    // }
-
-                    // try {
-                    //     await axiosPassword(currentPassword, newPassword)
-                    //         .then((res)=> {
-                    //             if(res.status) {
-                    //                 // alert("ok")
-                    //                 return;
-                    //             }
-                    //         })
-                    //         .catch(err => {
-                    //             alert(err.response.data.payload);
-                    //         });
-                    //     // if (pwResponse.status !== 200) {
-                    //     //     throw new Error(`Password update failed: ${pwResponse.status}`);
-                    //     // }
-                    // } catch (pwError) {
-                    //     if (pwError.response && pwError.response.status === 403) {
-                    //         alert('현재 비밀번호가 틀렸습니다.');
-                    //         return;
-                    //     } else {
-                    //         throw pwError;
-                    //     }
-                    // }
                 }
 
                 // update preferred genres
@@ -437,7 +567,8 @@ function MyPage() {
                                 <div className={classes["horLine"]}></div>
                             </div>
 
-                            {currRes.map((reservation, index) => (
+                            {hasCurrRes ?
+                            currRes.map((reservation, index) => (
                                 <div
                                     key={reservation.num}
                                     className={`${classes["currBox"]} ${index === currRes.length - 1 ? classes["marBotDel"] : ''}`}
@@ -510,7 +641,11 @@ function MyPage() {
                                         ))}
                                     </div>
                                 </div>
-                            ))}
+                            )) :
+                            <div className={`${classes["currBox"]} ${classes["marBotDel"]}`}>
+                                현재 예약된 내역이 없습니다.
+                            </div>
+                            }
                         </div>
                     </article>
 
@@ -724,7 +859,10 @@ function MyPage() {
                         </div>
 
                         {/* Past Reservations */}
-                        <div className={`${classes["pastWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}>
+                        <div
+                            className={`${classes["pastWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}
+                            style={ !hasPastRes ? {gap: '0'} : {} }
+                        >
                             <div className={`${classes["conBoxBar"]} ${classes["wTitle"]}`}>
                                 <div className={classes["horLine"]}></div>
                                 <div className={`${classes["barTitle"]} ${classes["subtitle"]}`}>
@@ -733,7 +871,8 @@ function MyPage() {
                                 <div className={classes["horLine"]}></div>
                             </div>
 
-                            {pastRes.map((reservation, index) => (
+                            { hasPastRes ?
+                            pastRes.map((reservation, index) => (
                                 <div
                                     key={reservation.num}
                                     className={`${classes["pastBox"]} ${
@@ -748,40 +887,59 @@ function MyPage() {
                                     </div>
 
 
-                                    <div className={classes["pastBoxLeft"]}>
-                                        <div className={classes["pastDate"]}>
-                                            날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
-                                            year: "numeric",
-                                            month: "long",
-                                            day: "numeric"
-                                        })}</span>
+                                    <div className={classes["pastBoxMain"]}>
+                                        <div className={classes["pastBoxLeft"]}>
+                                            <div className={classes["pastDate"]}>
+                                                날짜 <span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
+                                                year: "numeric",
+                                                month: "long",
+                                                day: "numeric"
+                                            })}</span>
+                                            </div>
+                                            <div className={classes["pastTime"]}>
+                                                시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
+                                            </div>
+                                            <div className={classes["pastRoom"]}>
+                                                방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                            </div>
+                                            <div className={classes["pastMovie"]}>
+                                                영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+                                            </div>
                                         </div>
-                                        <div className={classes["pastTime"]}>
-                                            시간 <span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
-                                        </div>
-                                        <div className={classes["pastRoom"]}>
-                                            방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
-                                        </div>
-                                        <div className={classes["pastMovie"]}>
-                                            영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+
+                                        <div className={classes["pastBoxRight"]}>
+                                            {theaterImg
+                                                .filter(img => img.id === reservation.id)
+                                                .map((img) => (
+                                                    <div key={img.id}>
+                                                        <img
+                                                            src={img.img}
+                                                            className={classes["pastImg"]}
+                                                            alt="Theater Image"
+                                                        />
+                                                    </div>
+                                                ))}
                                         </div>
                                     </div>
 
-                                    <div className={classes["pastBoxRight"]}>
-                                        {theaterImg
-                                            .filter(img => img.id === reservation.id)
-                                            .map((img) => (
-                                                <div key={img.id}>
-                                                    <img
-                                                        src={img.img}
-                                                        className={classes["pastImg"]}
-                                                        alt="Theater Image"
-                                                    />
-                                                </div>
-                                            ))}
+                                    <div className={classes["pastBoxBtn"]}>
+                                        <button
+                                            name={reservation.num}
+                                            type="button"
+                                            className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
+                                            // onClick={}
+                                        >
+                                            LEAVE A REVIEW
+                                        </button>
                                     </div>
+
+
                                 </div>
-                            ))}
+                            )) :
+                            <div className={"pastBox"}>
+                                과거 예약 내역이 없습니다.
+                            </div>
+                            }
                         </div>
                     </article>
                 </section>
