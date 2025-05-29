@@ -8,6 +8,7 @@ import {
     axiosPreferredGenres, axiosResAll, axiosResDel,
     axiosResInProgress, axiosTheaters
 } from "../api/axios.js";
+import WriteReview from "../components/writeReview/WriteReview.jsx";
 
 function MyPage() {
     // states
@@ -18,6 +19,8 @@ function MyPage() {
     const [currRes, setCurrRes] = useState([]);
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
+    // const [isTouched, setIsTouched] = useState(false);
+    const [showWriteForm, setShowWriteForm] = useState(false);
 
     // password states
     const [currentPassword, setCurrentPassword] = useState('********');
@@ -42,6 +45,15 @@ function MyPage() {
         id: null,
         mouseLeft: false
     });
+
+    // touch functions
+    // const handleTouchStart () => {
+    //     setIsTouched(true);
+    // };
+    //
+    // const handleTouchEnd () => {
+    //     setIsTouched(false);
+    // };
 
     // load (in background) user profile data & reservation data
     useEffect(() => {
@@ -95,7 +107,6 @@ function MyPage() {
                             id: curr.theaterId
                     }));
                     setCurrRes(currResData);
-                    console.log('current reservations:', currResResponse.data.payload);
 
                     // set all reservations
                     const allResData = allResResponse.data.payload.map(all => ({
@@ -118,7 +129,6 @@ function MyPage() {
                         img: room.image
                     }));
                     setTheaterImg(theaterData);
-                    console.log('hi:', theaterData);
                 } catch (resError) {
                     console.log('resError:', resError)
                 }
@@ -222,6 +232,12 @@ function MyPage() {
         }
     };
 
+    // const handleWriteReview = async (e) => {
+    //     const { name } = e.target;
+    //
+    //
+    // }
+
     // handle reservation cancellation
         const handleCancelRes = async (e) => {
             // setIsBtnActive(prev => !prev);
@@ -233,7 +249,6 @@ function MyPage() {
                     await axiosResDel(name).then(delResponse => {
                         if(delResponse.status === 200) {
                             alert("상영관 예약이 취소되었습니다.");
-                            console.log('currRes:', currRes);
                             window.location.reload();
                         }
                     })
@@ -740,7 +755,7 @@ function MyPage() {
                                             name={reservation.num}
                                             type="button"
                                             className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
-                                            // onClick={}
+                                            onClick={() => setShowWriteForm(true)}
                                         >
                                             LEAVE A REVIEW
                                         </button>
@@ -757,6 +772,10 @@ function MyPage() {
                     </article>
                 </section>
             </div>
+
+            { showWriteForm && (
+                < WriteReview onClose={() => setShowWriteForm(false)} />
+            )}
         </div>
     );
 }
