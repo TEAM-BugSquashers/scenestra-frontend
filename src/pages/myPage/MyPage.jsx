@@ -19,7 +19,8 @@ function MyPage() {
     const [currRes, setCurrRes] = useState([]);
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
-    // const [isTouched, setIsTouched] = useState(false);
+    const [isTouched, setIsTouched] = useState(false);
+    const [btnIsTouched, setBtnIsTouched] = useState(null);
     const [showWriteForm, setShowWriteForm] = useState(false);
 
     // password states
@@ -47,13 +48,13 @@ function MyPage() {
     });
 
     // touch functions
-    // const handleTouchStart () => {
-    //     setIsTouched(true);
-    // };
-    //
-    // const handleTouchEnd () => {
-    //     setIsTouched(false);
-    // };
+    const handleTouchStart = () => {
+        setIsTouched(true);
+    };
+
+    const handleTouchEnd = () => {
+        setIsTouched(false);
+    };
 
     // load (in background) user profile data & reservation data
     useEffect(() => {
@@ -440,14 +441,21 @@ function MyPage() {
                                                         전화번호&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.mobile}</span>
                                                     </div>
                                         </div>
-                                        <button
-                                            name={reservation.num}
-                                            type="button"
-                                            className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
-                                            onClick={handleCancelRes}
-                                        >
-                                            CANCEL RESERVATION
-                                        </button>
+                                            <button
+                                                name={reservation.num}
+                                                key={reservation.num}
+                                                type="button"
+                                                className={`
+                                                    ${classes["bigBtn"]} 
+                                                    ${classes["cancelResBtn"]} 
+                                                    ${btnIsTouched === reservation.num ? classes["cancelResTouched"] : classes["cancelResUntouched"]}
+                                                    `}
+                                                onClick={handleCancelRes}
+                                                onTouchStart={() => setBtnIsTouched(reservation.num)}
+                                                onTouchEnd={() => setBtnIsTouched(null)}
+                                            >
+                                                CANCEL RESERVATION
+                                            </button>
                                     </div>
                                     <div className={classes["currBoxRight"]}>
                                         {theaterImg
@@ -664,6 +672,12 @@ function MyPage() {
                                 type="button"
                                 className={`${classes["bigBtn"]} ${classes["btn1"]}`}
                                 onClick={handleEditProfile}
+                                onTouchStart={handleTouchStart}
+                                onTouchEnd={handleTouchEnd}
+                                style={{
+                                    backgroundColor: isTouched ? '#32271e' : '#b2a69b',
+                                    color: 'white',
+                                }}
                             >
                                 {isEditMode ? 'SAVE EDIT' : 'EDIT PROFILE'}
                             </button>
@@ -673,6 +687,11 @@ function MyPage() {
                                     type="button"
                                     className={classes["cancelBtn"]}
                                     onClick={handleCancelEdit}
+                                    onTouchStart={handleTouchStart}
+                                    onTouchEnd={handleTouchEnd}
+                                    style={{
+                                        color: isTouched ? '#32271e' : '#b2a69b',
+                                    }}
                                 >
                                     CANCEL EDIT
                                 </button>
