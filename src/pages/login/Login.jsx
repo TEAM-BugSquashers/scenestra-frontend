@@ -9,6 +9,9 @@ function Login() {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
+    // touch states
+    const [isTouched, setIsTouched] = useState(false);
+
     // current theater image state
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
@@ -41,6 +44,15 @@ function Login() {
             zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
         };
     };
+
+    // touch functions
+    const handleTouchStart = () => {
+        setIsTouched(true);
+    };
+
+    const handleTouchEnd = () => {
+        setIsTouched(false);
+    }
 
     // login form submission handler
     const handleSubmit = () => {
@@ -182,7 +194,14 @@ function Login() {
                             아이디 기억하기
                         </div>
                         <button
-                            onClick={handleSubmit} className={`bBg bPri`}
+                            onClick={handleSubmit}
+                            className={`bBg bPri`}
+                            onTouchStart={handleTouchStart}
+                            onTouchEnd={handleTouchEnd}
+                            style={{
+                                backgroundColor: isTouched ? '#b2a69b' : '#32271e',
+                                color: isTouched ? '#32271e' : '#b2a69b'
+                            }}
                         >
                             LOGIN
                         </button>
