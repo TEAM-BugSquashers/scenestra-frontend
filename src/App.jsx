@@ -16,6 +16,7 @@ import AllMovie from "./pages/allMovie/AllMovie.jsx";
 import Reservation from "./pages/reservationPage/Reservation.jsx";
 import MyPage from "./pages/myPage/MyPage.jsx";
 import Result from "./pages/reservationPage/resultPage/Result.jsx";
+import AboutUs from "./pages/aboutUs/AboutUs.jsx";
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/result" element={<Result />} />
+          <Route path="/aboutUs" element={<AboutUs />} />
         </Routes>
       </main>
       

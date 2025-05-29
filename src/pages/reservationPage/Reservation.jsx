@@ -151,7 +151,7 @@ function Reservation() {
         setSelectedTime(null);
         setSelectedTimeInfo(null);
     };
-
+    const selectedTheater = roomData.find(room => room.theaterId === selectedRoom);
     // 날짜별 스타일 클래스 결정
     const getDateClass = ({ date, view }) => {
         if (view === 'month') {
@@ -168,7 +168,6 @@ function Reservation() {
                 return 'unavailable-date';
             }
 
-            // API에서 받은 예약 가능 여부 확인
             const dateString = checkDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
 
             if (Object.keys(availableDates).length > 0) {
@@ -196,7 +195,6 @@ function Reservation() {
                 return true;
             }
 
-            // API에서 받은 예약 가능 여부 확인
             const dateString = checkDate.toISOString().split('T')[0];
 
             if (Object.keys(availableDates).length > 0) {
@@ -349,6 +347,7 @@ function Reservation() {
                         reservationData={selectedDate}
                         timeInfo={selectedTimeInfo}
                         movieInfo={selectedMovie}
+                        roomData={selectedTheater}
                     />
                 </div>
             </div>
