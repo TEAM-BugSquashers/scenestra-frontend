@@ -34,16 +34,6 @@ function Review(){
                 console.log("상영관 데이터:", response.data.payload);
                 setRoomData(response.data.payload);
 
-                // const data = response.data.payload;
-                //
-                // // URL 파라미터 id에 해당하는 상영관만 필터링
-                // const targetTheater = data.find(theater => theater.theaterId === parseInt(id));
-                //
-                // if (targetTheater) {
-                //     setRoomData(targetTheater); // 배열이 아닌 단일 객체로 설정
-                //     console.log("선택된 상영관:", targetTheater);
-                // }
-
 
             } catch(error) {
                 console.error("상영관을 못가져옴", error);
@@ -138,7 +128,7 @@ function Review(){
                                 <h3>{roomData.name}</h3>
                                 <p>{roomData.info}</p>
                                 <p>가격: {roomData.price.toLocaleString()}원</p>
-                                <p>수용인원: {roomData.numPeople}/{roomData.numPeopleMax}명</p>
+                                <p>수용인원: {roomData.numPeople}~{roomData.numPeopleMax}명</p>
                             </figcaption>
                         </>
                     )}

@@ -201,14 +201,6 @@ export const axiosRecommend = async() => {
         throw error;
     }
 }
-export const axiosTheaters = async () => {
-    try {
-        const response = await instance.get(`/theaters`);
-        return response;
-    }catch (error) {
-        throw error;
-    }
-}
 
 export const axiosTheaterDetails = async (theaterId) => {
     try {

@@ -15,7 +15,6 @@ function ReviewSelect(){
                 console.error("상영관을 못가져옴", error);
             }
         }
-
         fetchMovieData();
     }, [])
 
