@@ -267,3 +267,28 @@ export const axiosSearchMovies = async (title)=>{
         throw error;
     }
 }
+
+export const axiosTheaterReviews = async (theaterId)=>{
+    try {
+        const response = await instance.get(`/review/theater/${theaterId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+export const axiosOneReview = async (id)=>{
+    try {
+        const response = await instance.get(`/movies/${id}`);
+        return response;
+    }catch (error) {
+        throw error;
+    }
+}
+
+export const axiosWriteReview = async (reviewData)=>{
+    const response = await instance.post('/review', reviewData);
+    return response;
+}
+

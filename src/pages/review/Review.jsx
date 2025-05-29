@@ -4,22 +4,49 @@ import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation} from "swiper/modules";
 import WriteReview from "../components/writeReview/WriteReview.jsx";
 import {useParams} from "react-router-dom";
-import {axiosTheaterDetails} from "../api/axios.js";
+import {axiosTheaterDetails, axiosTheaterReviews} from "../api/axios.js";
 
 function Review(){
     const {id} = useParams();
     const [roomData, setRoomData] = useState(null);
     const [posts, setPosts] = useState([]); // initialPosts 대신 빈 배열로 초기화
-    const [reviewImages, setReviewImages] = useState({}); // reviewImages 상태 추가
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
     const [selectedPost, setSelectedPost] = useState(null);
     const [pan, setPan] = useState(false);
     const [sortBy, setSortBy] = useState('date');
     const [sortDirection, setSortDirection] = useState('desc');
-    const [showWriteForm, setShowWriteForm] = useState(false);
+    // const [showWriteForm, setShowWriteForm] = useState(false);
+    // const [reviewImages, setReviewImages] = useState({}); // reviewImages 상태 추가
+    // const [oneReview, setOneReview] = useState(null);
 
+    // useEffect(()=>{
+    //     const fetchOneReview = async () => {
+    //         try{
+    //             const response = await axiosOneReview();
+    //             console.log('oneReview 응답:', response.data); // 이렇게 추가
+    //             setOneReview(response.data.payload)
+    //         }catch(error){
+    //             console.error("리뷰를 못가져옴", error)
+    //         }
+    //     }
+    //     fetchOneReview();
+    // },[])
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await axiosTheaterReviews(id);
+                setPosts(response.data);
+            } catch (error) {
+                console.error('리뷰 목록 전체를 못가져옴', error);
+                console.log('에러 상세:', error.response?.data);
+            }
+        }
+
+        if (id) {
+            fetchReviews();
+        }
+    }, [id]);
 
 
     useEffect(() => {
@@ -28,16 +55,12 @@ function Review(){
         const fetchReview = async () => {
             try{
                 setLoading(true);
-                console.log("API 호출 시작, ID:", id);
                 const response = await axiosTheaterDetails(id);
-                console.log("API 응답:", response);
-                console.log("상영관 데이터:", response.data.payload);
                 setRoomData(response.data.payload);
 
 
             } catch(error) {
                 console.error("상영관을 못가져옴", error);
-                setError("데이터를 불러오는데 실패했습니다.");
                 if(error.response) {
                     console.error("HTTP 상태 코드:", error.response.status);
                     console.error("서버 응답 데이터:", error.response.data);
@@ -57,11 +80,31 @@ function Review(){
 
     // 게시글 정렬 함수
     const sortPosts = (posts, sortBy, direction) => {
+        // posts가 falsy이거나 배열이 아니면 빈 배열 반환
+        if (!posts || !Array.isArray(posts)) {
+            return [];
+        }
+
         return [...posts].sort((a, b) => {
+            let aValue = a[sortBy];
+            let bValue = b[sortBy];
+
+            // API 데이터 필드명 매핑
+            if (sortBy === 'rating') {
+                aValue = a.star;
+                bValue = b.star;
+            } else if (sortBy === 'date') {
+                aValue = a.regDate;
+                bValue = b.regDate;
+            } else if (sortBy === 'views') {
+                aValue = a.viewCount;
+                bValue = b.viewCount;
+            }
+
             if (direction === 'asc') {
-                return a[sortBy] > b[sortBy] ? 1 : -1;
+                return aValue > bValue ? 1 : -1;
             } else {
-                return a[sortBy] < b[sortBy] ? 1 : -1;
+                return aValue < bValue ? 1 : -1;
             }
         });
     };
@@ -94,11 +137,6 @@ function Review(){
     // 로딩 상태 처리
     if (loading) {
         return <div className={classes.loading}>로딩 중...</div>;
-    }
-
-    // 에러 상태 처리
-    if (error) {
-        return <div className={classes.error}>{error}</div>;
     }
 
     return (
@@ -137,7 +175,7 @@ function Review(){
                 <div className={classes.main}>
                     <div className={classes["section_header"]}>
                         <div></div>
-                        <h2>Review</h2>
+                        <h2>REVIEW</h2>
                         <div></div>
                     </div>
 
@@ -178,22 +216,22 @@ function Review(){
                         <div className={classes.noReviews}>등록된 리뷰가 없습니다.</div>
                     ) : (
                         sortedPosts.map((post) => (
-                            <div className={classes['board_row']} key={post.id} onClick={() => panHandler(post)}>
-                                <div>{post.id}</div>
-                                <div>{renderStars(post.rating)}</div>
+                            <div className={classes['board_row']} key={post.reviewId} onClick={() => panHandler(post)}>
+                                <div>{post.reviewId}</div>
+                                <div>{renderStars(post.star)}</div>
                                 <div>{post.title}</div>
-                                <div>{post.author}</div>
-                                <div>{post.date}</div>
-                                <div>{post.views}</div>
+                                <div>{post.username}</div>
+                                <div>{post.regDate.slice(0,10)}</div>
+                                <div>{post.viewCount}</div>
                             </div>
                         ))
                     )}
                 </div>
 
-                <div className={classes.writeWrap}>
-                    <div></div>
-                    <div className={classes.wrapBtn} onClick={() => setShowWriteForm(true)}>글쓰기</div>
-                </div>
+                {/*<div className={classes.writeWrap}>*/}
+                {/*    <div></div>*/}
+                {/*    <div className={classes.wrapBtn} onClick={() => setShowWriteForm(true)}>글쓰기</div>*/}
+                {/*</div>*/}
                 <footer className={classes.footer}></footer>
             </div>
 
@@ -203,15 +241,15 @@ function Review(){
                         <div className={classes.h3}>{selectedPost.title}</div>
                         <div className={classes.postDetails}>
                             <div className={classes.postInfo}>
-                                <span>글번호: {selectedPost.id}</span>
-                                <span>별점: {selectedPost.rating}</span>
-                                <span>작성자: {selectedPost.author}</span>
-                                <span>날짜: {selectedPost.date}</span>
-                                <span>조회수: {selectedPost.views}</span>
+                                <span>글번호: {selectedPost.reviewId}</span>
+                                <span>별점: {selectedPost.star}</span>
+                                <span>작성자: {selectedPost.username}</span>
+                                <span>날짜: {selectedPost.regDate.slice(0,10)}</span>
+                                <span>조회수: {selectedPost.viewCount}</span>
                             </div>
 
-                            {/* 리뷰 이미지가 있는 경우에만 표시 */}
-                            {reviewImages[selectedPost.id] && reviewImages[selectedPost.id].length > 0 && (
+                             {/*리뷰 이미지가 있는 경우에만 표시*/}
+                            {selectedPost.imageUrls && selectedPost.imageUrls.length > 0 && (
                                 <div className={classes.reviewImgWrap}>
                                     <Swiper
                                         modules={[Navigation]}
@@ -221,10 +259,9 @@ function Review(){
                                         spaceBetween={10}
                                         className={classes.reviewImg}
                                     >
-                                        {reviewImages[selectedPost.id].map((image) => (
-                                            <SwiperSlide key={image.id} className={classes.reviewImgContent}>
-                                                <div className={classes.ImgFill} style={{ backgroundImage: `url(${image.src})` }}></div>
-                                                <p className={classes.imageCaption}>{image.caption}</p>
+                                        {selectedPost.imageUrls.map((imageUrl, index) => (
+                                            <SwiperSlide key={index} className={classes.reviewImgContent}>
+                                                <div className={classes.ImgFill} style={{ backgroundImage: `url(${imageUrl})` }}></div>
                                             </SwiperSlide>
                                         ))}
                                     </Swiper>
@@ -242,9 +279,9 @@ function Review(){
                 </div>
             )}
 
-            {showWriteForm && (
-                <WriteReview onClose={() => setShowWriteForm(false)} />
-            )}
+            {/*{showWriteForm && (*/}
+            {/*    <WriteReview onClose={() => setShowWriteForm(false)} />*/}
+            {/*)}*/}
         </>
     );
 }
