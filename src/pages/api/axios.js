@@ -297,3 +297,14 @@ export const axiosWriteReview = async (reviewData) => {
         throw error;
     }
 }
+
+export const axiosReviewPopups = async (id) => {
+    try {
+        const response = await instance.get(`/review/${id}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+

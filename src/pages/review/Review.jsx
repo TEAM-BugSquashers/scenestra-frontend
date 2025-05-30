@@ -4,39 +4,41 @@ import {Swiper, SwiperSlide} from "swiper/react";
 import {Navigation} from "swiper/modules";
 import WriteReview from "../components/writeReview/WriteReview.jsx";
 import {useParams} from "react-router-dom";
-import {axiosTheaterDetails, axiosTheaterReviews} from "../api/axios.js";
+import {axiosReviewPopups, axiosTheaterDetails, axiosTheaterReviews} from "../api/axios.js";
 
 function Review(){
     const {id} = useParams();
     const [roomData, setRoomData] = useState(null);
-    const [posts, setPosts] = useState([]); // initialPosts 대신 빈 배열로 초기화
+    const [posts, setPosts] = useState([]); // 리뷰 목록 (기본 정보)
     const [loading, setLoading] = useState(true);
     const [selectedPost, setSelectedPost] = useState(null);
     const [pan, setPan] = useState(false);
     const [sortBy, setSortBy] = useState('date');
     const [sortDirection, setSortDirection] = useState('desc');
-    // const [showWriteForm, setShowWriteForm] = useState(false);
-    // const [reviewImages, setReviewImages] = useState({}); // reviewImages 상태 추가
-    // const [oneReview, setOneReview] = useState(null);
+    const [popupData, setPopupData] = useState([]); // 모든 리뷰의 상세 정보
 
-    // useEffect(()=>{
-    //     const fetchOneReview = async () => {
-    //         try{
-    //             const response = await axiosOneReview();
-    //             console.log('oneReview 응답:', response.data); // 이렇게 추가
-    //             setOneReview(response.data.payload)
-    //         }catch(error){
-    //             console.error("리뷰를 못가져옴", error)
-    //         }
-    //     }
-    //     fetchOneReview();
-    // },[])
-
+    // popupData 가져오기 (모든 리뷰의 상세 정보)
+    useEffect(() => {
+        const fetchPopupReview = async () => {
+            try{
+                const response = await axiosReviewPopups(id);
+                setPopupData(response.data.payload);
+                console.log('popupData:', response.data.payload);
+            }catch(error){
+                console.log('팝업 데이터 가져오기 실패:', error);
+            }
+        }
+        if (id) {
+            fetchPopupReview();
+        }
+    }, [id]);
+    // 리뷰 목록 가져오기
     useEffect(() => {
         const fetchReviews = async () => {
             try {
                 const response = await axiosTheaterReviews(id);
                 setPosts(response.data);
+                console.log("리뷰 목록:", response.data);
             } catch (error) {
                 console.error('리뷰 목록 전체를 못가져옴', error);
                 console.log('에러 상세:', error.response?.data);
@@ -47,7 +49,6 @@ function Review(){
         }
     }, [id]);
 
-
     useEffect(() => {
         if(id === undefined) return;
 
@@ -56,7 +57,6 @@ function Review(){
                 setLoading(true);
                 const response = await axiosTheaterDetails(id);
                 setRoomData(response.data.payload);
-
 
             } catch(error) {
                 console.error("상영관을 못가져옴", error);
@@ -72,14 +72,14 @@ function Review(){
         fetchReview();
     }, [id]);
 
-    const panHandler = (post) => {
-        setSelectedPost(post);
-        setPan(prevState => !prevState);
+    const panHandler = (clickedPost) => {
+        console.log('클릭된 리뷰:', clickedPost);
+        setSelectedPost(clickedPost);
+        setPan(true);
     }
 
     // 게시글 정렬 함수
     const sortPosts = (posts, sortBy, direction) => {
-        // posts가 falsy이거나 배열이 아니면 빈 배열 반환
         if (!posts || !Array.isArray(posts)) {
             return [];
         }
@@ -88,7 +88,6 @@ function Review(){
             let aValue = a[sortBy];
             let bValue = b[sortBy];
 
-            // API 데이터 필드명 매핑
             if (sortBy === 'rating') {
                 aValue = a.star;
                 bValue = b.star;
@@ -133,7 +132,6 @@ function Review(){
         return <span className={classes.starRating}>{stars}</span>;
     };
 
-    // 로딩 상태 처리
     if (loading) {
         return <div className={classes.loading}>로딩 중...</div>;
     }
@@ -148,7 +146,6 @@ function Review(){
                 </div>
 
                 <section className={classes.section}>
-                    {/* roomData는 이제 단일 상영관 객체 */}
                     {roomData && (
                         <>
                             <figure
@@ -227,10 +224,6 @@ function Review(){
                     )}
                 </div>
 
-                {/*<div className={classes.writeWrap}>*/}
-                {/*    <div></div>*/}
-                {/*    <div className={classes.wrapBtn} onClick={() => setShowWriteForm(true)}>글쓰기</div>*/}
-                {/*</div>*/}
                 <footer className={classes.footer}></footer>
             </div>
 
@@ -243,11 +236,11 @@ function Review(){
                                 <span>글번호: {selectedPost.reviewId}</span>
                                 <span>별점: {selectedPost.star}</span>
                                 <span>작성자: {selectedPost.username}</span>
-                                <span>날짜: {selectedPost.regDate.slice(0,10)}</span>
+                                <span>날짜: {selectedPost.regDate?.slice(0,10)}</span>
                                 <span>조회수: {selectedPost.viewCount}</span>
                             </div>
 
-                             {/*리뷰 이미지가 있는 경우에만 표시*/}
+                            {/* 리뷰 이미지가 있는 경우에만 표시 */}
                             {selectedPost.imageUrls && selectedPost.imageUrls.length > 0 && (
                                 <div className={classes.reviewImgWrap}>
                                     <Swiper
@@ -268,7 +261,7 @@ function Review(){
                             )}
 
                             <div className={classes.postContent}>
-                                {selectedPost.content}
+                                {selectedPost.content || '내용이 없습니다.'}
                             </div>
                             <div className={classes.postActions}>
                                 <button onClick={() => setPan(false)}>닫기</button>
@@ -277,10 +270,6 @@ function Review(){
                     </div>
                 </div>
             )}
-
-            {/*{showWriteForm && (*/}
-            {/*    <WriteReview onClose={() => setShowWriteForm(false)} />*/}
-            {/*)}*/}
         </>
     );
 }
