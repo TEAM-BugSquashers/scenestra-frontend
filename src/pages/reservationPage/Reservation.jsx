@@ -58,16 +58,37 @@ function Reservation() {
         fetchCapacity();
     }, [selectedPeople]);
 
+    // 현재 보고 있는 달 상태 추가
+    const [activeStartDate, setActiveStartDate] = useState(new Date());
+
+    const formatDateForAPI = (date) => {
+        // 로컬 시간대 기준으로 YYYY-MM-DD 형식 생성
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const formatYearMonthForAPI = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${year}-${month}`;
+    };
+//  문자열을 로컬 Date 객체로 변환 지금은 안써서 주석처리
+//     const parseLocalDate = (dateString) => {
+//         const [year, month, day] = dateString.split('-').map(Number);
+//         return new Date(year, month - 1, day); // month는 0부터 시작
+//     };
+
     // 방과 영화가 선택되면 예약 가능한 날짜 가져오기
     useEffect(() => {
         if (selectedRoom && selectedMovie) {
             const fetchAvailableDates = async () => {
                 try {
                     const currentDate = new Date();
-                    const yearMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+                    const yearMonth = formatYearMonthForAPI(currentDate);
 
                     const response = await axiosAvailableDates(selectedRoom, selectedMovie.movieId, yearMonth);
-                    console.log("AvailableDates: ", response.data.payload);
                     setAvailableDates(response.data.payload);
                 } catch (error) {
                     console.error("Error fetching availableDates: ", error);
@@ -80,19 +101,38 @@ function Reservation() {
         }
     }, [selectedRoom, selectedMovie]);
 
+    // 달이 변경될 때 해당 월의 데이터 가져오기
+    useEffect(() => {
+        if (selectedRoom && selectedMovie && activeStartDate) {
+            const fetchMonthAvailableDates = async () => {
+                try {
+                    const yearMonth = formatYearMonthForAPI(activeStartDate);
+
+                    const response = await axiosAvailableDates(selectedRoom, selectedMovie.movieId, yearMonth);
+
+                    // 기존 데이터와 새로운 데이터를 병합
+                    setAvailableDates(prev => ({
+                        ...prev,
+                        ...response.data.payload
+                    }));
+                } catch (error) {
+                    console.error("Error fetching availableDates for month: ", error);
+                }
+            }
+            fetchMonthAvailableDates();
+        }
+    }, [selectedRoom, selectedMovie, activeStartDate]);
+
     // 방 영화 날짜가 선택되면 예약가능한 시간 가져오기
     useEffect(() => {
         if(selectedRoom && selectedMovie && selectedDate) {
             const fetchAvailableTimes = async () => {
                 try {
-                    const formattedDate = selectedDate.toISOString().split('T')[0]; // "2025-05-30"
+                    const formattedDate = formatDateForAPI(selectedDate); // 수정된 함수 사용
                     const response = await axiosAvailableTimes(selectedRoom, selectedMovie.movieId, formattedDate);
 
-                    console.log("AvailableTimes: ", response.data.payload.availableTimes);
-                    console.log("TimeUnit: ", response.data.payload.timeUnit);
-
                     setAvailableTimes(response.data.payload.availableTimes);
-                    setTimeUnit(response.data.payload.timeUnit); // timeUnit 저장
+                    setTimeUnit(response.data.payload.timeUnit);
                 } catch (error) {
                     console.error("Error fetching available times: ", error);
                     setAvailableTimes([]);
@@ -114,6 +154,32 @@ function Reservation() {
         }
     }, [location.state, navigate]);
 
+    const calculateTotalPrice = (roomPrice, timeUnit) => {
+        if(!roomPrice || !timeUnit || roomPrice <= 0 || timeUnit <=0 ){
+            return 0;
+        }
+        return roomPrice * timeUnit;
+    };
+    const formatPrice = (price) => {
+        if(price === 0 ) return "0원";
+        return price.toLocaleString('ko-KR') + "원";
+    };
+    const [totalPrice, setTotalPrice] = useState(0);
+    useEffect(() => {
+        if (selectedRoom && timeUnit && roomData.length > 0) {
+            const selectedTheater = roomData.find(room => room.theaterId === selectedRoom);
+            if (selectedTheater && selectedTheater.price) {
+                const calculatedPrice = calculateTotalPrice(selectedTheater.price, timeUnit);
+                setTotalPrice(calculatedPrice);
+                console.log(`Price calculation: ${selectedTheater.price} * ${timeUnit} = ${calculatedPrice}`);
+            } else {
+                setTotalPrice(0);
+            }
+        } else {
+            setTotalPrice(0);
+        }
+    }, [selectedRoom, timeUnit, roomData]);
+
     const openPopup = () => setIsPopupOpen(true);
     const closePopup = () => setIsPopupOpen(false);
 
@@ -121,15 +187,6 @@ function Reservation() {
     const isDateStepActive = selectedPeople !== null && selectedRoom !== null;
     const isTimeStepActive = selectedPeople !== null && selectedRoom !== null && selectedDate !== null;
     const isReserveButtonActive = selectedPeople !== null && selectedRoom !== null && selectedDate !== null && selectedTimeInfo !== null;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    const oneMonthLater = new Date(tomorrow);
-    oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -142,6 +199,7 @@ function Reservation() {
         setSelectedDate(null);
         setSelectedTime(null);
         setSelectedTimeInfo(null);
+        setAvailableDates({});
     };
 
     const handlePeopleSelect = (peopleCount) => {
@@ -151,24 +209,12 @@ function Reservation() {
         setSelectedTime(null);
         setSelectedTimeInfo(null);
     };
+
     const selectedTheater = roomData.find(room => room.theaterId === selectedRoom);
-    // 날짜별 스타일 클래스 결정
+
     const getDateClass = ({ date, view }) => {
         if (view === 'month') {
-            const checkDate = new Date(date);
-            checkDate.setHours(0, 0, 0, 0);
-
-            // 과거 날짜
-            if (checkDate <= today) {
-                return 'past-date';
-            }
-
-            // 한 달 이후 날짜
-            if (checkDate > oneMonthLater) {
-                return 'unavailable-date';
-            }
-
-            const dateString = checkDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+            const dateString = formatDateForAPI(date); // 수정된 함수 사용
 
             if (Object.keys(availableDates).length > 0) {
                 if (availableDates[dateString] === true) {
@@ -177,31 +223,21 @@ function Reservation() {
                     return 'unavailable-date';
                 }
             }
-
-            // 기본적으로 예약 가능한 날짜로 표시 (API 데이터가 없을 때)
-            return 'available-date';
+            return 'unavailable-date';
         }
         return null;
     };
 
-    // 날짜 비활성화 여부 결정
     const tileDisabled = ({ date, view }) => {
         if (view === 'month') {
-            const checkDate = new Date(date);
-            checkDate.setHours(0, 0, 0, 0);
-
-            // 과거 날짜나 한 달 이후는 항상 비활성화
-            if (checkDate <= today || checkDate > oneMonthLater) {
-                return true;
-            }
-
-            const dateString = checkDate.toISOString().split('T')[0];
+            const dateString = formatDateForAPI(date); // 수정된 함수 사용
 
             if (Object.keys(availableDates).length > 0) {
-                return availableDates[dateString] === false;
+                return availableDates[dateString] !== true;
             }
 
-            return false; // API 데이터가 없으면 활성화
+            // API 데이터가 없으면 모든 날짜 비활성화
+            return true;
         }
         return false;
     };
@@ -214,6 +250,9 @@ function Reservation() {
             weekday: 'long'
         });
     };
+
+    // 상영관이용 최종금액
+
 
     if (!selectedMovie) {
         return (
@@ -280,17 +319,14 @@ function Reservation() {
                             <div className={classes.reservationInfo}>
                                 <h3 className={classes.reserveTitle}>예약안내</h3>
                                 <ul>
-                                    <li>당일 예약은 불가능합니다.</li>
-                                    <li>한 달 이내의 날짜만 선택 가능합니다</li>
                                     <li>상영관별로 예약 가능한 날짜가 다릅니다</li>
                                     <li>회색으로 표시된 날짜는 예약이 불가능한 날입니다</li>
+                                    <li>파란색으로 표시된 날짜만 선택 가능합니다</li>
                                 </ul>
                             </div>
                             <Calendar
                                 onChange={handleDateChange}
                                 value={selectedDate}
-                                minDate={tomorrow}
-                                maxDate={oneMonthLater}
                                 tileClassName={getDateClass}
                                 tileDisabled={tileDisabled}
                                 locale="ko-KR"
@@ -300,6 +336,7 @@ function Reservation() {
                                 prev2Label={null}
                                 nextLabel="›"
                                 prevLabel="‹"
+                                onActiveStartDateChange={({ activeStartDate }) => setActiveStartDate(activeStartDate)}
                             />
                         </div>
                     </div>
@@ -333,7 +370,9 @@ function Reservation() {
                     )}
                     <div className={classes.box}>
                         <div className={`${classes["sectionTitle"]} subtitle`}>현장결제금액</div>
-                        <div className={classes.box}>10,000 원</div>
+                        <div className={classes.box}>
+                            {totalPrice > 0 ? formatPrice(totalPrice) : "0 원" }
+                        </div>
                     </div>
                 </div>
                 <div className={classes.btnBox}>
@@ -348,6 +387,7 @@ function Reservation() {
                         timeInfo={selectedTimeInfo}
                         movieInfo={selectedMovie}
                         roomData={selectedTheater}
+                        totalPrice={totalPrice}
                     />
                 </div>
             </div>

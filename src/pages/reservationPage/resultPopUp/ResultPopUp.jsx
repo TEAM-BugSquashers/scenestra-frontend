@@ -2,7 +2,7 @@ import classes from './ResultPopUp.module.css';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, roomData }) {
+function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, roomData, totalPrice }) {
     const navigate = useNavigate();
 
     if(!isOpen) return null;
@@ -25,7 +25,7 @@ function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, ro
                             weekday: 'long'
                         })}</p>
                         <p>시간: {timeInfo?.startTime} ~ {timeInfo?.endTime}</p>
-                        <p>현장결제금액:  원</p>
+                        <p>현장결제금액: {totalPrice.toLocaleString('ko-KR')}원</p>
                     </div>
                     <div className={classes.btnBox}>
                         <button className={`${classes["closeBtn"]} btn2`} onClick={onClose} >CANCEL</button>

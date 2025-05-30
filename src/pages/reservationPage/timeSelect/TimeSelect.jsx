@@ -2,11 +2,12 @@ import React, {useEffect, useState} from 'react';
 import classes from './TimeSelect.module.css';
 
 function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, onTimeSelect}) {
-    // 시간선택불가능한 영역 표시용 임시데이터
-    const [unavailableSlots, setUnavailableSlots ] = useState([]);
+    // 시간 상태별 슬롯 관리
+    const [bookedSlots, setBookedSlots] = useState([]); // BOOKED - 마감
+    const [blockedSlots, setBlockedSlots] = useState([]); // BLOCKED - 선택가능하지만 제한있음
+    const [availableSlots, setAvailableSlots] = useState([]); // AVAILABLE - 완전히 선택가능
     const [errorMessage, setErrorMessage] = useState('');
 
-    // timeUnit을 직접 사용 (API에서 받아온 슬롯 수)
     const slotsNeeded = timeUnit;
 
     const generateTimeSlots = () => {
@@ -22,8 +23,9 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
     const timeSlots = generateTimeSlots();
 
     const convertTimeToSlotIndex = (timeString) => {
-        const time = timeString.split('T')[1];
-        const [hour, minute] = time.split(':').map(Number);
+        // "2025-06-03T11:00" 형식에서 시간 추출
+        const timePart = timeString.split('T')[1];
+        const [hour, minute] = timePart.split(':').map(Number);
 
         const baseIndex = (hour - 11) * 2;
 
@@ -35,41 +37,75 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
     };
 
     useEffect(() => {
-        if(availableTimes && Array.isArray(availableTimes)) {
-            const allSlots = Array.from({length: timeSlots.length}, (_, i) => i);
-            const availableSlotIndices = availableTimes.map(timeString => convertTimeToSlotIndex(timeString)
-            ).filter(index => index >= 0 && index < timeSlots.length);
-            const unavailableSlotIndices = allSlots.filter(slot => !availableSlotIndices.includes(slot)
-            );
-            setUnavailableSlots(unavailableSlotIndices);
+        if(availableTimes && typeof availableTimes === 'object') {
+            const booked = [];
+            const blocked = [];
+            const available = [];
+
+            Object.entries(availableTimes).forEach(([timeString, status]) => {
+                const slotIndex = convertTimeToSlotIndex(timeString);
+
+                if (slotIndex >= 0 && slotIndex < timeSlots.length) {
+                    switch(status) {
+                        case 'BOOKED':
+                            booked.push(slotIndex);
+                            break;
+                        case 'BLOCKED':
+                            blocked.push(slotIndex);
+                            break;
+                        case 'AVAILABLE':
+                            available.push(slotIndex);
+                            break;
+                    }
+                }
+            });
+            setBookedSlots(booked);
+            setBlockedSlots(blocked);
+            setAvailableSlots(available);
         } else {
-            const allSlots = Array.from({ length: timeSlots.length }, (_, i) => i);
-            setUnavailableSlots(allSlots);
+            setBookedSlots([]);
+            setBlockedSlots([]);
+            setAvailableSlots([]);
         }
-    }, [availableTimes, timeSlots.length])
+    }, [availableTimes, timeSlots.length]);
 
     const handleTimeClick = (index) => {
         setErrorMessage('');
 
-        // 1. 예약 불가능한 시간 체크 (시작 시간만)
-        if (unavailableSlots && unavailableSlots.includes(index)) {
-            setErrorMessage("선택불가능한 시간입니다");
-            return;
-        }
-        // 2. 이미 선택된 시간 클릭 시 선택 해제
-        if (selectedTime === index) {
-            setSelectedTime(null);
-            onTimeSelect && onTimeSelect(null);
+        if (bookedSlots.includes(index)) {
+            setErrorMessage("이미 마감된 시간입니다");
             return;
         }
 
-        // 3. 23시 종료 제한 체크
+        if (!availableSlots.includes(index) && !blockedSlots.includes(index) && !bookedSlots.includes(index)) {
+            setErrorMessage("선택할 수 없는 시간입니다");
+            return;
+        }
+
+        if (selectedTime === index) {
+            setSelectedTime(null);
+            onTimeSelect && onTimeSelect(null);
+            setErrorMessage(''); // 선택 해제 시 에러 메시지도 제거
+            return;
+        }
+
+        // 4. 23시 종료 제한 체크
         const endSlotIndex = index + slotsNeeded;
         const slot23 = (23 - 11) * 2; // = 24
 
         if (endSlotIndex > slot23) {
             setErrorMessage("23시 이후에 끝나는 상영은 불가능합니다");
             return;
+        }
+
+        for (let i = index; i < index + slotsNeeded && i < timeSlots.length; i++) {
+            if (bookedSlots.includes(i)) {
+                setErrorMessage("선택한 시간대에 이미 예약된 시간이 포함되어 있습니다");
+                return;
+            }
+        }
+        if (blockedSlots.includes(index)) {
+            setErrorMessage("관람에 필요한 시간이 부족하거나 예약할 수 없는 시간입니다");
         }
 
         setSelectedTime(index);
@@ -102,6 +138,31 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
             });
         }
     };
+
+    // 슬롯의 상태에 따른 클래스 결정
+    const getSlotClassName = (index) => {
+        const classNames = [classes.clickBox];
+
+        if (bookedSlots.includes(index)) {
+            classNames.push(classes.booked);
+        }
+        else if (blockedSlots.includes(index)) {
+            classNames.push(classes.blocked);
+        }
+        else if (availableSlots.includes(index)) {
+            classNames.push(classes.available);
+        }
+        else {
+            classNames.push(classes.unavailable);
+        }
+
+        if (selectedTime !== null && index >= selectedTime && index < selectedTime + slotsNeeded) {
+            classNames.push(classes.selected);
+        }
+
+        return classNames.join(' ');
+    };
+
     return (
         <>
             <div className={classes.timeSelectBox}>
@@ -119,10 +180,7 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
                     {timeSlots.map((time, index) => (
                         <div
                             key={index}
-                            className={`${classes.clickBox} ${
-                                unavailableSlots.includes(index) ? classes.unavailable :
-                                    (selectedTime !== null && index >= selectedTime && index < selectedTime + slotsNeeded)
-                                        ? classes.selected : ''}`}
+                            className={getSlotClassName(index)}
                             onClick={() => handleTimeClick(index)}
                         >
                         </div>
