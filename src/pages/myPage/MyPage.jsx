@@ -19,8 +19,6 @@ function MyPage() {
     const [currRes, setCurrRes] = useState([]);
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
-    const [isTouched, setIsTouched] = useState(false);
-    const [btnIsTouched, setBtnIsTouched] = useState(null);
     const [showWriteForm, setShowWriteForm] = useState(false);
 
     // password states
@@ -47,12 +45,24 @@ function MyPage() {
         mouseLeft: false
     });
 
+    // touch states
+    const [isTouched, setIsTouched] = useState(false);
+    const [btnIsTouched, setBtnIsTouched] = useState(null);
+    // const touchTimeoutRef = useRef(null);
+
     // touch functions
     const handleTouchStart = () => {
+        // if (touchTimeoutRef.current) {
+        //     clearTimeout(touchTimeoutRef.current);
+        // }
+        // setBtnIsTouched(reservationNum);
         setIsTouched(true);
     };
 
     const handleTouchEnd = () => {
+        // touchTimeoutRef.current = setTimeout(() => {
+        //     setBtnIsTouched(null);
+        // }, 100);
         setIsTouched(false);
     };
 
@@ -299,6 +309,10 @@ function MyPage() {
 
     // handle profile editing
     const handleEditProfile = async () => {
+
+        // setTimeout(() => setBtnIsTouched(null), 100);
+        setBtnIsTouched(null);
+
         if (!isEditMode) {
             // enter edit mode
             setIsEditMode(true);
@@ -452,7 +466,14 @@ function MyPage() {
                                                     `}
                                                 onClick={handleCancelRes}
                                                 onTouchStart={() => setBtnIsTouched(reservation.num)}
-                                                onTouchEnd={() => setBtnIsTouched(null)}
+                                                onTouchEnd={() => {
+                                                    setTimeout(() => setBtnIsTouched(null), 100);
+                                                }}
+                                                // onMouseDown={() => setBtnIsTouched(reservation.num)}
+                                                // onMouseUp={() => setBtnIsTouched(null)}
+                                                // onMouseLeave={() => setBtnIsTouched(null)}
+                                                // onTouchStart={() => handleTouchStart(reservation.num)}
+                                                // onTouchEnd={handleTouchEnd}
                                             >
                                                 CANCEL RESERVATION
                                             </button>
@@ -670,14 +691,24 @@ function MyPage() {
                             {/* Action Buttons */}
                             <button
                                 type="button"
-                                className={`${classes["bigBtn"]} ${classes["btn1"]}`}
+                                key={"saveEditBtn"}
+                                className={`
+                                    ${classes["bigBtn"]} 
+                                    ${classes["btn1"]}
+                                    ${btnIsTouched === "saveEditBtn"? classes["editBtnTouched"] : classes["editBtnUntouched"]}
+
+                                `}
                                 onClick={handleEditProfile}
-                                onTouchStart={handleTouchStart}
-                                onTouchEnd={handleTouchEnd}
-                                style={{
-                                    backgroundColor: isTouched ? '#32271e' : '#b2a69b',
-                                    color: 'white',
-                                }}
+                                // onTouchStart={handleTouchStart}
+                                // onTouchEnd={handleTouchEnd}
+                                onTouchStart={() => setBtnIsTouched("saveEditBtn")}
+                                // onTouchEnd={() => {
+                                //     setTimeout(() => setBtnIsTouched(null), 100);
+                                // }}
+                                // style={{
+                                //     backgroundColor: isTouched ? '#32271e' : '#b2a69b',
+                                //     color: 'white',
+                                // }}
                             >
                                 {isEditMode ? 'SAVE EDIT' : 'EDIT PROFILE'}
                             </button>
@@ -776,7 +807,7 @@ function MyPage() {
                                             className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
                                             onClick={() => setShowWriteForm(true)}
                                         >
-                                            LEAVE A REVIEW
+                                            LEAVE REVIEW
                                         </button>
                                     </div>
 
