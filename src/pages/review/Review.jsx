@@ -80,10 +80,11 @@ function Review(){
     }
 
     useEffect(() => {
+        console.log('selectedReviewId:', selectedReviewId);
         setSelectedPost(null);
         axiosReviewPopups(selectedReviewId)
         .then(res => {
-            console.log(res.data.payload);
+            console.log("asdfasdf",res.data.payload);
             setSelectedPost(res.data.payload);
         }).catch(err => {
             console.log(err)
@@ -246,7 +247,7 @@ function Review(){
                         <div className={classes.h3}>{selectedPost.title}</div>
                         <div className={classes.postDetails}>
                             <div className={classes.postInfo}>
-                                <span>글번호: {selectedPost.reviewId}</span>
+                                <span>글번호: {selectedPost.reservationId}</span>
                                 <span>별점: {selectedPost.star}</span>
                                 <span>작성자: {selectedPost.username}</span>
                                 <span>날짜: {selectedPost.regDate?.slice(0,10)}</span>
