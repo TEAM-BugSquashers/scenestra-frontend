@@ -17,16 +17,28 @@ function WriteReview({onClose, id}) {
 
     const handleSubmit = async () => {
         try {
-            // FormData 생성 (이미지 파일 전송용)
             const formData = new FormData();
             formData.append('reservationId', id);
             formData.append('title', title);
             formData.append('content', content);
             formData.append('star', selectedStar);
 
+            // 이미지가 있는 경우에만 추가
+            if (selectedImages.length > 0) {
+                selectedImages.forEach((image, index) => {
+                    // 배열로 전송하기 위해 인덱스 포함
+                    formData.append(`images[${index}]`, image.file);
+                    // 또는 서버 구현에 따라 이렇게 할 수도 있음:
+                    // formData.append('images', image.file);
+                });
+            }
 
-            selectedImages.forEach((image) => {
-                formData.append('images', image.file);
+            console.log('전송할 데이터:', {
+                reservationId: id,
+                title,
+                content,
+                star: selectedStar,
+                imageCount: selectedImages.length
             });
 
             await axiosWriteReview(formData);
@@ -34,7 +46,8 @@ function WriteReview({onClose, id}) {
             onClose();
         } catch (error) {
             console.error('리뷰 등록 실패:', error);
-            alert('리뷰 등록에 실패했습니다.');
+            console.error('에러 상세:', error.response?.data);
+            alert(error.response?.data.payload);
         }
     }
 
@@ -47,8 +60,6 @@ function WriteReview({onClose, id}) {
             document.body.style.overflow = 'unset';
         };
     }, []);
-
-
 
     const handleClose = () => {
         // 닫기 전에 스크롤 복원
@@ -66,7 +77,17 @@ function WriteReview({onClose, id}) {
         fileInputRef.current.click();
     };
 
-    const handleFileChange = (e) => {
+    // 이미지를 Base64로 변환하는 함수 (서버가 string을 기대하는 경우)
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const handleFileChange = async (e) => {
         const files = Array.from(e.target.files);
 
         // 이미지 파일만 필터링
@@ -76,11 +97,14 @@ function WriteReview({onClose, id}) {
         );
 
         // 파일을 URL로 변환하여 미리보기 가능하게 만듦
-        const imageUrls = imageFiles.map(file => ({
-            file: file,
-            url: URL.createObjectURL(file),
-            name: file.name
-        }));
+        const imageUrls = await Promise.all(
+            imageFiles.map(async (file) => ({
+                file: file,
+                url: URL.createObjectURL(file),
+                name: file.name,
+                base64: await fileToBase64(file) // Base64 변환 추가
+            }))
+        );
 
         setSelectedImages(prev => [...prev, ...imageUrls]);
     };
@@ -98,12 +122,15 @@ function WriteReview({onClose, id}) {
             <div className={classes.writingPan} onClick={handleClose}>
                 <div className={classes.composeWrap} onClick={(e) => e.stopPropagation()}>
                     <div className={classes.closeComposeWrap} onClick={onClose}>
-                        {/*×*/}
                         <div className={classes.topExLeft}></div>
                         <div className={classes.topExRight}></div>
                     </div>
                     <div className={classes.titleInputWrap}>
-                        <input placeholder={"제목을 적으시오"}  onChange={(e) => setTitle(e.target.value)} />
+                        <input
+                            placeholder={"제목을 적으시오"}
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
                     </div>
 
                     <div className={classes.starPoint}>
@@ -136,7 +163,6 @@ function WriteReview({onClose, id}) {
                             pagination={{ clickable: true }}
                             className={classes.swiper}
                         >
-                            {/* 첫 번째 슬라이드: 이미지 선택 박스 */}
                             <SwiperSlide>
                                 <div className={classes.imageSlide}>
                                     <div className={classes.fileSelectBox} onClick={handleFileSelect}>
@@ -145,7 +171,6 @@ function WriteReview({onClose, id}) {
                                 </div>
                             </SwiperSlide>
 
-                            {/* 선택된 이미지들 */}
                             {selectedImages.map((image, index) => (
                                 <SwiperSlide key={index}>
                                     <div className={classes.imageSlide}>
@@ -158,16 +183,11 @@ function WriteReview({onClose, id}) {
                                             onClick={() => removeImage(index)}
                                             className={classes.removeImageBtn}
                                         >
-                                            {/*×*/}
                                             <div className={classes.xWrap}>
                                                 <div className={classes.exLeft}></div>
                                                 <div className={classes.exRight}></div>
                                             </div>
-
                                         </button>
-                                        {/*<div className={classes.imageName}>*/}
-                                        {/*    {image.name}*/}
-                                        {/*</div>*/}
                                     </div>
                                 </SwiperSlide>
                             ))}
@@ -175,7 +195,11 @@ function WriteReview({onClose, id}) {
                     </div>
 
                     <div className={classes.contentInputWrap}>
-                        <textarea placeholder={"내용을 적으시오"} onChange={(e) => setContent(e.target.value)}/>
+                        <textarea
+                            placeholder={"내용을 적으시오"}
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                        />
                     </div>
 
                     <div className={classes.enrollContent} onClick={handleSubmit}>POST REVIEW</div>
