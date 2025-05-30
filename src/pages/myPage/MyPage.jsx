@@ -48,23 +48,74 @@ function MyPage() {
     // touch states
     const [isTouched, setIsTouched] = useState(false);
     const [btnIsTouched, setBtnIsTouched] = useState(null);
-    // const touchTimeoutRef = useRef(null);
 
     // touch functions
     const handleTouchStart = () => {
-        // if (touchTimeoutRef.current) {
-        //     clearTimeout(touchTimeoutRef.current);
-        // }
-        // setBtnIsTouched(reservationNum);
         setIsTouched(true);
     };
-
     const handleTouchEnd = () => {
-        // touchTimeoutRef.current = setTimeout(() => {
-        //     setBtnIsTouched(null);
-        // }, 100);
         setIsTouched(false);
     };
+
+    // touched cancel reservation button color change
+    const getCancelResBtnStyle = (name) => {
+        if (btnIsTouched === name) {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        // } else if (btnIsTouched === null) {
+        //     return {
+        //         backgroundColor: 'white',
+        //         color: '#b2a69b'
+        //     };
+        } else {
+            return {
+                backgroundColor: 'white',
+                color: '#b2a69b'
+            };
+        }
+    }
+
+    // touched save/edit button color change
+    const getSaveEditBtnStyle = (key) => {
+        if (btnIsTouched === key) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white'
+            };
+        // } else if (btnIsTouched === null) {
+        //     return {
+        //         backgroundColor: '#b2a69b',
+        //         color: 'white'
+        //     };
+        } else {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        }
+    }
+
+    // touched review  button color change
+    const getReviewBtnStyle = (name) => {
+        if (btnIsTouched === name) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white'
+            };
+        // } else if (btnIsTouched === null) {
+        //     return {
+        //         backgroundColor: '#b2a69b',
+        //         color: 'white'
+        //     };
+        } else {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        }
+    }
 
     // load (in background) user profile data & reservation data
     useEffect(() => {
@@ -229,11 +280,19 @@ function MyPage() {
                 borderColor: '#b2a69b'
             };
         } else if (hoveredGenre === id) {
-            return {
-                backgroundColor: '#32271e',
-                color: 'white',
-                borderColor: '#32271e'
-            };
+            if (selectedGenres.length === 3 && !isTouched) {
+                return {
+                    backgroundColor: 'white',
+                    color: '#b2a69b',
+                    borderColor: '#b2a69b'
+                };
+            } else {
+                return {
+                    backgroundColor: '#32271e',
+                    color: 'white',
+                    borderColor: '#32271e'
+                };
+            }
         } else {
             return {
                 backgroundColor: 'white',
@@ -242,12 +301,6 @@ function MyPage() {
             };
         }
     };
-
-    // const handleWriteReview = async (e) => {
-    //     const { name } = e.target;
-    //
-    //
-    // }
 
     // handle reservation cancellation
         const handleCancelRes = async (e) => {
@@ -457,23 +510,15 @@ function MyPage() {
                                         </div>
                                             <button
                                                 name={reservation.num}
-                                                key={reservation.num}
                                                 type="button"
                                                 className={`
                                                     ${classes["bigBtn"]} 
                                                     ${classes["cancelResBtn"]} 
-                                                    ${btnIsTouched === reservation.num ? classes["cancelResTouched"] : classes["cancelResUntouched"]}
                                                     `}
                                                 onClick={handleCancelRes}
                                                 onTouchStart={() => setBtnIsTouched(reservation.num)}
-                                                onTouchEnd={() => {
-                                                    setTimeout(() => setBtnIsTouched(null), 100);
-                                                }}
-                                                // onMouseDown={() => setBtnIsTouched(reservation.num)}
-                                                // onMouseUp={() => setBtnIsTouched(null)}
-                                                // onMouseLeave={() => setBtnIsTouched(null)}
-                                                // onTouchStart={() => handleTouchStart(reservation.num)}
-                                                // onTouchEnd={handleTouchEnd}
+                                                onTouchEnd={() => setBtnIsTouched(null)}
+                                                style={getCancelResBtnStyle(reservation.num)}
                                             >
                                                 CANCEL RESERVATION
                                             </button>
@@ -668,6 +713,8 @@ function MyPage() {
                                                     value={genre.value}
                                                     checked={selectedGenres.includes(genre.value)}
                                                     onChange={handleGenreChange}
+                                                    onTouchStart={handleTouchStart}
+                                                    onTouchEnd={handleTouchEnd}
                                                     disabled={!isEditMode}
                                                 />
                                                 <label
@@ -699,16 +746,9 @@ function MyPage() {
 
                                 `}
                                 onClick={handleEditProfile}
-                                // onTouchStart={handleTouchStart}
-                                // onTouchEnd={handleTouchEnd}
                                 onTouchStart={() => setBtnIsTouched("saveEditBtn")}
-                                // onTouchEnd={() => {
-                                //     setTimeout(() => setBtnIsTouched(null), 100);
-                                // }}
-                                // style={{
-                                //     backgroundColor: isTouched ? '#32271e' : '#b2a69b',
-                                //     color: 'white',
-                                // }}
+                                onTouchEnd={() => setBtnIsTouched(null)}
+                                style={getSaveEditBtnStyle("saveEditBtn")}
                             >
                                 {isEditMode ? 'SAVE EDIT' : 'EDIT PROFILE'}
                             </button>
@@ -806,6 +846,9 @@ function MyPage() {
                                             type="button"
                                             className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
                                             onClick={() => setShowWriteForm(true)}
+                                            onTouchStart={() => setBtnIsTouched(reservation.num)}
+                                            onTouchEnd={() => setBtnIsTouched(null)}
+                                            style={getReviewBtnStyle(reservation.num)}
                                         >
                                             LEAVE REVIEW
                                         </button>

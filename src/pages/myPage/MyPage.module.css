@@ -427,25 +427,3 @@ input[type="checkbox"]:checked + label {
         width: 50%;
     }
 }
-@media (hover: none), (pointer: coarse) {
-    .cancelResBtn:hover {
-        background-color: white;
-        color: #b2a69b;
-    }
-    .cancelResTouched {
-        background-color: #b2a69b;
-        color: white;
-    }
-    .cancelResUntouched {
-        background-color: white;
-        color: #b2a69b;
-    }
-    .editBtnTouched {
-        background-color: #32271e;
-        color: white;
-    }
-    .editBtnUntouched {
-        background-color: #b2a69b;
-        color: white;
-    }
-}
