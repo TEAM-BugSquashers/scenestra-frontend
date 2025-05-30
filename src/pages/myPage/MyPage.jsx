@@ -165,7 +165,9 @@ function MyPage() {
                         endTime: all.endTime,
                         room: all.theaterName,
                         movie: all.movieTitle,
-                        id: all.theaterId
+                        id: all.theaterId,
+                        status: all.statusString,
+                        code: all.status
                     }));
                     const currNums = currResData.map(curr => curr.num);
                     // filter out current reservations to obtain past reservations
@@ -295,12 +297,6 @@ function MyPage() {
         }
     };
 
-    // const handleWriteReview = async (e) => {
-    //     const { name } = e.target;
-    //
-    //
-    // }
-
     // handle reservation cancellation
         const handleCancelRes = async (e) => {
             // setIsBtnActive(prev => !prev);
@@ -362,11 +358,11 @@ function MyPage() {
     // handle profile editing
     const handleEditProfile = async () => {
 
-        // setTimeout(() => setBtnIsTouched(null), 100);
-        setBtnIsTouched(null);
+        // setBtnIsTouched(null);
 
         if (!isEditMode) {
             // enter edit mode
+            setBtnIsTouched(null);
             setIsEditMode(true);
             setBackupData({ ...formData });
             setBackupGenres([...selectedGenres]);
@@ -408,6 +404,7 @@ function MyPage() {
                 }
 
                 // success - exit edit mode and reset states
+                setBtnIsTouched(null);
                 setIsEditMode(false);
                 setIsPwEditMode(false);
                 setCurrentPassword('********');
@@ -443,6 +440,8 @@ function MyPage() {
     if (error) {
         return <div className={classes["error"]}>{error}</div>;
     }
+
+    console.log('btnistouched:', btnIsTouched);
 
     return (
         <div className={classes["body"]}>
@@ -737,13 +736,13 @@ function MyPage() {
                             {/* Action Buttons */}
                             <button
                                 type="button"
-                                key={"saveEditBtn"}
+                                key="saveEditBtn"
                                 className={`
                                     ${classes["bigBtn"]} 
                                     ${classes["btn1"]}
-                                    ${btnIsTouched === "saveEditBtn"? classes["editBtnTouched"] : classes["editBtnUntouched"]}
-
                                 `}
+                                // ${btnIsTouched === "saveEditBtn"? classes["editBtnTouched"] : classes["editBtnUntouched"]}
+
                                 onClick={handleEditProfile}
                                 onTouchStart={() => setBtnIsTouched("saveEditBtn")}
                                 onTouchEnd={() => setBtnIsTouched(null)}
@@ -822,6 +821,9 @@ function MyPage() {
                                                         textOverflow: 'ellipsis'
                                                     }}>{reservation.movie}</span>
                                             </div>
+                                            <div className={classes["pastRoom"]}>
+                                                예약&nbsp;상태&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.status}</span>
+                                            </div>
                                         </div>
 
                                         <div className={classes["pastBoxRight"]}>
@@ -839,21 +841,22 @@ function MyPage() {
                                         </div>
                                     </div>
 
-                                    <div className={classes["pastBoxBtn"]}>
-                                        <button
-                                            name={reservation.num}
-                                            type="button"
-                                            className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
-                                            onClick={() => setShowWriteForm(true)}
-                                            onTouchStart={() => setBtnIsTouched(reservation.num)}
-                                            onTouchEnd={() => setBtnIsTouched(null)}
-                                            style={getReviewBtnStyle(reservation.num)}
-                                        >
-                                            LEAVE REVIEW
-                                        </button>
-                                    </div>
-
-
+                                    {reservation.code === "COMPLETED" ?
+                                        <div className={classes["pastBoxBtn"]}>
+                                            <button
+                                                name={reservation.num}
+                                                type="button"
+                                                className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
+                                                onClick={() => handleWriteReview(reservation.num)}
+                                                onTouchStart={() => setBtnIsTouched(reservation.num)}
+                                                onTouchEnd={() => setBtnIsTouched(null)}
+                                                style={getReviewBtnStyle(reservation.num)}
+                                            >
+                                                LEAVE REVIEW
+                                            </button>
+                                        </div> :
+                                        null
+                                    }
                                 </div>
                             )) :
                             <div className={"pastBox"}>
@@ -868,6 +871,7 @@ function MyPage() {
             { showWriteForm && (
                 < WriteReview onClose={() => setShowWriteForm(false)} id={selectReviewId} />
             )}
+
         </div>
     );
 }
