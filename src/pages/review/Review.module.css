@@ -319,19 +319,24 @@
     opacity: 1 !important;
 }
 
-
-
-
-
-
-
-
-
-
-
 .footer{
     width: 100%;
     height: 300px;
+}
+
+@media screen and (max-width: 430px) {
+    .wrap{
+        width: 100%;
+    }
+    .section_header{
+        margin-bottom: 60px;
+    }
+    .section{
+        flex-direction: column;
+    }
+    .roomImg{
+        margin: 0 10px;
+    }
 }
 
 

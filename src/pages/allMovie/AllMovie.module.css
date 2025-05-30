@@ -68,3 +68,27 @@
     height: 1px;
     background-color: #fff;
 }
+
+@media screen and (max-width: 430px) {
+    .wrap{
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: 10px;
+        padding: 0 10px;
+    }
+    .genreNameWrap{
+        width: 100%;
+        margin: 0;
+    }
+    .leftLine{
+        width: calc(100% / 3);
+        flex-shrink: 1;
+    }
+    .rightLine{
+        width: calc(100% / 3);
+    }
+
+    .movieArea{
+        margin-top: 10px;
+    }
+}
