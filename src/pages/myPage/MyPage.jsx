@@ -40,6 +40,8 @@ function MyPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [selectReviewId, setSelectReviewId] = useState(null);
+
     // just-unselected genre ref
     const justUnselectedRef = useRef({
         id: null,
@@ -139,6 +141,8 @@ function MyPage() {
             } finally {
                 setIsLoading(false);
             }
+
+
         };
 
         fetchMyData();
@@ -148,6 +152,10 @@ function MyPage() {
     const hasCurrRes = currRes.length > 0;
     const hasPastRes = pastRes.length > 0;
 
+    const handleWriteReview = (id) => {
+        setSelectReviewId(id);
+        setShowWriteForm(true);
+    }
     // handle input changes
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -755,7 +763,7 @@ function MyPage() {
                                             name={reservation.num}
                                             type="button"
                                             className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
-                                            onClick={() => setShowWriteForm(true)}
+                                            onClick={() => handleWriteReview(reservation.num)}
                                         >
                                             LEAVE A REVIEW
                                         </button>
@@ -774,7 +782,7 @@ function MyPage() {
             </div>
 
             { showWriteForm && (
-                < WriteReview onClose={() => setShowWriteForm(false)} />
+                < WriteReview onClose={() => setShowWriteForm(false)} id={selectReviewId} />
             )}
         </div>
     );
