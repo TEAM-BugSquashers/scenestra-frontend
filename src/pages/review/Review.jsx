@@ -12,6 +12,7 @@ function Review(){
     const [posts, setPosts] = useState([]); // 리뷰 목록 (기본 정보)
     const [loading, setLoading] = useState(true);
     const [selectedPost, setSelectedPost] = useState(null);
+    const [selectedReviewId, setSelectedReviewId] = useState(null);
     const [pan, setPan] = useState(false);
     const [sortBy, setSortBy] = useState('date');
     const [sortDirection, setSortDirection] = useState('desc');
@@ -74,9 +75,22 @@ function Review(){
 
     const panHandler = (clickedPost) => {
         console.log('클릭된 리뷰:', clickedPost);
-        setSelectedPost(clickedPost);
+        setSelectedReviewId(clickedPost);
         setPan(true);
     }
+
+    useEffect(() => {
+        console.log('selectedReviewId:', selectedReviewId);
+        setSelectedPost(null);
+        axiosReviewPopups(selectedReviewId)
+        .then(res => {
+            console.log("asdfasdf",res.data.payload);
+            setSelectedPost(res.data.payload);
+        }).catch(err => {
+            console.log(err)
+            setSelectedPost(null);
+        });
+    }, [selectedReviewId])
 
     // 게시글 정렬 함수
     const sortPosts = (posts, sortBy, direction) => {
@@ -212,7 +226,7 @@ function Review(){
                         <div className={classes.noReviews}>등록된 리뷰가 없습니다.</div>
                     ) : (
                         sortedPosts.map((post) => (
-                            <div className={classes['board_row']} key={post.reviewId} onClick={() => panHandler(post)}>
+                            <div className={classes['board_row']} key={post.reviewId} onClick={() => panHandler(post.reviewId)}>
                                 <div>{post.reviewId}</div>
                                 <div>{renderStars(post.star)}</div>
                                 <div>{post.title}</div>
@@ -233,7 +247,7 @@ function Review(){
                         <div className={classes.h3}>{selectedPost.title}</div>
                         <div className={classes.postDetails}>
                             <div className={classes.postInfo}>
-                                <span>글번호: {selectedPost.reviewId}</span>
+                                <span>글번호: {selectedPost.reservationId}</span>
                                 <span>별점: {selectedPost.star}</span>
                                 <span>작성자: {selectedPost.username}</span>
                                 <span>날짜: {selectedPost.regDate?.slice(0,10)}</span>
