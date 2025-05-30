@@ -20,6 +20,7 @@ function MyPage() {
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
     const [showWriteForm, setShowWriteForm] = useState(false);
+    const [isReviewWritten, setIsReviewWritten] = useState(false);
 
     // password states
     const [currentPassword, setCurrentPassword] = useState('********');
@@ -136,26 +137,34 @@ function MyPage() {
                 setAllGenres(allGenresData);
 
                 try {
-                    // fetch reservations and theater images
-                    const [currResResponse, allResResponse, theaterResponse] = await Promise.all([
-                        axiosResInProgress(),
-                        axiosResAll(),
-                        axiosTheaters(),
-                    ]);
+                    // fetch current reservations
+                    const currResResponse = await axiosResInProgress();
 
                     // set current reservations
                     const currResData = currResResponse.data.payload.map(curr => ({
-                            num: curr.reservationId,
-                            date: curr.date,
-                            startTime: curr.startTime,
-                            endTime: curr.endTime,
-                            room: curr.theaterName,
-                            movie: curr.movieTitle,
-                            name: curr.username,
-                            mobile: curr.mobile,
-                            id: curr.theaterId
+                        num: curr.reservationId,
+                        date: curr.date,
+                        startTime: curr.startTime,
+                        endTime: curr.endTime,
+                        room: curr.theaterName,
+                        movie: curr.movieTitle,
+                        name: curr.username,
+                        mobile: curr.mobile,
+                        id: curr.theaterId,
+                        review: curr.isReviewed
                     }));
                     setCurrRes(currResData);
+                    setIsReviewWritten(currResData.review);
+                } catch (currError) {
+                    console.error("currError:", currError);
+                }
+
+                try {
+                    // fetch all reservations and theater images
+                    const [allResResponse, theaterResponse] = await Promise.all([
+                        axiosResAll(),
+                        axiosTheaters(),
+                    ]);
 
                     // set all reservations
                     const allResData = allResResponse.data.payload.map(all => ({
@@ -169,9 +178,7 @@ function MyPage() {
                         status: all.statusString,
                         code: all.status
                     }));
-                    const currNums = currResData.map(curr => curr.num);
-                    // filter out current reservations to obtain past reservations
-                    const filteredRes = allResData.filter(all => !currNums.includes(all.num));
+                    const filteredRes = allResData.filter(all => all.code === "COMPLETED" || all.code === "CANCELLED");
                     setPastRes(filteredRes);
 
                     // set theater images
@@ -190,8 +197,6 @@ function MyPage() {
             } finally {
                 setIsLoading(false);
             }
-
-
         };
 
         fetchMyData();
@@ -358,8 +363,6 @@ function MyPage() {
     // handle profile editing
     const handleEditProfile = async () => {
 
-        // setBtnIsTouched(null);
-
         if (!isEditMode) {
             // enter edit mode
             setBtnIsTouched(null);
@@ -440,8 +443,6 @@ function MyPage() {
     if (error) {
         return <div className={classes["error"]}>{error}</div>;
     }
-
-    console.log('btnistouched:', btnIsTouched);
 
     return (
         <div className={classes["body"]}>
@@ -847,12 +848,17 @@ function MyPage() {
                                                 name={reservation.num}
                                                 type="button"
                                                 className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
-                                                onClick={() => handleWriteReview(reservation.num)}
+                                                onClick={
+                                                    isReviewWritten ?
+                                                        null : () => handleWriteReview(reservation.num)
+                                                }
                                                 onTouchStart={() => setBtnIsTouched(reservation.num)}
                                                 onTouchEnd={() => setBtnIsTouched(null)}
-                                                style={getReviewBtnStyle(reservation.num)}
+                                                style={
+                                                    getReviewBtnStyle(reservation.num)
+                                                }
                                             >
-                                                LEAVE REVIEW
+                                                {isReviewWritten ? 'REVIEW COMPLETED' : 'LEAVE REVIEW'}
                                             </button>
                                         </div> :
                                         null
