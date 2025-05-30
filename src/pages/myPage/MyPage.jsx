@@ -19,7 +19,6 @@ function MyPage() {
     const [currRes, setCurrRes] = useState([]);
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
-    // const [isTouched, setIsTouched] = useState(false);
     const [showWriteForm, setShowWriteForm] = useState(false);
 
     // password states
@@ -48,14 +47,62 @@ function MyPage() {
         mouseLeft: false
     });
 
+    // touch states
+    const [isTouched, setIsTouched] = useState(false);
+    const [btnIsTouched, setBtnIsTouched] = useState(null);
+
     // touch functions
-    // const handleTouchStart () => {
-    //     setIsTouched(true);
-    // };
-    //
-    // const handleTouchEnd () => {
-    //     setIsTouched(false);
-    // };
+    const handleTouchStart = () => {
+        setIsTouched(true);
+    };
+    const handleTouchEnd = () => {
+        setIsTouched(false);
+    };
+
+    // touched cancel reservation button color change
+    const getCancelResBtnStyle = (name) => {
+        if (btnIsTouched === name) {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        } else {
+            return {
+                backgroundColor: 'white',
+                color: '#b2a69b'
+            };
+        }
+    }
+
+    // touched save/edit button color change
+    const getSaveEditBtnStyle = (key) => {
+        if (btnIsTouched === key) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white'
+            };
+        } else {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        }
+    }
+
+    // touched review  button color change
+    const getReviewBtnStyle = (name) => {
+        if (btnIsTouched === name) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white'
+            };
+        } else {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        }
+    }
 
     // load (in background) user profile data & reservation data
     useEffect(() => {
@@ -226,11 +273,19 @@ function MyPage() {
                 borderColor: '#b2a69b'
             };
         } else if (hoveredGenre === id) {
-            return {
-                backgroundColor: '#32271e',
-                color: 'white',
-                borderColor: '#32271e'
-            };
+            if (selectedGenres.length === 3 && !isTouched) {
+                return {
+                    backgroundColor: 'white',
+                    color: '#b2a69b',
+                    borderColor: '#b2a69b'
+                };
+            } else {
+                return {
+                    backgroundColor: '#32271e',
+                    color: 'white',
+                    borderColor: '#32271e'
+                };
+            }
         } else {
             return {
                 backgroundColor: 'white',
@@ -306,6 +361,10 @@ function MyPage() {
 
     // handle profile editing
     const handleEditProfile = async () => {
+
+        // setTimeout(() => setBtnIsTouched(null), 100);
+        setBtnIsTouched(null);
+
         if (!isEditMode) {
             // enter edit mode
             setIsEditMode(true);
@@ -448,14 +507,20 @@ function MyPage() {
                                                         전화번호&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.mobile}</span>
                                                     </div>
                                         </div>
-                                        <button
-                                            name={reservation.num}
-                                            type="button"
-                                            className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
-                                            onClick={handleCancelRes}
-                                        >
-                                            CANCEL RESERVATION
-                                        </button>
+                                            <button
+                                                name={reservation.num}
+                                                type="button"
+                                                className={`
+                                                    ${classes["bigBtn"]} 
+                                                    ${classes["cancelResBtn"]} 
+                                                    `}
+                                                onClick={handleCancelRes}
+                                                onTouchStart={() => setBtnIsTouched(reservation.num)}
+                                                onTouchEnd={() => setBtnIsTouched(null)}
+                                                style={getCancelResBtnStyle(reservation.num)}
+                                            >
+                                                CANCEL RESERVATION
+                                            </button>
                                     </div>
                                     <div className={classes["currBoxRight"]}>
                                         {theaterImg
@@ -647,6 +712,8 @@ function MyPage() {
                                                     value={genre.value}
                                                     checked={selectedGenres.includes(genre.value)}
                                                     onChange={handleGenreChange}
+                                                    onTouchStart={handleTouchStart}
+                                                    onTouchEnd={handleTouchEnd}
                                                     disabled={!isEditMode}
                                                 />
                                                 <label
@@ -670,8 +737,17 @@ function MyPage() {
                             {/* Action Buttons */}
                             <button
                                 type="button"
-                                className={`${classes["bigBtn"]} ${classes["btn1"]}`}
+                                key={"saveEditBtn"}
+                                className={`
+                                    ${classes["bigBtn"]} 
+                                    ${classes["btn1"]}
+                                    ${btnIsTouched === "saveEditBtn"? classes["editBtnTouched"] : classes["editBtnUntouched"]}
+
+                                `}
                                 onClick={handleEditProfile}
+                                onTouchStart={() => setBtnIsTouched("saveEditBtn")}
+                                onTouchEnd={() => setBtnIsTouched(null)}
+                                style={getSaveEditBtnStyle("saveEditBtn")}
                             >
                                 {isEditMode ? 'SAVE EDIT' : 'EDIT PROFILE'}
                             </button>
@@ -681,6 +757,11 @@ function MyPage() {
                                     type="button"
                                     className={classes["cancelBtn"]}
                                     onClick={handleCancelEdit}
+                                    onTouchStart={handleTouchStart}
+                                    onTouchEnd={handleTouchEnd}
+                                    style={{
+                                        color: isTouched ? '#32271e' : '#b2a69b',
+                                    }}
                                 >
                                     CANCEL EDIT
                                 </button>
@@ -763,9 +844,12 @@ function MyPage() {
                                             name={reservation.num}
                                             type="button"
                                             className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
-                                            onClick={() => handleWriteReview(reservation.num)}
+                                            onClick={() => setShowWriteForm(true)}
+                                            onTouchStart={() => setBtnIsTouched(reservation.num)}
+                                            onTouchEnd={() => setBtnIsTouched(null)}
+                                            style={getReviewBtnStyle(reservation.num)}
                                         >
-                                            LEAVE A REVIEW
+                                            LEAVE REVIEW
                                         </button>
                                     </div>
 
