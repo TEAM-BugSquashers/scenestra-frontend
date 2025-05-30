@@ -2,8 +2,9 @@ import classes from "./AboutUs.module.css";
 import React, { useState, useEffect } from "react";
 
 function AboutUs() {
-    const [fadeClass, setFadeClass] = useState('');
+    const [opacity, setOpacity] = useState(1);
     const [ currentIndex, setCurrentIndex ] = useState(0);
+
 
 const roomImg = [
     {id: 1, url: '/roomImg/room1.jpg'},
@@ -14,16 +15,12 @@ const roomImg = [
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setFadeClass('fade-out'); // 페이드 아웃 시작
+            setOpacity(0); // 페이드 아웃
 
             setTimeout(() => {
                 setCurrentIndex(prev => (prev + 1) % roomImg.length);
-                setFadeClass('fade-in'); // 페이드 인 시작
-            }, 250); // 0.25초 후 이미지 변경
-
-            setTimeout(() => {
-                setFadeClass(''); // 클래스 제거
-            }, 500); // 0.5초 후 클래스 제거
+                setOpacity(1); // 페이드 인
+            }, 300);
         }, 3000);
 
         return () => clearInterval(interval);
@@ -32,7 +29,7 @@ const roomImg = [
 
     return(
         <>
-            <div className={classes.container}>
+            <div className={`${classes.container} ${classes.whiteText}`}>
                 {/*소개글*/}
                 <div className={classes.about}>
                     <div className={classes.titleBox}>
@@ -45,6 +42,10 @@ const roomImg = [
                             <img
                                 src={roomImg[currentIndex].url}
                                 alt={`Room ${roomImg[currentIndex].id}`}
+                                style={{
+                                    transition: 'opacity 0.5s ease-in-out',
+                                    opacity: opacity
+                                }}
                             />
                         </div>
                         <div className={classes.scenestra}>

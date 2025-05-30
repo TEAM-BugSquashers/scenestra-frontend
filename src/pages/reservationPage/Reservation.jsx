@@ -7,7 +7,7 @@ import PeopleNumber from "./peopleNo/PeopleNumber.jsx";
 import 'react-calendar/dist/Calendar.css';
 import ResultPopUp from "./resultPopUp/ResultPopUp.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import {axiosAvailableDates, axiosAvailableTimes, axiosCapacity, axiosRoom} from "../api/axios.js";
+import {axiosAvailableDates, axiosAvailableTimes, axiosCapacity, axiosReservation, axiosRoom} from "../api/axios.js";
 
 function Reservation() {
     const [selectedTime, setSelectedTime] = useState(null);
@@ -74,11 +74,6 @@ function Reservation() {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         return `${year}-${month}`;
     };
-//  문자열을 로컬 Date 객체로 변환 지금은 안써서 주석처리
-//     const parseLocalDate = (dateString) => {
-//         const [year, month, day] = dateString.split('-').map(Number);
-//         return new Date(year, month - 1, day); // month는 0부터 시작
-//     };
 
     // 방과 영화가 선택되면 예약 가능한 날짜 가져오기
     useEffect(() => {
@@ -158,7 +153,7 @@ function Reservation() {
         if(!roomPrice || !timeUnit || roomPrice <= 0 || timeUnit <=0 ){
             return 0;
         }
-        return roomPrice * timeUnit;
+        return roomPrice * (timeUnit-1);
     };
     const formatPrice = (price) => {
         if(price === 0 ) return "0원";
@@ -171,7 +166,7 @@ function Reservation() {
             if (selectedTheater && selectedTheater.price) {
                 const calculatedPrice = calculateTotalPrice(selectedTheater.price, timeUnit);
                 setTotalPrice(calculatedPrice);
-                console.log(`Price calculation: ${selectedTheater.price} * ${timeUnit} = ${calculatedPrice}`);
+                console.log(`Price calculation: ${selectedTheater.price} * ${timeUnit - 1} = ${calculatedPrice}`);
             } else {
                 setTotalPrice(0);
             }
@@ -388,6 +383,7 @@ function Reservation() {
                         movieInfo={selectedMovie}
                         roomData={selectedTheater}
                         totalPrice={totalPrice}
+                        selectedPeople={selectedPeople}
                     />
                 </div>
             </div>

@@ -8,7 +8,7 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
     const [availableSlots, setAvailableSlots] = useState([]); // AVAILABLE - 완전히 선택가능
     const [errorMessage, setErrorMessage] = useState('');
 
-    const slotsNeeded = timeUnit;
+    const slotsNeeded = timeUnit - 1;
 
     const generateTimeSlots = () => {
         const slots = [];

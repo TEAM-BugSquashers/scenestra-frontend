@@ -210,3 +210,11 @@ export const axiosAvailableTimes = async(theaterId, movieId, date) => {
         throw error;
     }
 }
+export const axiosReservation = async (reservationData) => {
+    try {
+        const response = await instance.post("/reservations", reservationData);
+        return response;
+    } catch (error) {
+    throw error;
+}
+}

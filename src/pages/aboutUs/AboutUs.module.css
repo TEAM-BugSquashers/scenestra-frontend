@@ -1,7 +1,8 @@
 * {
     box-sizing: border-box;
-    color: #fff;
 }
+.whiteText {color: #fff !important;}
+.whiteText * {color: #fff !important;}
 .container {
     width: 1280px;
     height: 900px;
@@ -26,14 +27,18 @@
 .about, .rules {
     width: 100%;
     height: 500px;
+
 }
 .imgBox img{
     width: 500px;
     object-fit: cover;
     transition: opacity 0.25s ease-in-out;
+    opacity: 1;
 }
-.imgBox img.fade-out {opacity: 0;}
-.imgBox img.fade-in {opacity: 1;}
+.fadeOut {opacity: 0;}
+
+.fadeIn {opacity: 1;}
+
 .scenestra p{margin: 10px 0;}
 .descBox {
     display: flex;

@@ -1,14 +1,91 @@
 import classes from './ResultPopUp.module.css';
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {axiosReservation} from "../../api/axios.js";
 
-function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, roomData, totalPrice }) {
+function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, roomData, totalPrice, selectedPeople }) {
     const navigate = useNavigate();
 
     if(!isOpen) return null;
-    console.log('팝업에서 받은 roomData:', roomData);
-    console.log('roomData.name:', roomData?.name);
 
+    // const handleReservation = async () => {
+    //     try {
+    //         const formatDateForAPI = (date) => {
+    //             const year = date.getFullYear();
+    //             const month = String(date.getMonth() + 1).padStart(2, '0');
+    //             const day = String(date.getDate()).padStart(2, '0');
+    //             return `${year}-${month}-${day}`;
+    //         };
+    //
+    //         const reservationPayload = {
+    //             "theaterId": Number(roomData?.theaterId),     // 숫자로 변환
+    //             "movieId": String(movieInfo?.movieId),        // 문자열로 변환
+    //             "date": formatDateForAPI(reservationData),    // 날짜 형식
+    //             "time": timeInfo?.startTime + ":00",                // 시간 형식 확인 필요
+    //             "numPeople": Number(selectedPeople)
+    //         };
+    //         const response = await axiosReservation(reservationPayload);
+    //
+    //         if(response.status === 200 || response.status === 201) {
+    //             navigate("/result", {
+    //                 state: {
+    //                     reservationResult: response.data,
+    //                     reservationInfo: reservationPayload
+    //                 }
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error("예약 실패:", error);
+    //         alert('예약 중 오류가 발생했습니다.');
+    //     }
+    // }
+    const handleReservation = async () => {
+        try {
+            const formatDateForAPI = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            // 시간 형식 변환 함수 추가
+            const formatTimeForAPI = (timeStr) => {
+                if (timeStr.includes('시')) {
+                    // "11시" → "11:00:00"
+                    const hour = timeStr.replace('시', '').padStart(2, '0');
+                    return `${hour}:00:00`;
+                }
+                // 이미 올바른 형식이라면 그대로 사용
+                return timeStr.includes(':') ? timeStr + ':00' : timeStr;
+            };
+
+            const reservationPayload = {
+                "theaterId": Number(roomData?.theaterId),
+                "movieId": String(movieInfo?.id || movieInfo?.movieId), // id 필드 확인
+                "date": formatDateForAPI(reservationData),
+                "time": formatTimeForAPI(timeInfo?.startTime), // 시간 형식 변환
+                "numPeople": Number(selectedPeople)
+            };
+
+            console.log('=== 수정된 전송 데이터 ===');
+            console.log('reservationPayload:', reservationPayload);
+
+            const response = await axiosReservation(reservationPayload);
+
+            if(response.status === 200 || response.status === 201) {
+                navigate("/result", {
+                    state: {
+                        reservationResult: response.data,
+                        reservationInfo: reservationPayload
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("예약 실패:", error);
+            console.error("서버 에러 응답:", error.response?.data);
+            alert('예약 중 오류가 발생했습니다.');
+        }
+    }
     return (
         <>
             <div className={classes.overlay}>
@@ -30,7 +107,7 @@ function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, ro
                     <div className={classes.btnBox}>
                         <button className={`${classes["closeBtn"]} btn2`} onClick={onClose} >CANCEL</button>
                         <button
-                            onClick={() => {navigate("/result");}}
+                            onClick={handleReservation}
                             className={`${classes["reserveBtn"]} btn2`}>RESERVATION</button>
                     </div>
                 </div>
