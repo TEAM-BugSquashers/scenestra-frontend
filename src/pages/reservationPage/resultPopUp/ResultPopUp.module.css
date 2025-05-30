@@ -29,7 +29,7 @@
 .descBox {
     border-top: 3px solid #726254;
     margin-top: 10px;
-    padding-top: 30px;
+    padding: 10px 0;
 }
 .btnBox {
     display: flex;

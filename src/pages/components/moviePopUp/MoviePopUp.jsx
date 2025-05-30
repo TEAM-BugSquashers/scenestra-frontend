@@ -50,10 +50,14 @@ function MoviePopUp({movie, onClose}) {
 
     return (
         <>
-            <div className={classes.popUpPan} onClick={onClose}
-                    onClick={(e) => e.stopPropagation()}
+            <div
+                className={classes.popUpPan}
+                onClick={onClose}
             >
-                <div className={classes.moviePopUp}>
+                <div
+                    className={classes.moviePopUp}
+                    onClick={(e) => e.stopPropagation()}  //
+                >
                     <div className={classes.movieDetailImg}>
                         <img src={movieData?.posterUrl} alt={movieData?.title} />
                     </div>
