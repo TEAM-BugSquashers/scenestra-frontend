@@ -277,7 +277,6 @@ export const axiosTheaterReviews = async (theaterId)=>{
     }
 }
 
-
 export const axiosOneReview = async (id)=>{
     try {
         const response = await instance.get(`/movies/${id}`);
@@ -287,8 +286,14 @@ export const axiosOneReview = async (id)=>{
     }
 }
 
-export const axiosWriteReview = async (reviewData)=>{
-    const response = await instance.post('/review', reviewData);
-    return response;
+export const axiosWriteReview = async (reviewData) => {
+    try {
+        const response = await instance.post('/review', reviewData);
+        return response;
+    } catch (error) {
+        console.log('Error status:', error.response?.status);
+        console.log('Error message:', error.response?.data);
+        console.log('Request data:', reviewData);
+        throw error;
+    }
 }
-

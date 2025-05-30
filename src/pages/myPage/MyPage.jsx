@@ -39,6 +39,8 @@ function MyPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [selectReviewId, setSelectReviewId] = useState(null);
+
     // just-unselected genre ref
     const justUnselectedRef = useRef({
         id: null,
@@ -64,11 +66,6 @@ function MyPage() {
                 backgroundColor: '#b2a69b',
                 color: 'white'
             };
-        // } else if (btnIsTouched === null) {
-        //     return {
-        //         backgroundColor: 'white',
-        //         color: '#b2a69b'
-        //     };
         } else {
             return {
                 backgroundColor: 'white',
@@ -84,11 +81,6 @@ function MyPage() {
                 backgroundColor: '#32271e',
                 color: 'white'
             };
-        // } else if (btnIsTouched === null) {
-        //     return {
-        //         backgroundColor: '#b2a69b',
-        //         color: 'white'
-        //     };
         } else {
             return {
                 backgroundColor: '#b2a69b',
@@ -104,11 +96,6 @@ function MyPage() {
                 backgroundColor: '#32271e',
                 color: 'white'
             };
-        // } else if (btnIsTouched === null) {
-        //     return {
-        //         backgroundColor: '#b2a69b',
-        //         color: 'white'
-        //     };
         } else {
             return {
                 backgroundColor: '#b2a69b',
@@ -201,6 +188,8 @@ function MyPage() {
             } finally {
                 setIsLoading(false);
             }
+
+
         };
 
         fetchMyData();
@@ -210,6 +199,10 @@ function MyPage() {
     const hasCurrRes = currRes.length > 0;
     const hasPastRes = pastRes.length > 0;
 
+    const handleWriteReview = (id) => {
+        setSelectReviewId(id);
+        setShowWriteForm(true);
+    }
     // handle input changes
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -301,6 +294,12 @@ function MyPage() {
             };
         }
     };
+
+    // const handleWriteReview = async (e) => {
+    //     const { name } = e.target;
+    //
+    //
+    // }
 
     // handle reservation cancellation
         const handleCancelRes = async (e) => {
@@ -867,7 +866,7 @@ function MyPage() {
             </div>
 
             { showWriteForm && (
-                < WriteReview onClose={() => setShowWriteForm(false)} />
+                < WriteReview onClose={() => setShowWriteForm(false)} id={selectReviewId} />
             )}
         </div>
     );

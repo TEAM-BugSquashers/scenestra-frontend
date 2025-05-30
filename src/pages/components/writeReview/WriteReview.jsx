@@ -8,7 +8,7 @@ import 'swiper/css/pagination';
 import { useEffect } from 'react';
 import {axiosWriteReview} from "../../api/axios.js";
 
-function WriteReview({onClose}) {
+function WriteReview({onClose, id}) {
     const [selectedStar, setSelectedStar] = useState(0);
     const [selectedImages, setSelectedImages] = useState([]);
     const fileInputRef = useRef(null);
@@ -19,6 +19,7 @@ function WriteReview({onClose}) {
         try {
             // FormData 생성 (이미지 파일 전송용)
             const formData = new FormData();
+            formData.append('reservationId', id);
             formData.append('title', title);
             formData.append('content', content);
             formData.append('star', selectedStar);
@@ -46,6 +47,8 @@ function WriteReview({onClose}) {
             document.body.style.overflow = 'unset';
         };
     }, []);
+
+
 
     const handleClose = () => {
         // 닫기 전에 스크롤 복원
