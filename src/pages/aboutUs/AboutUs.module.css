@@ -1,10 +1,10 @@
 * {
     box-sizing: border-box;
+    color: #fff;
 }
 .container {
     width: 1280px;
     height: 900px;
-    border: 2px solid #fff;
     margin: 120px auto;
 }
 .title {
@@ -23,43 +23,73 @@
     display: flex;
     align-items: center;
 }
-.about {
+.about, .rules {
     width: 100%;
-    height: 600px;
-    padding: 30px;
+    height: 500px;
 }
 .imgBox img{
     width: 500px;
     object-fit: cover;
     transition: opacity 0.25s ease-in-out;
 }
-.imgBox img.fade-out {
-    opacity: 0;
-}
-
-.imgBox img.fade-in {
-    opacity: 1;
-}
-.imgBox {
-
-}
-.scenestra {
-
-}
+.imgBox img.fade-out {opacity: 0;}
+.imgBox img.fade-in {opacity: 1;}
+.scenestra p{margin: 10px 0;}
 .descBox {
     display: flex;
+    align-items: center;
+    gap: 30px;
+    padding-top: 20px;
 }
 .subTitle {
     color: #fff;
     font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 1.5rem;
     margin: 10px;
 }
-.headline {
+.iconTitle {
     display: flex;
+    align-items: center;
 }
-.headline img {
+.iconTitle img {
     width: 30px;
     height: 30px;
+}
+.iconTitle p {margin: 10px;}
+.bbb {font-size: 1.25rem;}
+ul {margin: 10px 0;}
+
+.tableBox {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+.price {
+    width: 100%;
+    height: 500px;
+}
+table {
+    border-collapse: collapse;
+    border: 1px solid #b2a69b;
+}
+td, th {
+    border: 1px solid #b2a69b; /* 셀 테두리 */
+    padding: 20px;
+}
+td {
+    word-wrap: break-word;
+    white-space: pre-line;
+}
+.name {font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;}
+.ruleGuide {
+}
+.info {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+.rule {
+    font-size: 1.25rem;
+    font-weight: 400;
 }
