@@ -310,15 +310,16 @@ input[type="checkbox"]:checked + label {
     margin-top: 15px;
 }
 .bigBtn:hover {
-    background-color: #32271e;
-    cursor: pointer;
+    background-color: #32271e !important;
+    cursor: pointer !important;
 }
 .cancelResBtn:hover {
-    background-color: #b2a69b;
-    color: white;
+    background-color: #b2a69b !important;
+    color: white !important;
 }
 .cancelBtn:hover {
-    color: #32271e;
+    color: #32271e  !important;
+    cursor: pointer !important
 }
 /* reservations */
 .pastNum {
@@ -427,24 +428,8 @@ input[type="checkbox"]:checked + label {
         width: 50%;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@media (hover: none), (pointer: coarse) {
+    .bigBtn:hover {
+        background-color: #b2a69b;
+    }
+}
