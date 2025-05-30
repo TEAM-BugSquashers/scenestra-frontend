@@ -42,7 +42,6 @@ function Review(){
                 console.log('에러 상세:', error.response?.data);
             }
         }
-
         if (id) {
             fetchReviews();
         }
