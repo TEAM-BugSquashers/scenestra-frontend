@@ -154,7 +154,6 @@ function MyPage() {
                         review: curr.isReviewed
                     }));
                     setCurrRes(currResData);
-                    setIsReviewWritten(currResData.review);
                 } catch (currError) {
                     console.error("currError:", currError);
                 }
@@ -176,10 +175,17 @@ function MyPage() {
                         movie: all.movieTitle,
                         id: all.theaterId,
                         status: all.statusString,
-                        code: all.status
+                        code: all.status,
+                        review: all.isReviewed
                     }));
                     const filteredRes = allResData.filter(all => all.code === "COMPLETED" || all.code === "CANCELLED");
                     setPastRes(filteredRes);
+                    console.log('bye:', pastRes);
+                    console.log('hey:', allResResponse.data.payload);
+
+                    // set review status
+                    // setIsReviewWritten(allResData.review);
+                    // console.log('hi:', allResData.review);
 
                     // set theater images
                     const theaterData = theaterResponse.data.payload.map(room => ({
@@ -849,16 +855,21 @@ function MyPage() {
                                                 type="button"
                                                 className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
                                                 onClick={
-                                                    isReviewWritten ?
+                                                    reservation.review ?
                                                         null : () => handleWriteReview(reservation.num)
                                                 }
                                                 onTouchStart={() => setBtnIsTouched(reservation.num)}
                                                 onTouchEnd={() => setBtnIsTouched(null)}
                                                 style={
-                                                    getReviewBtnStyle(reservation.num)
+                                                    reservation.review ?
+                                                        {backgroundColor: "white",
+                                                            color: '#b2a69b',
+                                                            border: '1px solid',
+                                                            pointerEvents: 'none'} :
+                                                        getReviewBtnStyle(reservation.num)
                                                 }
                                             >
-                                                {isReviewWritten ? 'REVIEW COMPLETED' : 'LEAVE REVIEW'}
+                                                {reservation.review ? 'REVIEW COMPLETED' : 'LEAVE REVIEW'}
                                             </button>
                                         </div> :
                                         null
