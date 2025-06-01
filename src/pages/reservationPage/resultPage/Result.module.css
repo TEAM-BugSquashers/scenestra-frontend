@@ -64,12 +64,15 @@
 .inner {
     display: flex;
     margin: 0 30px;
+    justify-content: space-around
 }
 .descBox {
     width: 60%;
 }
 .imgBox {
-    width: 40%;
     height: 290px;
-    background: #999;
+}
+.imgBox img {
+    height: 300px;
+    border-radius: 10px;
 }

@@ -8,37 +8,6 @@ function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, ro
 
     if(!isOpen) return null;
 
-    // const handleReservation = async () => {
-    //     try {
-    //         const formatDateForAPI = (date) => {
-    //             const year = date.getFullYear();
-    //             const month = String(date.getMonth() + 1).padStart(2, '0');
-    //             const day = String(date.getDate()).padStart(2, '0');
-    //             return `${year}-${month}-${day}`;
-    //         };
-    //
-    //         const reservationPayload = {
-    //             "theaterId": Number(roomData?.theaterId),     // 숫자로 변환
-    //             "movieId": String(movieInfo?.movieId),        // 문자열로 변환
-    //             "date": formatDateForAPI(reservationData),    // 날짜 형식
-    //             "time": timeInfo?.startTime + ":00",                // 시간 형식 확인 필요
-    //             "numPeople": Number(selectedPeople)
-    //         };
-    //         const response = await axiosReservation(reservationPayload);
-    //
-    //         if(response.status === 200 || response.status === 201) {
-    //             navigate("/result", {
-    //                 state: {
-    //                     reservationResult: response.data,
-    //                     reservationInfo: reservationPayload
-    //                 }
-    //             });
-    //         }
-    //     } catch (error) {
-    //         console.error("예약 실패:", error);
-    //         alert('예약 중 오류가 발생했습니다.');
-    //     }
-    // }
     const handleReservation = async () => {
         try {
             const formatDateForAPI = (date) => {
@@ -76,7 +45,12 @@ function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, ro
                 navigate("/result", {
                     state: {
                         reservationResult: response.data,
-                        reservationInfo: reservationPayload
+                        reservationInfo: reservationPayload,
+                        movieDetails: movieInfo,        // 영화 전체 정보 (제목, 감독, 장르 등)
+                        theaterDetails: roomData,       // 상영관 전체 정보 (이름, 가격 등)
+                        timeDetails: timeInfo,          // 시간 정보 (시작시간, 종료시간)
+                        peopleCount: selectedPeople,    // 인원수
+                        totalPrice: totalPrice
                     }
                 });
             }
