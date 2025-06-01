@@ -27,7 +27,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
               toggleSidebar();}}>MY PAGE</a>
             </li>
             <li>
-              <a onClick={()=> {navi("/about");
+              <a onClick={()=> {navi("/aboutUs");
               toggleSidebar();}}>ABOUT US</a>
             </li>
             <li>

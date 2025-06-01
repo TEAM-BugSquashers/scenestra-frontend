@@ -1,10 +1,14 @@
 import classes from "./AboutUs.module.css";
 import React, { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom";
 
 function AboutUs() {
     const [opacity, setOpacity] = useState(1);
     const [ currentIndex, setCurrentIndex ] = useState(0);
-
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate('/'); // 경로로 이동
+    };
 
 const roomImg = [
     {id: 1, url: '/roomImg/room1.jpg'},
@@ -86,7 +90,8 @@ const roomImg = [
                             <tr>
                                 <th> </th>
                                 <th>인원</th>
-                                <th>요금(30분)</th>
+                                <th>요금{'\n'}
+                                    (30분)</th>
                                 <th>옵션</th>
                             </tr>
                             </thead>
@@ -95,7 +100,7 @@ const roomImg = [
                                 <th className={classes.name}>SERENE</th>
                                 <td>1~3인</td>
                                 <td>10,000</td>
-                                <td>100인치 대형 스크린
+                                <td>100인치 대형 스크린{'\n'}
                                     9.1ch스피커
                                 </td>
                             </tr>
@@ -103,7 +108,7 @@ const roomImg = [
                                 <th className={classes.name}>CELESTIA</th>
                                 <td>1~3인</td>
                                 <td>10,000</td>
-                                <td>100인치 대형 스크린
+                                <td>100인치 대형 스크린{'\n'}
                                     9.1ch스피커
                                 </td>
                             </tr>
@@ -111,7 +116,7 @@ const roomImg = [
                                 <th className={classes.name}>ASTRAL</th>
                                 <td>4~5인</td>
                                 <td>20,000</td>
-                                <td>120인치 대형 스크린
+                                <td>120인치 대형 스크린{'\n'}
                                     돌비 애트모스 스피커
                                 </td>
                             </tr>
@@ -119,7 +124,7 @@ const roomImg = [
                                 <th className={classes.name}>VERDANT</th>
                                 <td>6~10인</td>
                                 <td>30,000</td>
-                                <td>150인치 초대형 스크린
+                                <td>150인치 초대형 스크린{'\n'}
                                     돌비 애트모스 스피커
                                 </td>
                             </tr>
@@ -158,50 +163,56 @@ const roomImg = [
                     </div>
                 </div>
             {/*    이용수칙*/}
-                <div className={classes.rules}>
+                <div className={classes.rulesBox}>
                     <div className={classes.titleBox}>
                         <div className={classes.line}></div>
                         <h1 className={classes.title}>THEATER GUIDE</h1>
                         <div className={classes.line}></div>
                     </div>
-                    <div className={classes.ruleGuide}>
-                        <div className={classes.iconTitle}>
-                            <img src= '/icon/protest.png'  alt="" />
-                            <p className={classes.info}>프라이빗 상영관 이용 안내</p>
-                        </div>
-                        <div>
-                            <p className={classes.rule}>공간 이용 및 에티켓</p>
-                            <ul>
-                                <li>상영관 내에서는 신발을 벗고 입장해 주세요. (슬리퍼가 제공됩니다.)</li>
-                                <li>이용 후 쓰레기 및 개인 물품은 정리 부탁드립니다.</li>
-                                <li>다음 고객님을 위해 쾌적한 환경 유지 및 정숙한 이용에 협조해 주세요.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <p className={classes.rule}>커스터마이징 및 장비 이용</p>
-                            <ul>
-                                <li>조명 밝기, 음향 크기 등은 요청 시 맞춤 조정이 가능합니다.</li>
-                                <li>Bluetooth, HDMI 등 개인 기기 연결은 사전 문의 후 이용해 주세요.</li>
-                                <li>시설 또는 장비 훼손 시, 수리 비용이 청구될 수 있습니다.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <p className={classes.rule}>프라이버시 및 보안</p>
-                            <ul>
-                                <li>고객님의 프라이버시를 위해 외부인의 출입은 엄격히 제한됩니다.</li>
-                                <li>관 내 설치된 CCTV는 보안 목적에 한하여 최소한으로 운영됩니다.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <p className={classes.rule}>금지사항</p>
-                            <ul>
-                                <li>상영관 및 전 구역은 금연 구역입니다.</li>
-                                <li>음주 상태의 입장은 제한될 수 있습니다.</li>
-                                <li>무단 촬영, 저작권 위반 콘텐츠의 상영은 금지됩니다.</li>
-                            </ul>
+                    <div className={classes.center}>
+                        <div className={classes.ruleGuide}>
+                            <div className={classes.iconTitle}>
+                                <img src= '/icon/protest.png'  alt="" />
+                                <p className={classes.info}>프라이빗 상영관 이용 안내</p>
+                            </div>
+                            <div>
+                                <p className={classes.rule}>공간 이용 및 에티켓</p>
+                                <ul>
+                                    <li>상영관 내에서는 신발을 벗고 입장해 주세요. (슬리퍼가 제공됩니다.)</li>
+                                    <li>이용 후 쓰레기 및 개인 물품은 정리 부탁드립니다.</li>
+                                    <li>다음 고객님을 위해 쾌적한 환경 유지 및 정숙한 이용에 협조해 주세요.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className={classes.rule}>커스터마이징 및 장비 이용</p>
+                                <ul>
+                                    <li>조명 밝기, 음향 크기 등은 요청 시 맞춤 조정이 가능합니다.</li>
+                                    <li>Bluetooth, HDMI 등 개인 기기 연결은 사전 문의 후 이용해 주세요.</li>
+                                    <li>시설 또는 장비 훼손 시, 수리 비용이 청구될 수 있습니다.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className={classes.rule}>프라이버시 및 보안</p>
+                                <ul>
+                                    <li>고객님의 프라이버시를 위해 외부인의 출입은 엄격히 제한됩니다.</li>
+                                    <li>관 내 설치된 CCTV는 보안 목적에 한하여 최소한으로 운영됩니다.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className={classes.rule}>금지사항</p>
+                                <ul>
+                                    <li>상영관 및 전 구역은 금연 구역입니다.</li>
+                                    <li>음주 상태의 입장은 제한될 수 있습니다.</li>
+                                    <li>무단 촬영, 저작권 위반 콘텐츠의 상영은 금지됩니다.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <button className={
+                    classes.gotoMovie}
+                    onClick={handleClick}
+                >영화예약하러가기</button>
             </div>
         </>
     );
