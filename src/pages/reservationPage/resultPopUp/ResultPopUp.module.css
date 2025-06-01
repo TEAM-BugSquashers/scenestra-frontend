@@ -63,3 +63,18 @@
     background: #32271e;
     color: #fff;
 }
+
+@media screen and (max-width: 430px) {
+    .popUp {
+        width: 430px;
+        height: 400px;
+        background: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 20px;
+        padding: 30px;
+    }
+
+}

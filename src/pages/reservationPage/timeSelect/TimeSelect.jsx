@@ -186,7 +186,9 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
                         </div>
                     ))}
                 </div>
-                <div className={classes.selectableBox}>
+            </div>
+            <div className={classes.selectableBox}>
+                <div className={classes.infoBox}>
                     <div className={classes.sBox}>
                         <div className={classes.selectable}></div>
                         선택가능
@@ -195,8 +197,8 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
                         <div className={classes.end}></div>
                         마감
                     </div>
-                    <div className={classes.error}>{errorMessage}</div>
                 </div>
+                <div className={classes.error}>{errorMessage}</div>
             </div>
         </>
     );

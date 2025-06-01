@@ -52,3 +52,17 @@
     font-size: 1.25rem;
 }
 
+@media screen and (max-width: 430px) {
+    .rBox {
+        width: calc((100% - 10px)/2);
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .roomContainer {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}

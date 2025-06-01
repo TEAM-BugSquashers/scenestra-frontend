@@ -76,3 +76,29 @@
     height: 300px;
     border-radius: 10px;
 }
+
+@media screen and (max-width: 430px) {
+    .outer {
+        width: 430px;
+        height: 100%;
+        margin: 120px auto;
+        gap: 10px;
+    }
+    .resultBox {
+        width: 350px;
+        height: 500px;
+    }
+    .inner {
+        display: flex;
+        margin: 0 30px;
+        flex-direction: column-reverse
+    }
+    .imgBox img {height: 150px;}
+    .imgBox {
+        height: 100%;
+        margin: 0 auto;
+    }
+    .descBox {width: 100%;}
+    .descBox p {margin: 8px;}
+
+}

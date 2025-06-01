@@ -314,9 +314,9 @@ function Reservation() {
                             <div className={classes.reservationInfo}>
                                 <h3 className={classes.reserveTitle}>예약안내</h3>
                                 <ul>
+                                    <li>상영관 선택 후 날짜 선택이 가능합니다.</li>
                                     <li>상영관별로 예약 가능한 날짜가 다릅니다</li>
                                     <li>회색으로 표시된 날짜는 예약이 불가능한 날입니다</li>
-                                    <li>파란색으로 표시된 날짜만 선택 가능합니다</li>
                                 </ul>
                             </div>
                             <Calendar
