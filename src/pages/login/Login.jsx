@@ -2,6 +2,7 @@ import classes from './Login.module.css';
 import {useEffect, useState} from "react";
 import {axiosLogin} from "../api/axios.js";
 import { useNavigate } from 'react-router-dom';
+import WriteReview from "../components/writeReview/WriteReview.jsx";
 
 function Login() {
     // login form state
@@ -86,6 +87,7 @@ function Login() {
     const toggleRememberMe = () => {
         setRememberMe(!rememberMe);
     };
+
 
     return (
         <div className={classes["sectionWrap"]}>
@@ -218,6 +220,7 @@ function Login() {
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }

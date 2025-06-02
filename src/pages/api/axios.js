@@ -307,4 +307,23 @@ export const axiosReviewPopups = async (id) => {
     }
 }
 
+export const axiosViewALlReservation = async () =>{
+    try {
+        const response = await instance.get("/admin/reservations");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosViewReservationDeteails = async (reservationId) =>{
+    try {
+        const response = await instance.get(`/admin/reservations/${reservationId}`);
+        return response;
+    }catch(error){
+        throw error;
+    }
+}
+
+
 
