@@ -1,0 +1,182 @@
+* {
+    box-sizing: border-box;
+}
+.whiteText {color: #fff !important;}
+.whiteText * {color: #fff !important;}
+.container {
+    width: 1280px;
+    height: 100%;
+    margin: 120px auto;
+}
+.title {
+    color: #b2a69b;
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    white-space: nowrap;
+    margin: 20px 20px;
+}
+.line {
+    width: 100%;
+    height: 1px;
+    background: #b2a69b;
+    display: flex;
+}
+.titleBox {
+    display: flex;
+    align-items: center;
+}
+.about, .rulesBox {
+    width: 100%;
+}
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.ruleGuide {
+    width: 500px;
+    padding-bottom: 30px;
+}
+.imgBox img{
+    width: 550px;
+    object-fit: cover;
+    transition: opacity 0.25s ease-in-out;
+    opacity: 1;
+}
+.fadeOut {opacity: 0;}
+
+.fadeIn {opacity: 1;}
+
+.scenestra p{margin: 10px 0;}
+.descBox {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding-top: 20px;
+    justify-content: center;
+}
+.subTitle {
+    color: #fff;
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    font-weight: 500;
+    font-size: 1.5rem;
+    margin: 10px;
+}
+.iconTitle {
+    display: flex;
+    align-items: center;
+}
+.iconTitle img {
+    width: 30px;
+    height: 30px;
+}
+.iconTitle p {margin: 10px;}
+.bbb {font-size: 1.25rem;}
+ul {margin: 10px 0;}
+
+.tableBox {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+.price {
+    width: 100%;
+}
+table {
+    border-collapse: collapse;
+    border: 1px solid #b2a69b;
+}
+td, th {
+    border: 1px solid #b2a69b;
+    padding: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+td {
+    word-wrap: break-word;
+    white-space: pre-line;
+}
+.name {font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;}
+.info {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+.rule {
+    font-size: 1.25rem;
+    font-weight: 400;
+}
+
+.gotoMovie {
+    background: #32271e;
+    width: 250px;
+    height: 40px;
+    color: #b2a69b !important;
+    border: 1px solid #b2a69b;
+    border-radius: 10px;
+    font-size: 1rem;
+    display: block;
+    margin: 20px auto;
+    font-weight: 500;
+    cursor: pointer;
+}
+.gotoMovie:hover {
+    background: #b2a69b;
+    color: #32271e !important;
+}
+
+@media screen and (max-width: 430px) {
+    .container {
+        width: 430px;
+        height: 100%;
+        margin: 120px auto;
+    }
+    .descBox {
+        display: flex;
+        gap: 10px;
+        padding-top: 20px;
+        flex-direction: column
+    }
+    .imgBox img{
+        width: 420px;
+        object-fit: cover;
+        transition: opacity 0.25s ease-in-out;
+        opacity: 1;
+    }
+    .scenestra {
+        width: 430px;
+        padding: 20px;
+    }
+    .scenestra p {
+        margin: 5px;
+    }
+    .about, .rulesBox {
+        width: 100%;
+        height: 100%;
+    }
+    .tableBox {
+        width: 430px;
+        flex-direction: column;
+        padding: 10px;
+    }
+    td, th {
+        border: 1px solid #b2a69b; /* 셀 테두리 */
+        padding: 5px;
+        font-size: 0.875rem;
+        white-space: pre;
+    }
+    .table {
+        width: 410px;
+    }
+    ul {
+        font-size: 0.875rem;
+        padding: 0 20px;
+    }
+    .ruleGuide {
+        font-size: 0.875rem;
+        padding: 10px;
+    }
+    .ruleGuide ul {
+        padding-left: 30px;
+    }
+}
