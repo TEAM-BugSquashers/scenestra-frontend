@@ -60,11 +60,12 @@
     background-color: #2a2a2a;
 }
 
-/* 넷플릭스 앱 스타일 */
+
 .netflix_app {       
     background-color: #32271e;
     min-height: 100vh;
     padding: 0 2.5vw 60px 2.5vw;
+    margin-top: 120px;
 }   
 
 .content {       
@@ -103,8 +104,7 @@
 }   
 
 .movie_slider {     
-    width: 100%;       
-    padding: 0 10px;
+    width: 100%;
     cursor: pointer;
 }   
 

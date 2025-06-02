@@ -11,60 +11,6 @@
     display: flex;
     flex-direction: column;
 }
-.contentBox {
-    background-color: white;
-    color: #32271e;
-
-    padding: 10px 30px 30px 30px;
-    border: 1px solid;
-    border-radius: 30px;
-    box-sizing: border-box;
-
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.profileWrap {
-    width: 100%;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.userProfile {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.pastWrap {
-    width: 100%;
-    height: fit-content;
-}
-.currWrap {
-    width: 100%;
-    height: fit-content;
-}
-.currBox {
-    display: flex;
-    /*flex-direction: column;*/
-    /*gap: 30px;*/
-    gap: 10px;
-}
-.currBoxLeft {
-    width: calc((100% - 10px)/2);
-
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-.currBoxRight {
-    border: 1px solid green;
-    width: calc((100% - 10px)/2);
-}
-/****************************/
-/****** the components ******/
-/****************************/
 .top {
     margin: 60px 0 60px;
     display: flex;
@@ -89,6 +35,104 @@
     flex-direction: column;
     gap: 2.5vw;
 }
+.contentBox {
+    background-color: white;
+    color: #32271e;
+
+    padding: 10px 30px 30px 30px;
+    border: 1px solid;
+    border-radius: 20px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.profileWrap {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.userProfile {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.genre {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.currWrap {
+    width: 100%;
+    height: fit-content;
+}
+.currBox {
+    border-bottom: 1px solid #32271e;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    box-sizing: border-box;
+
+    display: flex;
+    gap: 10px;
+}
+.currBoxLeft {
+    width: calc((100% - 10px)/2);
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.currBoxRight {
+    width: calc((100% - 10px)/2);
+    position: relative;
+}
+.pastWrap {
+    width: 100%;
+    height: fit-content;
+}
+.pastBox {
+    /*height: 150px;*/
+    height: fit-content;
+
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid;
+    box-sizing: border-box;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;*/
+}
+.pastBoxMain {
+    width: 100%;
+    height: 150px;
+
+    display: flex;
+    align-items: center;
+}
+.pastBoxLeft {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.pastBoxLeft > div {
+    display: flex;
+    align-items: center;
+}
+.pastBoxRight {
+    width: 40%;
+    height: 100%;
+}
+/****************************/
+/****** the components ******/
+/****************************/
 .conBoxBar {
     width: 100%;
     color: #32271e;
@@ -140,12 +184,7 @@
 
     display: block;
 }
-.genre {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-/* genreBar */
+/* genre */
 .genreBar {
     white-space: nowrap;
 
@@ -159,36 +198,9 @@
     flex-wrap: wrap;
     gap: 10px;
 }
-/* past reservation box */
-.pastBox {
-    height: 150px;
-
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid;
-    /* border-top: none; */
-    box-sizing: border-box;
-
-    position: relative;
-
-    display: flex;
-    align-items: center;
-
-}
-.pastBoxLeft {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.pastBoxRight {
-    width: 40%;
-    height: 100%;
-}
 /****************************/
 /****** the details ******/
 /****************************/
-/* top */
 .top > .barTitle {
     font-size: 1.5rem;
 }
@@ -208,6 +220,9 @@
 /* contentBox */
 .contentBox .horLine {
     background-color: #32271e;
+}
+.left > .contentBox {
+    gap: 0;
 }
 /* formField */
 .formField input:focus {
@@ -254,17 +269,7 @@ input[type="checkbox"]:checked + label {
     color: white;
     border-color: #32271e;
 }
-/*input[type="checkbox"]:disabled + label:hover {*/
-/*    background-color: inherit;*/
-/*    color: inherit;*/
-/*    border-color: inherit;*/
-/*    cursor: not-allowed;*/
-/*}*/
-/*input[type="checkbox"]:disabled + label {*/
-/*    opacity: 0.5;*/
-/*    cursor: not-allowed;*/
-/*}*/
-/* edit profile button */
+/* buttons */
 .bigBtn {
     width: 100%;
     height: 40px;
@@ -301,18 +306,22 @@ input[type="checkbox"]:checked + label {
     padding: 0;
     border: none;
 }
-
+.reviewBtn {
+    margin-top: 15px;
+}
 .bigBtn:hover {
-    background-color: #32271e;
-    cursor: pointer;
+    background-color: #32271e !important;
+    cursor: pointer !important;
 }
 .cancelResBtn:hover {
-    background-color: #b2a69b;
-    color: white;
+    background-color: #b2a69b !important;
+    color: white !important;
 }
 .cancelBtn:hover {
-    color: #32271e;
+    color: #32271e  !important;
+    cursor: pointer !important
 }
+/* reservations */
 .pastNum {
     background-color: white;
     white-space: nowrap;
@@ -325,14 +334,21 @@ input[type="checkbox"]:checked + label {
     left: 30px;
     transform: translateY(-50%);
 }
-/* margin */
-.marBotDel {
-    margin-bottom: 0;
+.currBoxRight > div,
+.pastBoxRight > div {
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 .pastImg {
     width: 100%;
     height: 100%;
     object-fit: cover;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .currBoxTop {
     display: flex;
@@ -343,4 +359,77 @@ input[type="checkbox"]:checked + label {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+/* margin */
+.marBotDel {
+    margin-bottom: 0;
+}
+.currWrap .marBotDel {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+/****************************/
+/**** responsive design ****/
+/****************************/
+@media (max-width: 430px) {
+    .body {
+        width: 100%;
+        margin: 0;
+    }
+    .bottom {
+        flex-direction: column;
+        gap: 60px;
+    }
+    .left {
+        width: 100%;
+    }
+    .right {
+        width: 100%;
+        gap: 60px;
+    }
+    .contentBox {
+        margin: 0 2.5vw;
+    }
+    .left > div {
+        width: calc(100% - 5vw);
+    }
+    .right > div {
+        width: calc(100% - 5vw);
+    }
+    .currBox {
+        height: fit-content;
+
+        flex-direction: column-reverse;
+        gap: 30px;
+    }
+    .currBoxLeft {
+        width: 100%;
+    }
+    .currBoxRight {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .currBoxRight > div {
+        width: 100%;
+        height: 220px;
+    }
+    .pastBoxLeft {
+        width: 50%;
+    }
+    .pastBoxLeft > div {
+        display: flex;
+        align-items: center;
+    }
+    .pastBoxRight {
+        width: 50%;
+    }
+}
+@media (hover: none), (pointer: coarse) {
+    .bigBtn:hover {
+        background-color: #b2a69b;
+    }
 }

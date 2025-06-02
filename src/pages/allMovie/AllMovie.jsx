@@ -6,48 +6,72 @@ import useMoviePopUp from "../hooks/useMoviePopUp.jsx";
 import {useParams} from "react-router-dom";
 
 function AllMovie() {
-    const [selectedMovieData,handleSelectMovie, handleClosePopUp ] = useMoviePopUp();
+    const [selectedMovieData, handleSelectMovie, handleClosePopUp] = useMoviePopUp();
     const [movieData, setMovieData] = useState([]);
+    const [loading, setLoading] = useState(false);
     const {id} = useParams();
 
-    useEffect(() => {
+    // 영화 데이터 가져오기
+    const fetchMovieData = async () => {
+        if (!id) return;
 
-        if(id === null) return;
-        const fetchMovieData = async () => {
-            try{
-                console.log("API 호출 시작");
-                const response = await axiosGenreId(id);
-                console.log("API 응답:", response); // 추가
-                console.log("영화 데이터:", response.data.payload);
-                setMovieData(response.data.payload);
-            }catch(error){
-                console.error("영화를 못가져옴");
-                if(error.response) {
-                    console.error("HTTP 상태 코드:", error.response.status);
-                    console.error("서버 응답 데이터:", error.response.data);
-                }
-            }
+        setLoading(true);
+        try {
+            console.log(`API 호출 시작 - 장르 ID: ${id}`);
+            const response = await axiosGenreId(id, 1);
+            console.log("API 응답:", response);
+
+            const movies = response.data.payload;
+            setMovieData(movies);
+
+        } catch(error) {
+            console.error("영화를 못가져옴", error);
+        } finally {
+            setLoading(false);
         }
+    };
 
+    // id가 변경되면 데이터 fetch
+    useEffect(() => {
         fetchMovieData();
-    },[id])
+    }, [id]);
 
     return(
-
         <>
-            <div className={classes.wrap}>
-                {movieData.map((movie) => (
-                        <div className={classes.movieArea}
-                             key={movie.movieId}
-                             style={{ backgroundImage: `url(${movie.posterUrl})` }}
-                             onClick={() => handleSelectMovie(movie)}>
-                        </div>
-                    ))}
+            {movieData.length > 0 && (
+                <div className={classes.videoWrap}>
+                    <video src={movieData[0].videoUrl} autoPlay loop muted playsInline>
+                    </video>
+                    <div className={classes.genreNameWrap}>
+                        <div className={classes.leftLine}></div>
+                        <div className={classes.genreName}>{movieData[0].engName}</div>
+                        <div className={classes.rightLine}></div>
+                    </div>
+                </div>
+            )}
 
+            <div className={classes.wrap}>
+                {movieData.map((genre) => (
+                    genre.movies.map((movie) => (
+                        <div
+                            className={classes.movieArea}
+                            key={movie.movieId}
+                            style={{ backgroundImage: `url(${movie.posterUrl})` }}
+                            onClick={() => handleSelectMovie(movie)}>
+                        </div>
+                    ))
+                ))}
             </div>
-            <MoviePopUp movie={selectedMovieData}
-                        onClose={handleClosePopUp}/>
+
+            {loading && (
+                <div className={classes.loading}>
+                    영화를 불러오는 중...
+                </div>
+            )}
+
+            <MoviePopUp movie={selectedMovieData} onClose={handleClosePopUp}/>
         </>
     );
 }
+
 export default AllMovie;

@@ -1,18 +1,19 @@
 import axios from "axios";
 
-const instance = axios.create({
+let requestQueue = Promise.resolve();
+let queueCount = 0;
+
+const originalInstance = axios.create({
     baseURL: "/api",
     withCredentials: true,
     timeout: 15000
 });
 
-// 응답 인터셉터 추가
-instance.interceptors.response.use(
-    response => response, // 정상 응답은 그대로 반환
+originalInstance.interceptors.response.use(
+    response => response,
     error => {
+        // 403 에러 발생 시 로그인 페이지로 이동
         if ((window.location.href !== "/login") && error.response && error.response.status === 403) {
-            // 403 에러 발생 시 로그인 페이지로 이동
-
             if (typeof window !== "undefined") {
                 // alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
                 window.location.href = "/login";
@@ -22,6 +23,55 @@ instance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+// 원본 인스턴스의 메서드들을 래핑하여 순차 처리
+const createSequentialMethod = (method) => {
+    return function(...args) {
+        return new Promise((resolve, reject) => {
+            queueCount++;
+            const url = args[0] || '';
+            // console.log(`📝 요청 대기열 추가: ${method.toUpperCase()} ${url} (현재 대기열: ${queueCount}개)`);
+
+            requestQueue = requestQueue
+                .then(async () => {
+                    // console.log(`⏳ 요청 처리 중: ${method.toUpperCase()} ${url}`);
+
+                    try {
+                        // 원본 axios 메서드 호출
+                        const response = await originalInstance[method](...args);
+
+                        queueCount--;
+                        // console.log(`✅ 요청 처리 완료: ${method.toUpperCase()} ${url} (남은 대기열: ${queueCount}개)`);
+
+                        // 요청 간 간격
+                        await new Promise(r => setTimeout(r, 10));
+
+                        resolve(response);
+                    } catch (error) {
+                        queueCount--;
+                        // console.log(`❌ 요청 처리 실패: ${method.toUpperCase()} ${url} (남은 대기열: ${queueCount}개)`);
+
+                        // 에러는 originalInstance의 인터셉터에서 이미 처리됨
+                        reject(error);
+                    }
+                })
+                .catch(() => {
+                    // 이전 요청 실패해도 현재 요청은 진행
+                    queueCount--;
+                    reject(new Error('Queue processing failed'));
+                });
+        });
+    };
+};
+
+// 순차 처리를 위한 instance 생성
+const instance = {
+    get: createSequentialMethod('get'),
+    post: createSequentialMethod('post'),
+    put: createSequentialMethod('put'),
+    delete: createSequentialMethod('delete'),
+    patch: createSequentialMethod('patch')
+};
 
 export const axiosTest = async () => {
     try {
@@ -47,6 +97,44 @@ export const axiosLogin = async (username, password) => {
 export const axiosLogout = async () => {
     try {
         const response = await instance.post("/logout");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// // 상영관 api // //
+export const axiosTheaters = async () => {
+    try {
+        const response = await instance.get("/theaters");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// // 예약 API // //
+export const axiosResDel = async (reservationId) => {
+    try {
+        const response = await instance.delete("reservations/"+reservationId);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosResInProgress = async () => {
+    try {
+        const response = await instance.get("/reservations/my/in-progress");
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosResAll = async () => {
+    try {
+        const response = await instance.get("/reservations/my/all");
         return response;
     } catch (error) {
         throw error;
@@ -105,8 +193,7 @@ export const axiosJoin = async (username, password, email, mobile, realName, gen
 
 export const axiosMe = async () => {
     try {
-        const response = await instance.get
-        ("/users/me");
+        const response = await instance.get("/users/me");
         return response;
     } catch (error) {
         throw error;
@@ -121,7 +208,6 @@ export const axiosChkUsername = async (username) => {
         throw error;
     }
 }
-
 
 export const axiosgroupedByGenre = async () => {
     try {
@@ -151,10 +237,9 @@ export const axiosBindMovie = async (movieId) => {
 }
 
 export const axiosGenreId = async (genreId) => {
-        const response = await instance.get(`/movies/genres/${genreId}`);
-        return response;
+    const response = await instance.get(`/movies/genres/${genreId}`);
+    return response;
 }
-
 
 export const axiosRecommend = async() => {
     try {
@@ -167,6 +252,10 @@ export const axiosRecommend = async() => {
 export const axiosRoom = async() => {
     try {
         const response = await instance.get("/theaters");
+
+export const axiosTheaterDetails = async (theaterId) => {
+    try {
+        const response = await instance.get(`/theaters/${theaterId}`);
         return response;
     } catch (error) {
         throw error;
@@ -175,6 +264,10 @@ export const axiosRoom = async() => {
 export const axiosCapacity = async(num) => {  // num 파라미터 추가
     try {
         const response = await instance.get(`/theaters/capacity?num=${num}`);  // 쿼리 파라미터로 전달
+
+export const axiosSearchMovies = async (title)=>{
+    try {
+        const response = await instance.get(`/movies/search?title=${title}`);
         return response;
     } catch (error) {
         throw error;
@@ -190,6 +283,9 @@ export const axiosAvailableDates = async(theaterId, movieId, yearMonth) => {
                 yearMonth: yearMonth
             }
         });
+export const axiosTheaterReviews = async (theaterId)=>{
+    try {
+        const response = await instance.get(`/review/theater/${theaterId}`);
         return response;
     } catch (error) {
         throw error;
@@ -218,3 +314,33 @@ export const axiosReservation = async (reservationData) => {
     throw error;
 }
 }
+export const axiosOneReview = async (id)=>{
+    try {
+        const response = await instance.get(`/movies/${id}`);
+        return response;
+    }catch (error) {
+        throw error;
+    }
+}
+
+export const axiosWriteReview = async (reviewData) => {
+    try {
+        const response = await instance.post('/review', reviewData);
+        return response;
+    } catch (error) {
+        console.log('Error status:', error.response?.status);
+        console.log('Error message:', error.response?.data);
+        console.log('Request data:', reviewData);
+        throw error;
+    }
+}
+
+export const axiosReviewPopups = async (id) => {
+    try {
+        const response = await instance.get(`/review/${id}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+

@@ -1,6 +1,14 @@
 import classes from './MyPage.module.css';
 import {useEffect, useRef, useState} from "react";
-import {axiosGenres, axiosInfo, axiosMe, axiosPassword, axiosPreferredGenres} from "../api/axios.js";
+import {
+    axiosGenres,
+    axiosInfo,
+    axiosMe,
+    axiosPassword,
+    axiosPreferredGenres, axiosResAll, axiosResDel,
+    axiosResInProgress, axiosTheaters
+} from "../api/axios.js";
+import WriteReview from "../components/writeReview/WriteReview.jsx";
 
 function MyPage() {
     // states
@@ -8,6 +16,10 @@ function MyPage() {
     const [allGenres, setAllGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [hoveredGenre, setHoveredGenre] = useState(null);
+    const [currRes, setCurrRes] = useState([]);
+    const [pastRes, setPastRes] = useState([]);
+    const [theaterImg, setTheaterImg] = useState([]);
+    const [showWriteForm, setShowWriteForm] = useState(false);
 
     // password states
     const [currentPassword, setCurrentPassword] = useState('********');
@@ -27,23 +39,82 @@ function MyPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [selectReviewId, setSelectReviewId] = useState(null);
+
     // just-unselected genre ref
     const justUnselectedRef = useRef({
         id: null,
         mouseLeft: false
     });
 
-    // load (in background) user profile data
+    // touch states
+    const [isTouched, setIsTouched] = useState(false);
+    const [btnIsTouched, setBtnIsTouched] = useState(null);
+
+    // touch functions
+    const handleTouchStart = () => {
+        setIsTouched(true);
+    };
+    const handleTouchEnd = () => {
+        setIsTouched(false);
+    };
+
+    // touched cancel reservation button color change
+    const getCancelResBtnStyle = (name) => {
+        if (btnIsTouched === name) {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        } else {
+            return {
+                backgroundColor: 'white',
+                color: '#b2a69b'
+            };
+        }
+    }
+
+    // touched save/edit button color change
+    const getSaveEditBtnStyle = (key) => {
+        if (btnIsTouched === key) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white'
+            };
+        } else {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        }
+    }
+
+    // touched review  button color change
+    const getReviewBtnStyle = (name) => {
+        if (btnIsTouched === name) {
+            return {
+                backgroundColor: '#32271e',
+                color: 'white'
+            };
+        } else {
+            return {
+                backgroundColor: '#b2a69b',
+                color: 'white'
+            };
+        }
+    }
+
+    // load (in background) user profile data & reservation data
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchMyData = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
 
-                // fetch user profile and genres together
-                const [profileResponse, genresResponse] = await Promise.all([
+                // fetch user profile and genres
+                const [profileResponse, genresResponse ] = await Promise.all([
                     axiosMe(),
-                    axiosGenres()
+                    axiosGenres(),
                 ]);
 
                 // set user profile
@@ -53,7 +124,7 @@ function MyPage() {
 
                 // set selected genres
                 const userGenres = profileData.userGenres?.map(genre => String(genre.genreId)) || [];
-                    // ? safety checks if userGenres exists before attempting .map; [] is a fallback
+                // ? safety checks if userGenres exists before attempting .map; [] is a fallback
                 setSelectedGenres(userGenres);
                 setBackupGenres(userGenres);
 
@@ -64,45 +135,76 @@ function MyPage() {
                 }));
                 setAllGenres(allGenresData);
 
+                try {
+                    // fetch reservations and theater images
+                    const [currResResponse, allResResponse, theaterResponse] = await Promise.all([
+                        axiosResInProgress(),
+                        axiosResAll(),
+                        axiosTheaters(),
+                    ]);
+
+                    // set current reservations
+                    const currResData = currResResponse.data.payload.map(curr => ({
+                            num: curr.reservationId,
+                            date: curr.date,
+                            startTime: curr.startTime,
+                            endTime: curr.endTime,
+                            room: curr.theaterName,
+                            movie: curr.movieTitle,
+                            name: curr.username,
+                            mobile: curr.mobile,
+                            id: curr.theaterId
+                    }));
+                    setCurrRes(currResData);
+
+                    // set all reservations
+                    const allResData = allResResponse.data.payload.map(all => ({
+                        num: all.reservationId,
+                        date: all.date,
+                        startTime: all.startTime,
+                        endTime: all.endTime,
+                        room: all.theaterName,
+                        movie: all.movieTitle,
+                        id: all.theaterId,
+                        status: all.statusString,
+                        code: all.status
+                    }));
+                    const currNums = currResData.map(curr => curr.num);
+                    // filter out current reservations to obtain past reservations
+                    const filteredRes = allResData.filter(all => !currNums.includes(all.num));
+                    setPastRes(filteredRes);
+
+                    // set theater images
+                    const theaterData = theaterResponse.data.payload.map(room => ({
+                        id: room.theaterId,
+                        img: room.image
+                    }));
+                    setTheaterImg(theaterData);
+                } catch (resError) {
+                    console.log('resError:', resError)
+                }
+
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
                 setError("사용자 정보를 불러오는데 실패했습니다.");
             } finally {
                 setIsLoading(false);
             }
+
+
         };
 
-        fetchUserData();
+        fetchMyData();
     }, []);
 
-    // mock reservation data
-    const currResData = {
-        num: "A000-1111-2222",
-        date: "2025년 2월 5일",
-        time: "12:00",
-        room: "Theater A",
-        movie: "Cars 2",
-        name: "John Doe",
-        mobile: "000-1111-2222"
-    };
+    //conditional for current reservation
+    const hasCurrRes = currRes.length > 0;
+    const hasPastRes = pastRes.length > 0;
 
-    const pastResData = [
-        {
-            num: "B000-1111-2222",
-            date: "2025년 2월 5일",
-            time: "12:00",
-            room: "Theater A",
-            movie: "Cars 2",
-        },
-        {
-            num: "C000-1111-2222",
-            date: "2025년 2월 5일",
-            time: "12:00",
-            room: "Theater A",
-            movie: "Cars 2",
-        }
-    ];
-
+    const handleWriteReview = (id) => {
+        setSelectReviewId(id);
+        setShowWriteForm(true);
+    }
     // handle input changes
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -114,13 +216,6 @@ function MyPage() {
         setIsPwEditMode(true);
         const { value } = e.target;
         setCurrentPassword(value);
-        // if (!isPwEditMode && value !== '********') {
-        //     setIsPwEditMode(true);
-        // }
-        // if (showPasswordMask && value !== '********') {
-        //     setShowPasswordMask(false);
-        //     setIsPwEditMode(true);
-        // }
     };
 
     // handle genre selection changes
@@ -180,11 +275,19 @@ function MyPage() {
                 borderColor: '#b2a69b'
             };
         } else if (hoveredGenre === id) {
-            return {
-                backgroundColor: '#32271e',
-                color: 'white',
-                borderColor: '#32271e'
-            };
+            if (selectedGenres.length === 3 && !isTouched) {
+                return {
+                    backgroundColor: 'white',
+                    color: '#b2a69b',
+                    borderColor: '#b2a69b'
+                };
+            } else {
+                return {
+                    backgroundColor: '#32271e',
+                    color: 'white',
+                    borderColor: '#32271e'
+                };
+            }
         } else {
             return {
                 backgroundColor: 'white',
@@ -195,12 +298,28 @@ function MyPage() {
     };
 
     // handle reservation cancellation
-    const handleCancelRes = () => {
-        if (window.confirm("정말 예약을 취소하시겠습니까?")) {
-            // TODO: Add API call to cancel reservation
-            alert("상영관 예약이 취소되었습니다.");
+        const handleCancelRes = async (e) => {
+            // setIsBtnActive(prev => !prev);
+
+            const { name } = e.target;
+
+            if (window.confirm("정말 예약을 취소하시겠습니까?")) {
+                try {
+                    await axiosResDel(name).then(delResponse => {
+                        if(delResponse.status === 200) {
+                            alert("상영관 예약이 취소되었습니다.");
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        alert('오류가 발생했습니다. 다시 시도해주세요.');
+                        console.log(error.response.data.payload);
+                    })
+                } catch (delError) {
+                    console.log(delError);
+                }
+            }
         }
-    };
 
     // validate form data
     const validateForm = () => {
@@ -236,20 +355,14 @@ function MyPage() {
         return true;
     };
 
-    // // input styling based on state
-    // const getInputStyle = (element) => {
-    //     if (element instanceof HTMLInputElement) {
-    //         return {
-    //             pointerEvents: 'none'
-    //         }
-    //     }
-    //     return {};
-    // }
-
     // handle profile editing
     const handleEditProfile = async () => {
+
+        // setBtnIsTouched(null);
+
         if (!isEditMode) {
             // enter edit mode
+            setBtnIsTouched(null);
             setIsEditMode(true);
             setBackupData({ ...formData });
             setBackupGenres([...selectedGenres]);
@@ -268,33 +381,18 @@ function MyPage() {
 
                 // update password if changed
                 if (isPwEditMode) {
-                    // const pwResponse = await axiosPassword(currentPassword, newPassword);
-                    // if (pwResponse.status === 403) {
-                    //     alert('현재 비밀번호가 틀렸습니다.');
-                    //     return;
-                    // } else if (pwResponse.status !== 200) {
-                    //     throw new Error(`Password update failed: ${pwResponse.status}`);
-                    // }
                     try {
-                        await axiosPassword(currentPassword, newPassword)
-                            .then((res)=> {
-                                if(res.status) {
-                                    // alert("ok")
-                                    return;
-                                }
-                            })
-                            .catch(err => {
-                                alert(err.response.data.payload);
-                            });
-                        // if (pwResponse.status !== 200) {
-                        //     throw new Error(`Password update failed: ${pwResponse.status}`);
-                        // }
+                        const pwResponse = await axiosPassword(currentPassword, newPassword);
+                        if (pwResponse.status !== 200) {
+                            throw new Error('password update failed:', pwResponse.status);
+                        }
                     } catch (pwError) {
                         if (pwError.response && pwError.response.status === 403) {
                             alert('현재 비밀번호가 틀렸습니다.');
                             return;
                         } else {
-                            throw pwError;
+                            alert(pwError.response.data.payload || '비밀번호 변경 중 오류가 발생했습니다.');
+                            return;
                         }
                     }
                 }
@@ -306,6 +404,7 @@ function MyPage() {
                 }
 
                 // success - exit edit mode and reset states
+                setBtnIsTouched(null);
                 setIsEditMode(false);
                 setIsPwEditMode(false);
                 setCurrentPassword('********');
@@ -342,6 +441,8 @@ function MyPage() {
         return <div className={classes["error"]}>{error}</div>;
     }
 
+    console.log('btnistouched:', btnIsTouched);
+
     return (
         <div className={classes["body"]}>
             <div className={classes["sectionWrap"]}>
@@ -363,49 +464,82 @@ function MyPage() {
                                 <div className={classes["horLine"]}></div>
                             </div>
 
-                            <div className={classes["currBox"]}>
-                                <div className={classes["currBoxLeft"]}>
-                                    <div className={classes["currBoxTop"]}>
-                                        <div className={classes["num"]}>
-                                            예약번호 <span style={{ color: '#b2a69b' }}>{currResData.num}</span>
+                            {hasCurrRes ?
+                            currRes.map((reservation, index) => (
+                                <div
+                                    key={reservation.num}
+                                    className={`${classes["currBox"]} ${index === currRes.length - 1 ? classes["marBotDel"] : ''}`}
+                                >
+                                    <div className={classes["currBoxLeft"]}>
+
+                                        <div className={classes["currBoxTop"]}>
+                                                    <div className={classes["num"]}>
+                                                        예약번호&nbsp;<span style={{ color: '#b2a69b' }}>
+                                                        {reservation.room.slice(0, 3)}{reservation.num}–
+                                                        {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–
+                                                        {reservation.startTime.slice(0, 2)}{reservation.startTime.slice(3, 5)}
+                                                        </span>
+
+                                                    </div>
+                                                    <div className={classes["date"]}>
+                                                        날짜&nbsp;<span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
+                                                        year: "numeric",
+                                                        month: "long",
+                                                        day: "numeric"
+                                                        })}</span>
+                                                    </div>
+                                                    <div className={classes["time"]}>
+                                                        시간&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0,5)}</span>
+                                                    </div>
+                                                    <div className={classes["room"]}>
+                                                        상영관&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                                    </div>
+                                                    <div className={classes["movie"]}>
+                                                        영화&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+                                                    </div>
                                         </div>
-                                        <div className={classes["date"]}>
-                                            날짜 <span style={{ color: '#b2a69b' }}>{currResData.date}</span>
+                                        <div className={classes["currBoxBot"]}>
+                                                    <div className={classes["name"]}>
+                                                        예약자&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.name}</span>
+                                                    </div>
+                                                    <div className={classes["mobile"]}>
+                                                        전화번호&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.mobile}</span>
+                                                    </div>
                                         </div>
-                                        <div className={classes["time"]}>
-                                            시간 <span style={{ color: '#b2a69b' }}>{currResData.time}</span>
-                                        </div>
-                                        <div className={classes["room"]}>
-                                            방 <span style={{ color: '#b2a69b' }}>{currResData.room}</span>
-                                        </div>
-                                        <div className={classes["movie"]}>
-                                            영화 <span style={{ color: '#b2a69b' }}>{currResData.movie}</span>
-                                        </div>
+                                            <button
+                                                name={reservation.num}
+                                                type="button"
+                                                className={`
+                                                    ${classes["bigBtn"]} 
+                                                    ${classes["cancelResBtn"]} 
+                                                    `}
+                                                onClick={handleCancelRes}
+                                                onTouchStart={() => setBtnIsTouched(reservation.num)}
+                                                onTouchEnd={() => setBtnIsTouched(null)}
+                                                style={getCancelResBtnStyle(reservation.num)}
+                                            >
+                                                CANCEL RESERVATION
+                                            </button>
                                     </div>
-                                    <div className={classes["currBoxBot"]}>
-                                        <div className={classes["name"]}>
-                                            예약자 <span style={{ color: '#b2a69b' }}>{currResData.name}</span>
-                                        </div>
-                                        <div className={classes["mobile"]}>
-                                            전화번호 <span style={{ color: '#b2a69b' }}>{currResData.mobile}</span>
-                                        </div>
+                                    <div className={classes["currBoxRight"]}>
+                                        {theaterImg
+                                            .filter(img => img.id === reservation.id)
+                                            .map((img) => (
+                                                <div key={img.id}>
+                                                    <img
+                                                        src={img.img}
+                                                        className={classes["pastImg"]}
+                                                        alt="Theater Image"
+                                                    />
+                                                </div>
+                                        ))}
                                     </div>
-                                    <button
-                                        type="button"
-                                        className={`${classes["bigBtn"]} ${classes["cancelResBtn"]}`}
-                                        onClick={handleCancelRes}
-                                    >
-                                        CANCEL RESERVATION
-                                    </button>
                                 </div>
-                                <div className={classes["currBoxRight"]}>
-                                    <img
-                                        src="/api/placeholder/150/120"
-                                        className={classes["pastImg"]}
-                                        alt="Theater Image"
-                                    />
-                                </div>
+                            )) :
+                            <div className={`${classes["currBox"]} ${classes["marBotDel"]}`}>
+                                현재 예약된 내역이 없습니다.
                             </div>
+                            }
                         </div>
                     </article>
 
@@ -444,7 +578,6 @@ function MyPage() {
                                         type="password"
                                         id="currentPassword"
                                         value={currentPassword}
-                                        // value={showPasswordMask && !isEditMode ? '********' : currentPassword}
                                         onChange={handlePasswordChange}
                                         onKeyDown={(e) => {
                                             if (isEditMode && e.key === 'Enter') {
@@ -578,6 +711,8 @@ function MyPage() {
                                                     value={genre.value}
                                                     checked={selectedGenres.includes(genre.value)}
                                                     onChange={handleGenreChange}
+                                                    onTouchStart={handleTouchStart}
+                                                    onTouchEnd={handleTouchEnd}
                                                     disabled={!isEditMode}
                                                 />
                                                 <label
@@ -601,8 +736,17 @@ function MyPage() {
                             {/* Action Buttons */}
                             <button
                                 type="button"
-                                className={`${classes["bigBtn"]} ${classes["btn1"]}`}
+                                key="saveEditBtn"
+                                className={`
+                                    ${classes["bigBtn"]} 
+                                    ${classes["btn1"]}
+                                `}
+                                // ${btnIsTouched === "saveEditBtn"? classes["editBtnTouched"] : classes["editBtnUntouched"]}
+
                                 onClick={handleEditProfile}
+                                onTouchStart={() => setBtnIsTouched("saveEditBtn")}
+                                onTouchEnd={() => setBtnIsTouched(null)}
+                                style={getSaveEditBtnStyle("saveEditBtn")}
                             >
                                 {isEditMode ? 'SAVE EDIT' : 'EDIT PROFILE'}
                             </button>
@@ -612,6 +756,11 @@ function MyPage() {
                                     type="button"
                                     className={classes["cancelBtn"]}
                                     onClick={handleCancelEdit}
+                                    onTouchStart={handleTouchStart}
+                                    onTouchEnd={handleTouchEnd}
+                                    style={{
+                                        color: isTouched ? '#32271e' : '#b2a69b',
+                                    }}
                                 >
                                     CANCEL EDIT
                                 </button>
@@ -619,7 +768,10 @@ function MyPage() {
                         </div>
 
                         {/* Past Reservations */}
-                        <div className={`${classes["pastWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}>
+                        <div
+                            className={`${classes["pastWrap"]} ${classes["contentBox"]} ${classes["wBg"]} ${classes["wMain"]}`}
+                            style={ !hasPastRes ? {gap: '0'} : {} }
+                        >
                             <div className={`${classes["conBoxBar"]} ${classes["wTitle"]}`}>
                                 <div className={classes["horLine"]}></div>
                                 <div className={`${classes["barTitle"]} ${classes["subtitle"]}`}>
@@ -628,43 +780,98 @@ function MyPage() {
                                 <div className={classes["horLine"]}></div>
                             </div>
 
-                            {pastResData.map((reservation, index) => (
+                            { hasPastRes ?
+                            pastRes.map((reservation, index) => (
                                 <div
                                     key={reservation.num}
                                     className={`${classes["pastBox"]} ${
-                                        index === pastResData.length - 1 ? classes["marBotDel"] : ''
+                                        index === pastRes.length - 1 ? classes["marBotDel"] : ''
                                     }`}
                                 >
-                                    <div className={classes["pastNum"]}>{reservation.num}</div>
+                                    <div className={classes["pastNum"]}>
+                                        {reservation.room.slice(0, 3)}{reservation.num}–
+                                        {reservation.date.slice(5, 7)}{reservation.date.slice(8, 10)}–
+                                        {reservation.startTime.slice(0, 2)}{reservation.startTime.slice(3, 5)}
+                                    </div>
 
-                                    <div className={classes["pastBoxLeft"]}>
-                                        <div className={classes["pastDate"]}>
-                                            날짜 <span style={{ color: '#b2a69b' }}>{reservation.date}</span>
+
+                                    <div className={classes["pastBoxMain"]}>
+                                        <div className={classes["pastBoxLeft"]}>
+                                            <div className={classes["pastDate"]}>
+                                                날짜&nbsp;<span style={{ color: '#b2a69b' }}>{new Date(reservation.date).toLocaleDateString("ko-Kr", {
+                                                year: "numeric",
+                                                month: "long",
+                                                day: "numeric"
+                                            })}</span>
+                                            </div>
+                                            <div className={classes["pastTime"]}>
+                                                시간&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
+                                            </div>
+                                            <div className={classes["pastRoom"]}>
+                                                방&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                            </div>
+                                            <div className={classes["pastMovie"]}>
+                                                영화&nbsp;<span
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        width: '75%',
+                                                        color: '#b2a69b',
+                                                        whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
+                                                        textOverflow: 'ellipsis'
+                                                    }}>{reservation.movie}</span>
+                                            </div>
+                                            <div className={classes["pastRoom"]}>
+                                                예약&nbsp;상태&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.status}</span>
+                                            </div>
                                         </div>
-                                        <div className={classes["pastTime"]}>
-                                            시간 <span style={{ color: '#b2a69b' }}>{reservation.time}</span>
-                                        </div>
-                                        <div className={classes["pastRoom"]}>
-                                            방 <span style={{ color: '#b2a69b' }}>{reservation.room}</span>
-                                        </div>
-                                        <div className={classes["pastMovie"]}>
-                                            영화 <span style={{ color: '#b2a69b' }}>{reservation.movie}</span>
+
+                                        <div className={classes["pastBoxRight"]}>
+                                            {theaterImg
+                                                .filter(img => img.id === reservation.id)
+                                                .map((img) => (
+                                                    <div key={img.id}>
+                                                        <img
+                                                            src={img.img}
+                                                            className={classes["pastImg"]}
+                                                            alt="Theater Image"
+                                                        />
+                                                    </div>
+                                                ))}
                                         </div>
                                     </div>
 
-                                    <div className={classes["pastBoxRight"]}>
-                                        <img
-                                            src="/api/placeholder/150/120"
-                                            className={classes["pastImg"]}
-                                            alt="Theater Image"
-                                        />
-                                    </div>
+                                    {reservation.code === "COMPLETED" ?
+                                        <div className={classes["pastBoxBtn"]}>
+                                            <button
+                                                name={reservation.num}
+                                                type="button"
+                                                className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
+                                                onClick={() => handleWriteReview(reservation.num)}
+                                                onTouchStart={() => setBtnIsTouched(reservation.num)}
+                                                onTouchEnd={() => setBtnIsTouched(null)}
+                                                style={getReviewBtnStyle(reservation.num)}
+                                            >
+                                                LEAVE REVIEW
+                                            </button>
+                                        </div> :
+                                        null
+                                    }
                                 </div>
-                            ))}
+                            )) :
+                            <div className={"pastBox"}>
+                                과거 예약 내역이 없습니다.
+                            </div>
+                            }
                         </div>
                     </article>
                 </section>
             </div>
+
+            { showWriteForm && (
+                < WriteReview onClose={() => setShowWriteForm(false)} id={selectReviewId} />
+            )}
+
         </div>
     );
 }

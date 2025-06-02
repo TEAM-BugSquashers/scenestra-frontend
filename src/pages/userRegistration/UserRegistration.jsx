@@ -1,11 +1,11 @@
 import classes from "./UserRegistration.module.css";
-import {useState, useRef} from "react";
-import {axiosChkUsername, axiosJoin} from "../api/axios.js";
+import {useState, useRef, useEffect} from "react";
+import {axiosChkUsername, axiosGenres, axiosJoin} from "../api/axios.js";
 import {useNavigate} from "react-router-dom";
 
 
 function UserRegistration() {
-    // state: form field
+    // states
     const [formData, setFormData] = useState({
         id: '',
         pw: '',
@@ -14,34 +14,97 @@ function UserRegistration() {
         mobile: '',
         email: ''
     });
-
-    // state: genre selection
+    const [allGenres, setAllGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
-
-    // state: hovered genre selection
     const [hoveredGenre, setHoveredGenre] = useState(null);
+    const [isTouched, setIsTouched] = useState(false);
 
-    // genre that was just unselected
+    // loading/error states
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // just-unselected genre ref
     const justUnselectedRef = useRef({
         id: null,
         mouseLeft: false
     });
 
-    // all genres --- USE AXIOS FUNCTION
-    const genres = [
-        { id: 'family', label: '가족' },
-        { id: 'performance', label: '공연' },
-        { id: 'horror', label: '공포(호러)' },
-        { id: 'drama', label: '드라마' },
-        { id: 'mystery', label: '미스터리' },
-        { id: 'crime', label: '범죄' },
-        { id: 'thriller', label: '스릴러' },
-        { id: 'animation', label: '애니메이션' },
-        { id: 'action', label: '액션' },
-        { id: 'comedy', label: '코미디' },
-        { id: 'fantasy', label: '판타지' },
-        { id: 'scifi', label: 'SF' }
-    ];
+    // left image state
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    // left image array
+    const imageClasses = [
+        'imgEight',
+        'imgThree',
+        'imgFive',
+        'imgSeven',
+        'imgNine',
+        'imgEleven',
+        'imgOne',
+        'imgEight',
+        'imgThree',
+        'imgFive',
+        'imgSeven',
+        'imgNine',
+        'imgEleven',
+        'imgOne',
+        'imgEight',
+        'imgThree',
+        'imgFive',
+        'imgSeven',
+        'imgNine',
+        'imgEleven',
+        'imgOne',
+        'imgEight'
+    ]
+
+    // left image transition
+    useEffect(() => {
+        if (currentIndex < imageClasses.length - 1) {
+            // const time = (currentIndex + 0.1) * 100;
+            const logBase = (number, base) => Math.log(number) / Math.log(base);
+            const time = logBase(5, (currentIndex+3)*0.4) * 110;
+            // const time = Math.log(currentIndex) * 100;
+            // const time = Math.pow(1.5, currentIndex) * 100;
+            const timeout = setTimeout(() => {
+                setCurrentIndex(prevIndex => prevIndex + 1);
+            }, time);
+            return () => clearTimeout(timeout);
+        }
+
+    }, [currentIndex, imageClasses.length]);
+
+    const getImageStyle = (index) => {
+        return {
+            opacity: index === currentIndex ? 1 : 0,
+            zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
+        }
+    }
+
+    // load all genres
+    useEffect(() => {
+        const fetchAllGenres = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                // setLoaded(true);
+
+                // set all genres
+                const genresResponse = await axiosGenres();
+                const allGenresData = genresResponse.data.payload.map(genre => ({
+                    value: String(genre.genreId),
+                    label: genre.name
+                }));
+                setAllGenres(allGenresData);
+            } catch (error) {
+                console.error("Failed to fetch genre selection:", error);
+                setError("장르 정보를 불러오는데 실패했습니다.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchAllGenres();
+    }, []);
 
     // handle input changes
     const handleInputChange = (e) => {
@@ -63,7 +126,7 @@ function UserRegistration() {
             // if unchecked, genre is removed from selected
             setSelectedGenres(selectedGenres.filter(genre => genre !== id));
 
-            // genre marked as just unselected
+            // attach just-unselected ref
             justUnselectedRef.current = {
                 id: id,
                 mouseLeft: false
@@ -75,7 +138,6 @@ function UserRegistration() {
             }
         }
     };
-
     // handle genre label mouse enter
     const handleMouseEnter = (id) => {
         // if re-entry after unselection, 'unselected flag' is cleared
@@ -95,6 +157,12 @@ function UserRegistration() {
     };
 
     // genre label color change
+    const handleTouchStart = () => {
+        setIsTouched(true);
+    }
+    const handleTouchEnd = () => {
+        setIsTouched(false);
+    }
     const getGenreLabelStyle = (id) => {
         if (selectedGenres.includes(id)) {
             // selected state
@@ -104,19 +172,26 @@ function UserRegistration() {
                 borderColor: '#32271e'
             };
         } else if (justUnselectedRef.current.id === id && !justUnselectedRef.current.mouseLeft) {
-            // just unselected (mouse enter)
+            // just unselected (but mouse still enter)
             return {
                 backgroundColor: 'white',
                 color: '#b2a69b',
                 borderColor: '#b2a69b'
             };
         } else if (hoveredGenre === id) {
-            // hover state
-            return {
-                backgroundColor: '#32271e',
-                color: 'white',
-                borderColor: '#32271e'
-            };
+            if (selectedGenres.length === 3 && !isTouched) {
+                return {
+                            backgroundColor: 'white',
+                            color: '#b2a69b',
+                            borderColor: '#b2a69b'
+                        }
+            } else {
+                return {
+                    backgroundColor: '#32271e',
+                    color: 'white',
+                    borderColor: '#32271e'
+                };
+            }
         } else {
             // default state
             return {
@@ -127,27 +202,40 @@ function UserRegistration() {
         }
     };
 
-    const navigate = useNavigate();
+    // validate form data
+    const validateForm = () => {
+        if (formData.pw !== formData.chkPw) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return false;
+        }
+
+        if (selectedGenres.length !== 3) {
+            alert('선호하는 장르 3개를 선택해부세요.');
+            return false;
+        }
+
+        // email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email || '')) {
+            alert('올바른 이메일 주소를 입력해주세요.');
+            return false;
+        }
+
+        return true;
+    }
 
     // handle form submit
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // requirement 1. three-genre selection
-        if (selectedGenres.length !== 3) {
-            alert('선호하는 장르 3개 선택해주세요');
+        // validate
+        if (!validateForm()) {
             return;
         }
 
-        // requirement 2. password/password-check agreement
-        if (formData.pw !== formData.chkPw) {
-            alert("비밀번호가 일치하지 않습니다.");
-            return;
-        }
-
-        // form submission processed
         try {
-            const response = await axiosJoin(
+            const userResponse = await axiosJoin(
                 formData.id,
                 formData.pw,
                 formData.email,
@@ -155,24 +243,30 @@ function UserRegistration() {
                 formData.name,
                 selectedGenres
             );
-            console.log(response);
 
-            if (response.status === 201 || response.status === 200) {
-                alert('회원가입에 성공했습니다');
+            console.log(userResponse);
+
+            if (userResponse.status === 201 || userResponse.status === 200) {
+                alert('회원가입에 성공했습니다.');
                 navigate('/login');
             } else {
-                alert(`회원가입에 실패했습니다. 상태 코드: ${response.status}`);
+                console.log('Failed to register user:', userResponse.status)
+                alert('회원가입에 실패했습니다.')
             }
         } catch (error) {
-            alert('회원가입 중 오류가 발생했습니다');
-            console.log('error: ', error);
+            if (error.response.data.payload !== undefined) {
+                console.log('register error:', error.response.data.payload);
+                alert(error.response.data.payload);
+            } else {
+                alert("회원가입 중 오류가 발생했습니다.");
+            }
         }
     };
 
     // handle id duplication check
     const isIdFilled = formData.id.trim() !== '';
 
-    const handleIdCheck = (e) => {
+    const handleIdCheck = async (e) => {
         e.preventDefault();
 
         // prevent empty id field
@@ -187,24 +281,31 @@ function UserRegistration() {
             return;
         }
 
+        try {
+            await axiosChkUsername(formData.id).then(idResponse => {
 
-        // axiosChkUsername(formData.id).then(response => {
+                if (idResponse.status === 200) {
+                    alert('사용할 수 있는 아이디입니다.')
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.status === 400) {
+                    let message = '';
+                    for (const value of Object.values(error.response.data.payload)) {
+                        message += typeof value === 'object' ? JSON.stringify(value).replace(/"/g, '') : value;
+                    }
+                    alert(message);
 
-            // console.log(response);
+                    setFormData(prev => ({ ...prev, id: ''}));
+                } else {
+                    alert('오류가 발생했습니다. 다시 시도해주세요.');
 
-        //     if (response.status === 200) {
-        //         alert(`사용할 수 있는 아이디입니다.`)
-        //     }
-        // })
-        //     .catch(error => {
-        //         if (error.response && error.response.status === 400) {
-        //             alert(`이미 사용 중인 아이디입니다.`);
-        //             setFormData(prev => ({ ...prev, id: '' }));
-        //         } else {
-        //             alert(`오류가 발생했습니다. 다시 시도해주세요.`);
-        //             console.error(error);
-        //         }
-        //     });
+                    console.log(error.response.data.payload);
+                }
+            })
+        } catch (idError) {
+            console.log(idError);
+        }
     };
 
     const isFormComplete = () => {
@@ -219,17 +320,167 @@ function UserRegistration() {
         );
     };
 
+    // loading state
+    if (isLoading) {
+        return <div className={classes["loading"]}>로딩 중...</div>;
+    }
+
+    // error state
+    if (error) {
+        return <div className={classes["error"]}>{error}</div>;
+    }
+
     return (
         <>
             <div className={classes["totalMargin"]}>
                 <div className={classes["totalLeft"]}>
-                    <div className={`${classes["leftQuote"]} ${classes["quoteLast"]}`}><em>SCENESTRA</em></div>
-                    <div className={`${classes["leftQuote"]} `}>Scene and space, exclusively yours.</div>
-                    {/*<div className={`${classes["leftQuote"]}`}>exclusively yours.</div>*/}
+                    <div className={classes["leftBox"]}>
+                        <img
+                            src="./img/8.jpeg"
+                            alt=""
+                            className={classes["imgEight"]}
+                            style={getImageStyle(0)}
+                        />
+                        <img
+                            src="./img/3.jpg"
+                            alt=""
+                            className={classes["imgThree"]}
+                            style={getImageStyle(1)}
+                        />
+                        <img
+                            src="./img/5.jpg"
+                            alt=""
+                            className={classes["imgFive"]}
+                            style={getImageStyle(2)}
+                        />
+                        <img
+                            src="./img/7.jpg"
+                            alt=""
+                            className={classes["imgSeven"]}
+                            style={getImageStyle(3)}
+                        />
+                        <img
+                            src="./img/9.jpeg"
+                            alt=""
+                            className={classes["imgNine"]}
+                            style={getImageStyle(4)}
+                        />
+                        <img
+                            src="./img/11.jpg"
+                            alt=""
+                            className={classes["imgEleven"]}
+                            style={getImageStyle(5)}
+                        />
+                        <img
+                            src="./img/1.jpg"
+                            alt=""
+                            className={classes["imgOne"]}
+                            style={getImageStyle(6)}
+                        />
+                        <img
+                            src="./img/8.jpeg"
+                            alt=""
+                            className={classes["imgEight"]}
+                            style={getImageStyle(7)}
+                        />
+                        <img
+                            src="./img/3.jpg"
+                            alt=""
+                            className={classes["imgThree"]}
+                            style={getImageStyle(8)}
+                        />
+                        <img
+                            src="./img/5.jpg"
+                            alt=""
+                            className={classes["imgFive"]}
+                            style={getImageStyle(9)}
+                        />
+                        <img
+                            src="./img/7.jpg"
+                            alt=""
+                            className={classes["imgSeven"]}
+                            style={getImageStyle(10)}
+                        />
+                        <img
+                            src="./img/9.jpeg"
+                            alt=""
+                            className={classes["imgNine"]}
+                            style={getImageStyle(11)}
+                        />
+                        <img
+                            src="./img/11.jpg"
+                            alt=""
+                            className={classes["imgEleven"]}
+                            style={getImageStyle(12)}
+                        />
+                        <img
+                            src="./img/1.jpg"
+                            alt=""
+                            className={classes["imgOne"]}
+                            style={getImageStyle(13)}
+                        />                        <img
+                        src="./img/8.jpeg"
+                        alt=""
+                        className={classes["imgEight"]}
+                        style={getImageStyle(7)}
+                    />
+                        <img
+                            src="./img/3.jpg"
+                            alt=""
+                            className={classes["imgThree"]}
+                            style={getImageStyle(8)}
+                        />
+                        <img
+                            src="./img/5.jpg"
+                            alt=""
+                            className={classes["imgFive"]}
+                            style={getImageStyle(9)}
+                        />
+                        <img
+                            src="./img/7.jpg"
+                            alt=""
+                            className={classes["imgSeven"]}
+                            style={getImageStyle(10)}
+                        />
+                        <img
+                            src="./img/9.jpeg"
+                            alt=""
+                            className={classes["imgNine"]}
+                            style={getImageStyle(11)}
+                        />
+                        <img
+                            src="./img/11.jpg"
+                            alt=""
+                            className={classes["imgEleven"]}
+                            style={getImageStyle(12)}
+                        />
+                        <img
+                            src="./img/1.jpg"
+                            alt=""
+                            className={classes["imgOne"]}
+                            style={getImageStyle(13)}
+                        />
+                        <img
+                            src={"./img/8.jpg"}
+                            alt=""
+                            className={classes["empty"]}
+                            style={getImageStyle(14)}
+                        />
+
+                        <div className={classes["leftQuoteBox"]}>
+                            <div className={`${classes["leftQuote"]} ${classes["leftLogo"]}`}><em>SCENESTRA</em></div>
+                            <div className={`${classes["leftQuote"]} `}>Scene and space, exclusively yours.</div>
+                        </div>
+
+                    </div>
                 </div>
-                <div className={classes["totalMid"]}></div>
+                <div
+                    className={classes["totalMid"]}
+                ></div>
                 <div className={classes["totalRight"]}>
-                    <div className={`${classes["main"]} wBg wMain`}>
+                    <div
+                        className={`${classes["main"]} wBg wMain`}
+                    >
                         <section className={classes["topBar"]}>
                             <div className={`${classes["horLine"]} bBg`}></div>
                             <div className={classes["barTitle"]}>SIGN UP</div>
@@ -348,24 +599,23 @@ function UserRegistration() {
                                         <div className={`${classes["horLine"]} bBg`}></div>
                                     </div>
                                     <div className={classes["genreBox"]}>
-                                        {genres.map(genre => (
-                                            <div key={genre.id} style={{ display: 'contents' }}>
+                                        {allGenres.map(genre => (
+                                            <div key={genre.value} style={{ display: 'contents' }}>
                                                 <input
                                                     type="checkbox"
                                                     name="chkGenre"
-                                                    id={genre.id}
-                                                    value={genre.id}
-                                                    checked={selectedGenres.includes(genre.id)}
+                                                    id={genre.value}
+                                                    value={genre.value}
+                                                    checked={selectedGenres.includes(genre.value)}
                                                     onChange={handleGenreChange}
-                                                    disabled={
-                                                        !selectedGenres.includes(genre.id) && selectedGenres.length >= 3
-                                                    }
+                                                    onTouchStart={handleTouchStart}
+                                                    onTouchEnd={handleTouchEnd}
                                                 />
                                                 <label className={classes["genreChkBx"]}
-                                                       htmlFor={genre.id}
-                                                       style={getGenreLabelStyle(genre.id)}
-                                                       onMouseEnter={() => handleMouseEnter(genre.id)}
-                                                       onMouseLeave={() => handleMouseLeave(genre.id)}
+                                                       htmlFor={genre.value}
+                                                       style={getGenreLabelStyle(genre.value)}
+                                                       onMouseEnter={() => handleMouseEnter(genre.value)}
+                                                       onMouseLeave={() => handleMouseLeave(genre.value)}
                                                 >
                                                     {genre.label}
                                                 </label>

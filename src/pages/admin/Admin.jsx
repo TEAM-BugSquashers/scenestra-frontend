@@ -42,6 +42,13 @@ function Admin() {
             el.classList.add(classes.active);
         });
     },[])
+
+    // useEffect(()=>{
+    //     try{
+    //         fetchAllReservation
+    //     }
+    // })
+
     return (
         <>
             <div className={classes.wrap}>
