@@ -205,3 +205,13 @@ export const axiosReviewPopups = async (id) => {
     return await instance.get(`/review/${id}`);
 }
 
+export const axiosViewALlReservation = async () => {
+    return await instance.get("/admin/reservations");
+}
+
+export const axiosViewReservationDeteails = async (reservationId) => {
+    return await instance.get(`/admin/reservations/${reservationId}`);
+}
+
+
+

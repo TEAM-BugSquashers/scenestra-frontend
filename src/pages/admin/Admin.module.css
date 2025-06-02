@@ -5,7 +5,7 @@
 
 .header{
     margin-top: 60px;
-    font-size: 45px;
+    font-family: 'Noto Serif KR', sans-serif;
 }
 
 .gridContainer{
@@ -32,12 +32,14 @@
     "runTime peopleNum ";
     opacity: 0;
     transition: 1s;
+    cursor: pointer;
+    font-family: 'Pretendard-Regular', sans-serif;
 }
 
 .title {
     grid-area: title;
     text-align: center;
-    color: #b2a69b;
+    color: #32271e;
 
     display: flex;
     justify-content: center;
@@ -51,28 +53,43 @@
 .resNum {
     grid-area: resNum;
     text-align: center;
-    color: #b2a69b;
+    color: #32271e;
     border: 1px solid rgba(178, 166, 155, 0.3);
+    font-family: 'Noto Serif KR', sans-serif;
 }
 .roomNum {
     grid-area: roomNum;
     text-align: center;
-    color: #b2a69b;
+    color: #32271e;
     border: 1px solid rgba(178, 166, 155, 0.3);
+    font-family: 'Noto Serif KR', sans-serif;
 }
 
 .runTime {
     grid-area: runTime;
     text-align: center;
-    color: #b2a69b;
+    color: #32271e;
     border-top: 1px solid rgba(178, 166, 155, 0.3);
     border-right: 1px solid rgba(178, 166, 155, 0.3);
+    font-family: 'Noto Serif KR', sans-serif;
 }
 
 .peopleNum {
     grid-area: peopleNum;
     text-align: center;
-    color: #b2a69b;
+    color: #32271e;
     border-top: 1px solid rgba(178, 166, 155, 0.3);
-    border-left: 1px solid rgba(178, 166, 155, 0.3);
+    border-left: 1px solid rgba(173, 166, 153, 0.3);
+    font-family: 'Noto Serif KR', sans-serif;
+}
+.statusString{
+    font-family: 'Pretendard-Regular', sans-serif;
+}
+@media screen and (max-width: 430px) {
+    .gridContainer{
+        grid-template-columns:1fr;
+        grid-column-gap: 10px;
+        color: rgba(140, 130, 120, 0.3);
+    }
+
 }

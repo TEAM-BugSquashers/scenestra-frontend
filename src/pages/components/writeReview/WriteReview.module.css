@@ -280,3 +280,8 @@
     color: white;
 }
 
+@media screen and (max-width: 430px) {
+    .composeWrap{
+        width: 100%;
+    }
+}
