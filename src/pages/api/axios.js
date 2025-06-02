@@ -249,6 +249,9 @@ export const axiosRecommend = async() => {
         throw error;
     }
 }
+export const axiosRoom = async() => {
+    try {
+        const response = await instance.get("/theaters");
 
 export const axiosTheaterDetails = async (theaterId) => {
     try {
@@ -258,6 +261,9 @@ export const axiosTheaterDetails = async (theaterId) => {
         throw error;
     }
 }
+export const axiosCapacity = async(num) => {  // num 파라미터 추가
+    try {
+        const response = await instance.get(`/theaters/capacity?num=${num}`);  // 쿼리 파라미터로 전달
 
 export const axiosSearchMovies = async (title)=>{
     try {
@@ -268,6 +274,15 @@ export const axiosSearchMovies = async (title)=>{
     }
 }
 
+export const axiosAvailableDates = async(theaterId, movieId, yearMonth) => {
+    try {
+        const response = await instance.get("/reservations/available-dates", {
+            params: {
+                theaterId: theaterId,
+                movieId: movieId,
+                yearMonth: yearMonth
+            }
+        });
 export const axiosTheaterReviews = async (theaterId)=>{
     try {
         const response = await instance.get(`/review/theater/${theaterId}`);
@@ -277,6 +292,28 @@ export const axiosTheaterReviews = async (theaterId)=>{
     }
 }
 
+export const axiosAvailableTimes = async(theaterId, movieId, date) => {
+    try {
+        const response = await instance.get("/reservations/available-times", {
+            params: {
+                theaterId: theaterId,
+                movieId: movieId,
+                day: date
+            }
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+export const axiosReservation = async (reservationData) => {
+    try {
+        const response = await instance.post("/reservations", reservationData);
+        return response;
+    } catch (error) {
+    throw error;
+}
+}
 export const axiosOneReview = async (id)=>{
     try {
         const response = await instance.get(`/movies/${id}`);
@@ -306,5 +343,4 @@ export const axiosReviewPopups = async (id) => {
         throw error;
     }
 }
-
 
