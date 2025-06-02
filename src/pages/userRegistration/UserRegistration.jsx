@@ -283,13 +283,19 @@ function UserRegistration() {
 
         try {
             await axiosChkUsername(formData.id).then(idResponse => {
+
                 if (idResponse.status === 200) {
                     alert('사용할 수 있는 아이디입니다.')
                 }
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
-                    alert('이미 사용 중인 아이디입니다.');
+                    let message = '';
+                    for (const value of Object.values(error.response.data.payload)) {
+                        message += typeof value === 'object' ? JSON.stringify(value).replace(/"/g, '') : value;
+                    }
+                    alert(message);
+
                     setFormData(prev => ({ ...prev, id: ''}));
                 } else {
                     alert('오류가 발생했습니다. 다시 시도해주세요.');
