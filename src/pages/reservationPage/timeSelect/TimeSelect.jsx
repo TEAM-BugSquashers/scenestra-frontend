@@ -123,9 +123,9 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
                 if (extraSlots === 1) {
                     endTime = "23시";
                 } else if (extraSlots === 2) {
-                    endTime = "23시 30분";
+                    endTime = "23시";
                 } else {
-                    endTime = "24시";
+                    endTime = "23시";
                 }
             }
 
