@@ -48,15 +48,22 @@ function UserRegistration() {
         'imgNine',
         'imgEleven',
         'imgOne',
+        'imgEight',
+        'imgThree',
+        'imgFive',
+        'imgSeven',
+        'imgNine',
+        'imgEleven',
+        'imgOne',
         'imgEight'
     ]
 
+    // left image transition
     useEffect(() => {
-
         if (currentIndex < imageClasses.length - 1) {
             // const time = (currentIndex + 0.1) * 100;
             const logBase = (number, base) => Math.log(number) / Math.log(base);
-            const time = logBase(5, (currentIndex+3)*0.4) * 100;
+            const time = logBase(5, (currentIndex+3)*0.4) * 110;
             // const time = Math.log(currentIndex) * 100;
             // const time = Math.pow(1.5, currentIndex) * 100;
             const timeout = setTimeout(() => {
@@ -276,13 +283,19 @@ function UserRegistration() {
 
         try {
             await axiosChkUsername(formData.id).then(idResponse => {
+
                 if (idResponse.status === 200) {
                     alert('사용할 수 있는 아이디입니다.')
                 }
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
-                    alert('이미 사용 중인 아이디입니다.');
+                    let message = '';
+                    for (const value of Object.values(error.response.data.payload)) {
+                        message += typeof value === 'object' ? JSON.stringify(value).replace(/"/g, '') : value;
+                    }
+                    alert(message);
+
                     setFormData(prev => ({ ...prev, id: ''}));
                 } else {
                     alert('오류가 발생했습니다. 다시 시도해주세요.');
@@ -370,6 +383,47 @@ function UserRegistration() {
                             className={classes["imgEight"]}
                             style={getImageStyle(7)}
                         />
+                        <img
+                            src="./img/3.jpg"
+                            alt=""
+                            className={classes["imgThree"]}
+                            style={getImageStyle(8)}
+                        />
+                        <img
+                            src="./img/5.jpg"
+                            alt=""
+                            className={classes["imgFive"]}
+                            style={getImageStyle(9)}
+                        />
+                        <img
+                            src="./img/7.jpg"
+                            alt=""
+                            className={classes["imgSeven"]}
+                            style={getImageStyle(10)}
+                        />
+                        <img
+                            src="./img/9.jpeg"
+                            alt=""
+                            className={classes["imgNine"]}
+                            style={getImageStyle(11)}
+                        />
+                        <img
+                            src="./img/11.jpg"
+                            alt=""
+                            className={classes["imgEleven"]}
+                            style={getImageStyle(12)}
+                        />
+                        <img
+                            src="./img/1.jpg"
+                            alt=""
+                            className={classes["imgOne"]}
+                            style={getImageStyle(13)}
+                        />                        <img
+                        src="./img/8.jpeg"
+                        alt=""
+                        className={classes["imgEight"]}
+                        style={getImageStyle(7)}
+                    />
                         <img
                             src="./img/3.jpg"
                             alt=""

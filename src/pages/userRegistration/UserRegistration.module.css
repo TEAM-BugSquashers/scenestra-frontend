@@ -127,6 +127,9 @@
     top: 11px;
     left: 10px;
 }
+.formField input::placeholder {
+    color: #b2a69b;
+}
 /* id */
 .idWrap {
     display: flex;
