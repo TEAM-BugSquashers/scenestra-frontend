@@ -52,6 +52,15 @@
     flex-direction: column;
     justify-content: flex-end;
 }
+.mobile {
+    position: absolute;
+    bottom: 160px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    color: #fff;
+    transition: all 0.8s;
+    display: none;
+}
 .movieContent {
     position: absolute;
     width: 100%;
@@ -144,4 +153,26 @@
 .allMovieShowBtn:hover {
     background-color: rgba(178,166,155, 0.4);
     color: #fff;
+}
+
+@media screen and (max-width: 430px) {
+    .line1 {
+        width: 100%;
+    }
+    .postersContainer {
+        width: 1280px;
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        z-index: 1002;
+        gap: 15px;
+
+        overflow-x: auto;
+    }
+    .postersContainer::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .mobile {
+        display: block;
+    }
 }
