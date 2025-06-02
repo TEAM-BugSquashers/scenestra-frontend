@@ -26,7 +26,7 @@ originalInstance.interceptors.response.use(
 
 // 원본 인스턴스의 메서드들을 래핑하여 순차 처리
 const createSequentialMethod = (method) => {
-    return function(...args) {
+    return function (...args) {
         return new Promise((resolve, reject) => {
             queueCount++;
             const url = args[0] || '';
@@ -116,7 +116,7 @@ export const axiosTheaters = async () => {
 // // 예약 API // //
 export const axiosResDel = async (reservationId) => {
     try {
-        const response = await instance.delete("reservations/"+reservationId);
+        const response = await instance.delete("reservations/" + reservationId);
         return response;
     } catch (error) {
         throw error;
@@ -144,7 +144,7 @@ export const axiosResAll = async () => {
 // // 유저 api // //
 export const axiosPreferredGenres = async ([x, y, z]) => {
     try {
-        const response = await instance.put("/users/preferred-genres", [ x, y, z ]);
+        const response = await instance.put("/users/preferred-genres", [x, y, z]);
         return response;
     } catch (error) {
         throw error;
@@ -202,7 +202,7 @@ export const axiosMe = async () => {
 
 export const axiosChkUsername = async (username) => {
     try {
-        const response = await instance.get("/users/check-username?username="+username);
+        const response = await instance.get("/users/check-username?username=" + username);
         return response;
     } catch (error) {
         throw error;
@@ -241,7 +241,7 @@ export const axiosGenreId = async (genreId) => {
     return response;
 }
 
-export const axiosRecommend = async() => {
+export const axiosRecommend = async () => {
     try {
         const response = await instance.get("/movies/recommend");
         return response;
@@ -259,7 +259,7 @@ export const axiosTheaterDetails = async (theaterId) => {
     }
 }
 
-export const axiosSearchMovies = async (title)=>{
+export const axiosSearchMovies = async (title) => {
     try {
         const response = await instance.get(`/movies/search?title=${title}`);
         return response;
@@ -268,7 +268,7 @@ export const axiosSearchMovies = async (title)=>{
     }
 }
 
-export const axiosTheaterReviews = async (theaterId)=>{
+export const axiosTheaterReviews = async (theaterId) => {
     try {
         const response = await instance.get(`/review/theater/${theaterId}`);
         return response;
@@ -277,11 +277,11 @@ export const axiosTheaterReviews = async (theaterId)=>{
     }
 }
 
-export const axiosOneReview = async (id)=>{
+export const axiosOneReview = async (id) => {
     try {
         const response = await instance.get(`/movies/${id}`);
         return response;
-    }catch (error) {
+    } catch (error) {
         throw error;
     }
 }
@@ -307,22 +307,12 @@ export const axiosReviewPopups = async (id) => {
     }
 }
 
-export const axiosViewALlReservation = async () =>{
-    try {
-        const response = await instance.get("/admin/reservations");
-        return response;
-    } catch (error) {
-        throw error;
-    }
+export const axiosViewALlReservation = async () => {
+    return await instance.get("/admin/reservations");
 }
 
-export const axiosViewReservationDeteails = async (reservationId) =>{
-    try {
-        const response = await instance.get(`/admin/reservations/${reservationId}`);
-        return response;
-    }catch(error){
-        throw error;
-    }
+export const axiosViewReservationDeteails = async (reservationId) => {
+    return await instance.get(`/admin/reservations/${reservationId}`);
 }
 
 
