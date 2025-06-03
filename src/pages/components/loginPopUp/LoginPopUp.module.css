@@ -1,0 +1,184 @@
+/****************************/
+/****** the framework ******/
+/****************************/
+.backdrop {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
+.popUpWrap {
+    /*width: 500px;*/
+    width: 650px;
+    /*width: 1280px;*/
+    /*height: 314px;*/
+    background-color: white;
+
+    border-radius: 20px;
+    /*padding: 30px;*/
+    padding: 50px;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    /*flex-direction: column;*/
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+.idBox {
+    width: 100%;
+    /*height: 50%;*/
+}
+.pwBox {
+    width: 100%;
+    /*height: 50%;*/
+}
+.vertLine {
+    width: 1px;
+    height: 150px;
+    background-color: #b2a69b;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+/****************************/
+/****** the components ******/
+/****************************/
+.boxBar {
+    margin-bottom: 30px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.formField {
+    position: relative;
+}
+.formField input {
+    width: 100%;
+    height: 40px;
+
+    color: #32271e;
+    font-size: 1rem;
+
+    padding: 20px 10px 5px;
+    border: 1px solid #b2a69b;
+    border-radius: 10px;
+    box-sizing: border-box;
+
+    outline: none;
+
+    display: flex;
+    align-items: center;
+}
+.formField > label {
+    color: #b2a69b;
+    font-size: 1rem;
+
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+
+    pointer-events: none;
+    transition: all 0.2s ease;
+
+    display: block;
+}
+
+/****************************/
+/****** the details ******/
+/****************************/
+.XBox {
+    width: 50px;
+    height: 50px;
+
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.XBox2 {
+    width: 25px;
+    height: 25px;
+
+    cursor: pointer;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.XLeft {
+    width: 20px;
+    height: 1px;
+    background-color: #32271e;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateZ(-45deg);
+}
+.XRight {
+    width: 20px;
+    height: 1px;
+    background-color: #32271e;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateZ(45deg);
+}
+.barTitle {
+    color: #32271e;
+    font-family: "Noto Serif KR", serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+    white-space: nowrap;
+
+    margin: 0 10px;
+}
+.horLine {
+    width: 100%;
+    height: 1px;
+    background-color: #32271e;
+}
+/* formField */
+.formField input:focus {
+    border: 1px solid #32271e;
+}
+.formField input:focus + label,
+.formField input:not(:placeholder-shown) + label {
+    color: #b2a69b;
+    font-size: 0.625rem;
+    top: 11px;
+    left: 10px;
+}
+form > button {
+    width: 100%;
+    height: 40px;
+
+    background-color: #b2a69b;
+    color: white;
+    font-family: "Noto Serif KR", serif;
+    font-weight: 500;
+    font-size: 1rem;
+
+    margin-top: 20px;
+
+    border: none;
+    border-radius: 10px;
+}
+form .valid {
+    background-color: #32271e;
+    cursor: pointer;
+}

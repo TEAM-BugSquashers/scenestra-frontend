@@ -269,3 +269,13 @@
         margin-bottom: 60px;
     }
 }
+@media (hover: none), (pointer: coarse) {
+    .loginTouched {
+        background-color: #b2a69b !important;
+        color: #32271e !important;
+    }
+    .loginNotTouched {
+        background-color: #32271e !important;
+        color: #b2a69b !important;
+    }
+}
