@@ -39,7 +39,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
               </>
             )}
             <li>
-              <a onClick={()=> {navi("/about");
+              <a onClick={()=> {navi("/aboutUs");
               toggleSidebar();}}>ABOUT US</a>
             </li>
             {!["/join", "/login"].includes(location.pathname) && (

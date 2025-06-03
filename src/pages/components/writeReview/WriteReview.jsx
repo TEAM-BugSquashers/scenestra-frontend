@@ -63,7 +63,7 @@ function WriteReview({onClose, id}) {
 
     const handleClose = () => {
         // 닫기 전에 스크롤 복원
-        if(confirm("취소?")) {
+        if(confirm("지우시겠습니까?")) {
             document.body.style.overflow = 'unset';
             onClose();
         }

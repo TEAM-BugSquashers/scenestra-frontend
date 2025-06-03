@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {axiosLogin} from "../api/axios.js";
 import { useNavigate } from 'react-router-dom';
 import LoginPopUp from "../components/loginPopUp/LoginPopUp.jsx";
+import WriteReview from "../components/writeReview/WriteReview.jsx";
 
 function Login() {
     // login form state

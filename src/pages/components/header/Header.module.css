@@ -90,6 +90,7 @@
     height: 40px;
     overflow: hidden;
     transition: width 0.5s ease;
+    position: relative;
 }
 
 .search_container.open {
@@ -142,4 +143,32 @@
 
 .search_button:hover {
     background-color: #2a2a2a;
+}
+
+@media screen and (max-width: 430px) {
+    .hamBtnWrap > div:first-child{
+        display: none;
+    }
+    .search_bar input{
+        background-color: #32271e;
+    }
+    .rightSection{
+        width: 100%;
+        justify-content: space-between;
+    }
+    .search_container{
+        width: 300px;
+        position: absolute;
+        left: 0;
+        top: 140%;
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+    .search_container.open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
 }
