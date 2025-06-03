@@ -815,7 +815,7 @@ function MyPage() {
                                                 시간&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
                                             </div>
                                             <div className={classes["pastRoom"]}>
-                                                방&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                                상영관&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
                                             </div>
                                             <div className={classes["pastMovie"]}>
                                                 영화&nbsp;<span
