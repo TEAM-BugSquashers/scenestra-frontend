@@ -3,9 +3,11 @@ import {useEffect, useState} from "react";
 import { axiosViewALlReservation} from "../api/axios.js";
 import ViewDetails from "../components/viewDetails/ViewDetails.jsx";
 
+
+
 function Admin() {
 
-
+    const[loading,setLoading] = useState(false);
     const [useThisShit, setUseThisShit] = useState([])
     const [selectedReservationId, setSelectedReservationId] = useState(null);
 
@@ -16,12 +18,15 @@ function Admin() {
 
     useEffect(()=>{
         const fetchAllReservation = async () => {
+            setLoading(true);
             try{
                 const response = await axiosViewALlReservation();
                 console.log(response.data.payload);
                 setUseThisShit(response.data.payload);
             }catch(error){
                 console.log(error);
+            }finally{
+                setLoading(false);
             }
         }
         fetchAllReservation();
@@ -49,7 +54,7 @@ function Admin() {
                         <article key={info.reservationId} className={classes.article} onClick={() => handleSelectReservationClick(info.reservationId)}>
                             <div className={classes.title} style={{
                                 color:
-                                    info.statusString === '이용 완료' ? '#8C82784C' : info.statusString === '확정' ? '#32271e' : info.statusString === '취소' ? 'red' : 'transparent'
+                                    info.statusString === '이용 완료' ? '#8C82784C' : info.statusString === '확정' ? '#32271e' : info.statusString === '취소' ? 'darkRed' : 'transparent'
                             }}>
                                 <div style={{
                                     textDecoration: info.statusString === '취소' ? 'line-through' : 'none'

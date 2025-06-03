@@ -34,9 +34,10 @@ function SearchResult() {
     }
     return (
         <>
+            <div  className={importClasses.query}>"{query}"에 대한 검색결과</div>
             <div className={importClasses.wrap}>
                 {results.length === 0 ? (
-                    <div className={importClasses.noResult}>검색 결과가 없습니다</div>
+                    <div className={importClasses.noResult}>"{query}"에 대한 검색 결과가 없습니다</div>
                 ) : (
                     results.map((movie) => (
                         <div
