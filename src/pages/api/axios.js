@@ -125,6 +125,24 @@ export const axiosMe = async () => {
     return await instance.get("/users/me");
 }
 
+export const axiosFindPw = async (username, name) => {
+    try {
+        const response = await instance.get("/users/findPw?username="+username+"&name="+name);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosFindId = async (email, name) => {
+    try {
+        const response = await instance.get("/users/findId?email="+email+"&name="+name);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const axiosChkUsername = async (username) => {
     return await instance.get("/users/check-username?username=" + username);
 }

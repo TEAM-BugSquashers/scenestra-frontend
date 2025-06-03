@@ -2,6 +2,7 @@ import classes from './Login.module.css';
 import {useEffect, useState} from "react";
 import {axiosLogin} from "../api/axios.js";
 import { useNavigate } from 'react-router-dom';
+import LoginPopUp from "../components/loginPopUp/LoginPopUp.jsx";
 import WriteReview from "../components/writeReview/WriteReview.jsx";
 
 function Login() {
@@ -9,6 +10,9 @@ function Login() {
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+
+    // popup state
+    const [showFind, setShowFind] = useState(false);
 
     // touch states
     const [isTouched, setIsTouched] = useState(false);
@@ -45,6 +49,11 @@ function Login() {
             zIndex: index === currentIndex ? 700 : 700 - ((index + 1) * 10)
         };
     };
+
+    // find id/pw function
+    const handleFind = () => {
+        setShowFind(true);
+    }
 
     // touch functions
     const handleTouchStart = () => {
@@ -87,7 +96,6 @@ function Login() {
     const toggleRememberMe = () => {
         setRememberMe(!rememberMe);
     };
-
 
     return (
         <div className={classes["sectionWrap"]}>
@@ -197,13 +205,13 @@ function Login() {
                         </div>
                         <button
                             onClick={handleSubmit}
-                            className={`bBg bPri`}
+                            className={`bBg bPri ${ isTouched ? classes["loginTouched"] : classes["loginNotTouched"]}`}
                             onTouchStart={handleTouchStart}
                             onTouchEnd={handleTouchEnd}
-                            style={{
-                                backgroundColor: isTouched ? '#b2a69b' : '#32271e',
-                                color: isTouched ? '#32271e' : '#b2a69b'
-                            }}
+                            // style={{
+                            //     backgroundColor: isTouched ? '#b2a69b' : '#32271e',
+                            //     color: isTouched ? '#32271e' : '#b2a69b'
+                            // }}
                         >
                             LOGIN
                         </button>
@@ -211,7 +219,7 @@ function Login() {
 
                     {/* Bottom */}
                     <div className={classes["rightContentWrapBot"]}>
-                        <button>
+                        <button onClick={()=>handleFind()}>
                             아이디/비밀번호 찾기
                         </button>
                         <button onClick={goToJoin}>
@@ -221,6 +229,7 @@ function Login() {
                 </div>
             </div>
 
+            { showFind && <LoginPopUp onClose={() => setShowFind(false)} />}
         </div>
     );
 }
