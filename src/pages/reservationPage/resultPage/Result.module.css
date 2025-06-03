@@ -1,0 +1,104 @@
+.outer {
+    width: 650px;
+    height: 100%;
+    margin: 250px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* h2와 resultBox 사이의 간격 */
+}
+.info {
+    color: #fff;
+    display: inline;
+}
+.resultBox {
+    width: 650px;
+    height: 400px;
+    background: #fff;
+    border-radius: 20px;
+    position: relative;
+}
+.RTitle {
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    color: #32271e;
+    padding: 0 10px;
+}
+.titleBox {
+    display: flex;
+    align-items: center;
+    margin: 0 30px;
+    /*padding-top: 20px;*/
+}
+.line1 {
+    width: 100%;
+    height: 1px;
+    background: #32271e;
+}
+.line2 {
+    width: 100%;
+    height: 1px;
+    background: #32271e;
+}
+.backHome {
+    width: 250px;
+    height: 40px;
+    border-radius: 10px;
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #b2a69b;
+    background: #32271e;
+    color: #b2a69b;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.backHome:hover {
+    background: #b2a69b;
+    color: #32271e;
+}
+.inner {
+    display: flex;
+    margin: 0 30px;
+    justify-content: space-around
+}
+.descBox {
+    width: 60%;
+}
+.imgBox {
+    height: 290px;
+}
+.imgBox img {
+    height: 300px;
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 430px) {
+    .outer {
+        width: 430px;
+        height: 100%;
+        margin: 120px auto;
+        gap: 10px;
+    }
+    .resultBox {
+        width: 350px;
+        height: 500px;
+    }
+    .inner {
+        display: flex;
+        margin: 0 30px;
+        flex-direction: column-reverse
+    }
+    .imgBox img {height: 150px;}
+    .imgBox {
+        height: 100%;
+        margin: 0 auto;
+    }
+    .descBox {width: 100%;}
+    .descBox p {margin: 8px;}
+
+}

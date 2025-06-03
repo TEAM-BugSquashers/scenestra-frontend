@@ -40,6 +40,9 @@ const MovieSlide = ({ movieSrc, genre, isActive, currentMoviesData, onSelectMovi
         bottom: isHovered ? '110%' : '40%',
         transition: 'bottom 0.5s ease'
     };
+    const noneBlock = {
+        opacity: isHovered ? '0' : '1',
+    }
 
     const handleContainerClick = () => {
         setIsHovered(false);
@@ -60,6 +63,7 @@ const MovieSlide = ({ movieSrc, genre, isActive, currentMoviesData, onSelectMovi
                  onMouseEnter={handleMouseEnter}
                  onClick={(e) => e.stopPropagation()}
             >
+                <div className={classes.mobile} style={noneBlock}>여기를 클릭하면 영화가 나와욥</div>
                 <div className={classes.movieContent} style={contentStyle}>
                     <div className={classes.line1} />
                     <h1 className={classes.genreTitle}>{genre}</h1>
@@ -140,7 +144,7 @@ function ForYou() {
     const movies = React.useMemo(() => {
         const movieSlides = [];
 
-        moviesData.genreMovies.forEach((genreData, index) => {
+        moviesData.genreMovies.forEach((genreData) => {
             movieSlides.push({
                 id: genreData.genreId,
                 url: genreData.videoUrl,

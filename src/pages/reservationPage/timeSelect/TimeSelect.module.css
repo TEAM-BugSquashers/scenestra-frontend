@@ -24,6 +24,7 @@
     cursor: not-allowed;
 }
 .clickBox.unavailable:hover {background: #d9d9d9;}
+.clickBox.booked:hover {background: #d9d9d9;}
 
 .timeSelectBox {
     width: 100%;
@@ -41,7 +42,7 @@
     height: 20px;
     background: #d9d9d9;
 }
-.sbox{
+.sBox{
     display: flex;
     gap: 5px;
     align-items: center;
@@ -49,18 +50,50 @@
 .selectableBox {
     width: 100%;
     display: flex;
-    margin: 10px 0 0 142px;
     gap: 20px;
-}
-.selectableBox {
     position: relative;
+    justify-content: space-around;
+    padding-bottom: 50px;
+}
+.infoBox{
+    width: 400px;
+    display: flex;
+    position: absolute;
+    left: 70px;
+    padding-top: 5px;
+    gap: 5px
 }
 .error {
-    width: 200px;
+    width: 400px;
     height: 30px;
     color: darkred;
     position: absolute;
     top: 0;
     left: 50%;
     transform: translate(-50%, 0);
+    padding-top: 5px;
+}
+.booked {
+    background-color: #D9D9D9;
+    cursor: not-allowed;
+}
+.blocked {}
+.available {}
+
+
+@media screen and (max-width: 430px) {
+    .timeSelectBox {
+        overflow-x: auto;
+        align-items: flex-start
+    }
+    .selectableBox {padding-bottom: 60px;}
+    .infoBox{left: 0;}
+    .error {
+        width: 400px;
+        top: 30px;
+        left: 0;
+        right: 0;
+        transform: translate(0, 0);
+    }
+    .clickBox:hover {background: #32271e;}
 }

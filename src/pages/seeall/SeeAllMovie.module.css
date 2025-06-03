@@ -237,3 +237,8 @@
     line-height: 40px;
 }
 
+@media screen and (max-width: 430px) {
+    .netflix_app {
+        margin-top: 60px;
+    }
+}
