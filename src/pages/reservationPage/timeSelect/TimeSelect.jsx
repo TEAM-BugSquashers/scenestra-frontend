@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react';
 import classes from './TimeSelect.module.css';
 
 function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, onTimeSelect}) {
-    // 시간 상태별 슬롯 관리
-    const [bookedSlots, setBookedSlots] = useState([]); // BOOKED - 마감
-    const [blockedSlots, setBlockedSlots] = useState([]); // BLOCKED - 선택가능하지만 제한있음
-    const [availableSlots, setAvailableSlots] = useState([]); // AVAILABLE - 완전히 선택가능
+
+    const [bookedSlots, setBookedSlots] = useState([]);
+    const [blockedSlots, setBlockedSlots] = useState([]);
+    const [availableSlots, setAvailableSlots] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
     const slotsNeeded = timeUnit - 1;
+    const systemNeeded = timeUnit;
 
     const generateTimeSlots = () => {
         const slots = [];
@@ -23,16 +24,13 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
     const timeSlots = generateTimeSlots();
 
     const convertTimeToSlotIndex = (timeString) => {
-        // "2025-06-03T11:00" 형식에서 시간 추출
         const timePart = timeString.split('T')[1];
         const [hour, minute] = timePart.split(':').map(Number);
-
         const baseIndex = (hour - 11) * 2;
 
         if (minute === 30) {
             return baseIndex + 1;
         }
-
         return baseIndex;
     };
 
@@ -85,25 +83,25 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
         if (selectedTime === index) {
             setSelectedTime(null);
             onTimeSelect && onTimeSelect(null);
-            setErrorMessage(''); // 선택 해제 시 에러 메시지도 제거
+            setErrorMessage('');
             return;
         }
+        // 청소시간 30분 포함
+        const userEndSlotIndex = index + slotsNeeded;
+        const slot23 = (23 - 11) * 2;
 
-        // 4. 23시 종료 제한 체크
-        const endSlotIndex = index + slotsNeeded;
-        const slot23 = (23 - 11) * 2; // = 24
-
-        if (endSlotIndex > slot23) {
+        if (userEndSlotIndex > slot23) {
             setErrorMessage("23시 이후에 끝나는 상영은 불가능합니다");
             return;
         }
 
-        for (let i = index; i < index + slotsNeeded && i < timeSlots.length; i++) {
+        for (let i = index; i < index + systemNeeded && i < timeSlots.length; i++) {
             if (bookedSlots.includes(i)) {
-                setErrorMessage("선택한 시간대에 이미 예약된 시간이 포함되어 있습니다");
+                setErrorMessage("선택할 수 없는 시간대가 포함되어 있습니다.");
                 return;
             }
         }
+
         if (blockedSlots.includes(index)) {
             setErrorMessage("관람에 필요한 시간이 부족하거나 예약할 수 없는 시간입니다");
         }
@@ -122,7 +120,8 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
                 const extraSlots = endIndex - timeSlots.length;
                 if (extraSlots === 1) {
                     endTime = "23시";
-                } else if (extraSlots === 2) {
+                }
+                else if (extraSlots === 2) {
                     endTime = "23시";
                 } else {
                     endTime = "23시";
@@ -134,6 +133,7 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
                 endTime: endTime,
                 startIndex: index,
                 slotsNeeded: slotsNeeded,
+                systemNeeded: systemNeeded,
                 timeUnit: timeUnit
             });
         }
@@ -156,10 +156,9 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
             classNames.push(classes.unavailable);
         }
 
-        if (selectedTime !== null && index >= selectedTime && index < selectedTime + slotsNeeded) {
+        if(selectedTime !== null && index >= selectedTime && index < selectedTime + slotsNeeded){
             classNames.push(classes.selected);
         }
-
         return classNames.join(' ');
     };
 

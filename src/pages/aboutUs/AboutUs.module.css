@@ -77,7 +77,7 @@ ul {margin: 10px 0;}
 .tableBox {
     display: flex;
     justify-content: center;
-    padding-top: 20px;
+    padding: 20px 0;
 }
 .price {
     width: 100%;
