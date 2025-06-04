@@ -1,6 +1,6 @@
 .wrap{
     width: 1280px;
-    margin: 60px auto 30px;
+    margin: 60px auto 0;
 }
 
 .section_header{
@@ -112,42 +112,11 @@
 /*#swiper-wrapper{*/
 /*    width: 0px !important;*/
 /*}*/
-
-/* Swiper 컨테이너 중앙 정렬 */
-.wrap .swiper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
+.swiper {
+    max-height: 100vh;
+    overflow-y: hidden;
 }
 
-/* Swiper 래퍼 중앙 정렬 */
-.wrap .swiper-wrapper {
-    justify-content: center;
-    align-items: center;
-}
-
-/* 카드 효과 그림자 영역 완전 제거 */
-.wrap .swiper-slide-shadow,
-.wrap .swiper-slide-shadow-left,
-.wrap .swiper-slide-shadow-right {
-    display: none !important;
-}
-
-/* 각 슬라이드 중앙 정렬 */
-.wrap .swiper-slide {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-
-/* 카드 효과에서 중앙 정렬을 위한 추가 스타일 */
-.wrap .swiper-cards {
-    overflow: visible;
-}
-
-.wrap .swiper-cards .swiper-slide {
-    transform-origin: center;
+.simpleCard {
+    max-height: 500px;
 }
