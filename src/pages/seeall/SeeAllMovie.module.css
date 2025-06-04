@@ -1,71 +1,10 @@
-*{       
-    box-sizing: border-box; 
-}
-
-/* 검색바 스타일 */
-.search_container {
-    padding: 1rem;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 110px;
-    margin-top: 200px;
-}
-
-.search_bar {
-    display: flex;
-    align-items: center;
-    background-color: #2a2a2a;
-    border-radius: 10px;
-    overflow: hidden;
-    height: 40px;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.search_bar input {
-    flex: 1;
-    background-color: transparent;
-    border: none;
-    color: white;
-    padding: 0 15px;
-    font-size: 16px;
-    height: 100%;
-}
-
-.search_bar input::placeholder {
-    color: #888;
-}
-
-.search_bar input:focus {
-    outline: none;
-}
-
-.search_button {
-    background-color: #473d35;
-    border: none;
-    color: white;
-    height: 100%;
-    width: 45px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-}
-
-.search_button:hover {
-    background-color: #2a2a2a;
-}
 
 
 .netflix_app {       
     background-color: #32271e;
     min-height: 100vh;
     padding: 0 2.5vw 60px 2.5vw;
-    margin-top: 120px;
+    margin-top: 60px;
 }   
 
 .content {       
@@ -224,7 +163,13 @@
 .seeMoreWrap{
     text-align: center;
     transform: translateY(30px);
-    color: #fff;
+    color: #b2a69b;
+    cursor: pointer;
+}
+
+.seeMoreWrap > span:hover{
+    color: #32271e;
+    background-color: #b2a69b;
 }
 
 .seeMoreWrap span{

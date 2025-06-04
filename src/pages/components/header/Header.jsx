@@ -5,12 +5,13 @@ import {useState} from "react";
 
 
 function Header({ toggleMenu, isMenuOpen }) {
+    const[click, setClick] = useState(false);
+    const navi = useNavigate();
+    const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
-    const[click, setClick] = useState(false);
-
     const handleSearch = () => {
         if (!searchTerm.trim()) return;
         navi(`/search?q=${encodeURIComponent(searchTerm)}`);
@@ -20,9 +21,6 @@ function Header({ toggleMenu, isMenuOpen }) {
         setClick(!click);
         console.log(click);
     }
-
-    const navi = useNavigate();
-    const location = useLocation();
 
     return (
         <header className={classes.header}>
@@ -45,26 +43,25 @@ function Header({ toggleMenu, isMenuOpen }) {
                                         : {}
                                 }
                             >
-
-                            <div className={`${classes["search_container"]} ${click ? classes.open : ''}`}>
-                            <div className={classes["search_bar"]}>
-                                <input
-                                    type="text"
-                                    placeholder="영화 제목을 검색하세요"
-                                    value={searchTerm}
-                                    onChange={handleSearchChange}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            handleSearch();
-                                        }
-                                    }}
-                                />
+                                <div className={`${classes["search_container"]} ${click ? classes.open : ''}`}>
+                                    <div className={classes["search_bar"]}>
+                                        <input
+                                            type="text"
+                                            placeholder="영화 제목을 검색하세요"
+                                            value={searchTerm}
+                                            onChange={handleSearchChange}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    handleSearch();
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <button className={classes["search_button"]} onClick={handleClick}>
+                                    <FaSearch />
+                                </button>
                             </div>
-                        </div>
-                            <button className={classes["search_button"]} onClick={handleClick}>
-                                <FaSearch />
-                            </button>
-                    </div>
                         </>
 
                     <button

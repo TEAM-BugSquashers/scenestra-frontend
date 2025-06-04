@@ -49,7 +49,9 @@ function Sidebar({ isOpen, toggleSidebar }) {
               </li>
             )}
           </ul>
+          {!["/join", "/login"].includes(location.pathname) && (
           <button className={`${classes.logout} ${classes.btn2}`} onClick={()=>{handleLogout(); toggleSidebar();}}>LOGOUT</button>
+              )}
         </nav>
       </div>
       

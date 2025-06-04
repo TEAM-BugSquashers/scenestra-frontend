@@ -153,7 +153,8 @@
 }
 
 .board_row:hover {
-    background-color: #725035;
+    background-color: #b2a69b;
+    color: #32271e;
     cursor: pointer;
 }
 
