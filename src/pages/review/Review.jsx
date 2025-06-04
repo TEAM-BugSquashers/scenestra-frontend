@@ -225,9 +225,9 @@ function Review(){
                     {posts.length === 0 ? (
                         <div className={classes.noReviews}>등록된 리뷰가 없습니다.</div>
                     ) : (
-                        sortedPosts.map((post) => (
+                        sortedPosts.map((post,index) => (
                             <div className={classes['board_row']} key={post.reviewId} onClick={() => panHandler(post.reviewId)}>
-                                <div>{post.reviewId}</div>
+                                <div>{index+1}</div>
                                 <div>{renderStars(post.star)}</div>
                                 <div>{post.title}</div>
                                 <div>{post.username}</div>
