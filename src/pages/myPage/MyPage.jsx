@@ -356,12 +356,19 @@ function MyPage() {
             return false;
         }
 
-        // email format validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email || '')) {
-            alert('올바른 이메일 주소를 입력해주세요.');
-            return false;
-        }
+        // // email format validation
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // if (!emailRegex.test(formData.email || '')) {
+        //     alert('올바른 이메일 주소를 입력해주세요.');
+        //     return false;
+        // }
+        //
+        // // mobile format validation
+        // const mobileRegex = /^\d{3}-\d{4}-\d{4}$/;
+        // if(!mobileRegex.test(formData.mobile || '')) {
+        //     alert('올바른 전화번호를 입력해주세요.');
+        //     return false;
+        // }
 
         return true;
     };
@@ -400,10 +407,28 @@ function MyPage() {
                             alert('현재 비밀번호가 틀렸습니다.');
                             return;
                         } else {
-                            alert(pwError.response.data.payload || '비밀번호 변경 중 오류가 발생했습니다.');
+                            let message = '';
+                            for (const value of Object.values(pwError.response.data.payload)) {
+                                message += typeof value === 'object' ? JSON.stringify(value).replace(/"/g, '') : value;
+                            }
+                            alert(message);
                             return;
                         }
                     }
+                }
+
+                // email format validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(formData.email || '')) {
+                    alert('올바른 이메일 주소를 입력해주세요.');
+                    return false;
+                }
+
+                // mobile format validation
+                const mobileRegex = /^\d{3}-\d{4}-\d{4}$/;
+                if(!mobileRegex.test(formData.mobile || '')) {
+                    alert('올바른 전화번호를 입력해주세요.');
+                    return false;
                 }
 
                 // update preferred genres
@@ -423,8 +448,17 @@ function MyPage() {
                 alert('회원정보가 성공적으로 수정되었습니다.');
 
             } catch (error) {
-                console.error('Profile update error:', error);
-                alert('회원정보 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+                console.log('Profile update error:', error.response.data.payload);
+
+                let message = '';
+                for (const value of Object.values(error.response.data.payload)) {
+                    message += typeof value === 'object' ? JSON.stringify(value).replace(/"/g, '') : value;
+                }
+                alert(message);
+
+                setFormData(prev => ({ ...prev, id: ''}));
+
+                // alert('회원정보 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
             }
         }
     };
@@ -658,7 +692,7 @@ function MyPage() {
                                 {/* Mobile */}
                                 <div className={classes["formField"]}>
                                     <input
-                                        type="text"
+                                        type="tel"
                                         id="mobile"
                                         value={formData.mobile || ''}
                                         onChange={handleInputChange}
