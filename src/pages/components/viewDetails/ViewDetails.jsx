@@ -1,5 +1,5 @@
 
-import classes from './viewDetails.module.css'
+import classes from './ViewDetails.module.css'
 import {useEffect, useState} from "react";
 import {axiosViewReservationDeteails} from "../../api/axios.js";
 
