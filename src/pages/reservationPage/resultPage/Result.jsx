@@ -21,6 +21,9 @@ function Result() {
     console.log("roomData: ", theaterDetails);
     console.log("timeDetails: ", timeDetails);
     console.log("peopleCount: ", peopleCount);
+    console.log("reservationInfo: ", reservationInfo)
+    console.log("reservationResult: ", reservationResult.payload.reservationId)
+
     if(!reservationResult || !reservationInfo ) {
         return (
             <div>
@@ -52,7 +55,9 @@ function Result() {
                     </div>
                     <div className={classes.inner}>
                         <div className={classes.descBox}>
-                            <p>예약번호: </p>
+                            <p>예약번호: {theaterDetails?.name.slice(0, 3)}{reservationResult.payload.reservationId}–
+                                {reservationInfo.date.slice(5, 7)}{reservationInfo.date.slice(8, 10)}–
+                                {reservationInfo.time.slice(0, 2)}{reservationInfo.time.slice(3, 5)}</p>
                             <p>영화: {movieDetails?.title || '정보없음'}</p>
                             <p>상영관: {theaterDetails?.name || '정보없음'}</p>
                             <p>날짜: {formatDate(reservationInfo.date)}</p>
