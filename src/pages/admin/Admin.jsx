@@ -1,47 +1,43 @@
 import classes from './Admin.module.css';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import { axiosViewALlReservation} from "../api/axios.js";
+import ViewDetails from "../components/viewDetails/ViewDetails.jsx";
+
+
 
 function Admin() {
-    const customerInfo=[
-        {
-            date:"2025-10-30",
-            name:"asdf",
-            resNum:"68",
-            roomNum:"12340",
-            runTime:"10:00",
-            peopleNum: "4",
-        },
-        {
-            date:"2025-11-30",
-            name:"asdf2",
-            resNum:"921",
-            roomNum:"25",
-            runTime:"12:00",
-            peopleNum: "1",
-        },
-        {
-            date:"2002-01-30",
-            name:"asdf3",
-            resNum:"566",
-            roomNum:"2513",
-            runTime:"17:00",
-            peopleNum: "3",
-        },
-        {
-            date:"2002-01-30",
-            name:"asdf3",
-            resNum:"768",
-            roomNum:"2513",
-            runTime:"17:00",
-            peopleNum: "3",
-        }]
+
+    const[loading,setLoading] = useState(false);
+    const [useThisShit, setUseThisShit] = useState([])
+    const [selectedReservationId, setSelectedReservationId] = useState(null);
+
+    const handleSelectReservationClick = (reservationId) => {
+        setSelectedReservationId(reservationId);
+    }
+
+
+    useEffect(()=>{
+        const fetchAllReservation = async () => {
+            setLoading(true);
+            try{
+                const response = await axiosViewALlReservation();
+                console.log(response.data.payload);
+                setUseThisShit(response.data.payload);
+            }catch(error){
+                console.log(error);
+            }finally{
+                setLoading(false);
+            }
+        }
+        fetchAllReservation();
+    },[])
 
     useEffect (()=>{
         const articles = document.querySelectorAll(`.${classes.article}`);
         articles.forEach((el) => {
             el.classList.add(classes.active);
         });
-    },[])
+    },[useThisShit])
 
     // useEffect(()=>{
     //     try{
@@ -52,36 +48,56 @@ function Admin() {
     return (
         <>
             <div className={classes.wrap}>
-                <h1 className={classes.header}>예약관리 현황</h1>
+                <h1 className={classes.header}>CURRENT RESERVATIONS</h1>
                 <div className={classes.gridContainer}>
-                    {customerInfo.map((info, index) => (
-                        <article key={index} className={classes.article}>
-                            <div className={classes.title}>
-                                <div>{info.date}</div>
-                                <div>{info.name}</div>
+                    {useThisShit.map((info) => (
+                        <article key={info.reservationId} className={classes.article} onClick={() => handleSelectReservationClick(info.reservationId)}>
+                            <div className={classes.title} style={{
+                                color:
+                                    info.statusString === '이용 완료' ? '#8C82784C' : info.statusString === '확정' ? '#32271e' : info.statusString === '취소' ? 'darkRed' : 'transparent'
+                            }}>
+                                <div style={{
+                                    textDecoration: info.statusString === '취소' ? 'line-through' : 'none'
+                                }}>{info.date}</div>
+                                <div
+                                    // style={{
+                                    //     color:
+                                    //         info.statusString === '이용 완료' ? 'gray' : info.statusString === '확정' ? '#32271e' : info.statusString === '취소' ? 'red' : 'transparent'
+                                    // }}
+                                >
+                                    {info.username}
+                                    <span className={classes.statusString}>({info.statusString})</span>
+                                </div>
                             </div>
 
                             <div className={classes.resNum}>
-                                <h3>resNum</h3>
-                                <p>{info.resNum}</p>
+                                <h3>Reservation Id</h3>
+                                <p>{info.reservationId}</p>
                             </div>
                             <div className={classes.roomNum}>
-                                <h3>roomNum</h3>
-                                <p>{info.roomNum}</p>
+                                <h3>Room Name</h3>
+                                <p>{info.theaterName}</p>
                             </div>
 
                             <div className={classes.runTime}>
-                                <h3>runTime</h3>
-                                <p>{info.runTime}</p>
+                                <h3>Run Time</h3>
+                                <p>{info.timeUnit}</p>
                             </div>
                             <div className={classes.peopleNum}>
-                                <h3>peopleNum</h3>
-                                <p>{info.peopleNum}</p>
+                                <h3>Headcount</h3>
+                                <p>{info.numPeople}</p>
                             </div>
                         </article>
                     ))}
                 </div>
             </div>
+
+            {selectedReservationId && (
+                <ViewDetails
+                    reservationId={selectedReservationId}
+                    onClose={() => setSelectedReservationId(null)}
+                />
+            )}
         </>
     );
 }

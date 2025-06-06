@@ -1,6 +1,4 @@
-* {
-    box-sizing: border-box;
-}
+
 .whiteText {color: #fff !important;}
 .whiteText * {color: #fff !important;}
 .container {

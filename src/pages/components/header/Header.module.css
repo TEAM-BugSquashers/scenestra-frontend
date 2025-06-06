@@ -56,7 +56,7 @@
 }
 
 .hamburgerBtn.open .hamburgerLine:nth-child(1) {
-    transform: translateY(10.5px) rotate(45deg);
+    transform: translateY(12.5px) rotate(45deg);
 }
 
 .hamburgerBtn.open .hamburgerLine:nth-child(2) {
@@ -90,6 +90,7 @@
     height: 40px;
     overflow: hidden;
     transition: width 0.5s ease;
+    position: relative;
 }
 
 .search_container.open {
@@ -142,4 +143,105 @@
 
 .search_button:hover {
     background-color: #2a2a2a;
+}
+
+@media screen and (max-width: 430px) {
+    .hamBtnWrap > div:first-child{
+        display: none;
+    }
+    .search_bar input{
+        background-color: #32271e;
+    }
+    .rightSection{
+        width: 100%;
+        justify-content: space-between;
+    }
+    .search_container{
+        width: 300px;
+        position: absolute;
+        left: 0;
+        top: 140%;
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+    .search_container.open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 기존 CSS는 그대로 두고 아래 내용만 추가 */
+
+/* 검색 드롭다운 스타일 */
+.searchDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #32271e;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.searchItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.searchItem:hover {
+    background-color: #473d35;
+}
+
+.searchItem:last-child {
+    border-bottom: none;
+}
+
+.searchIcon {
+    color: #888;
+    font-size: 12px;
+}
+
+/* 모바일에서의 드롭다운 스타일 */
+@media screen and (max-width: 430px) {
+    .searchDropdown {
+        position: fixed;
+        top: 100px; /* 헤더 아래에 위치 */
+        left: 2.5vw;
+        right: 2.5vw;
+        width: auto;
+        border-radius: 10px;
+    }
 }

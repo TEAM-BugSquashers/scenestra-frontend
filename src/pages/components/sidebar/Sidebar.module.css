@@ -5,7 +5,6 @@
   width: 250px;
   height: calc(100vh - 60px);
   background-color: #32271e;
-  /*box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);*/
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
   padding: 25px;
@@ -35,7 +34,7 @@
 .nav a {
   text-decoration: none;
   color: #fff;
-  font-size: 18px;
+  font-size: 1rem;
 }
 
 .toggleButton {
@@ -51,14 +50,15 @@
 }
 
 .logout{
-  height: 30px;
+  width: 90%;
+  height: 40px;
   border-radius: 10PX;
-  font-size: 17px;
+  font-size: 1rem;
   text-align: center;
-  font-weight: 900;
-  background-color: #32271e;
-  color: #fff;
-  border: 1px solid #fff;
+  font-weight: 500;
+  background-color: rgb(50, 39, 30);
+  color: rgb(178, 166, 155);
+  border: 1px solid #b2a69b;
 
   outline: none;
   padding: 0 5px;
@@ -72,6 +72,10 @@
   font-family: "Noto Serif KR", serif, "Times New Roman", Times, serif;
 }
 
+.logout:hover{
+  background-color: #b2a69b;
+  color: #32271e;
+}
 
 
 

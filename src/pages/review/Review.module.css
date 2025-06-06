@@ -153,7 +153,8 @@
 }
 
 .board_row:hover {
-    background-color: #725035;
+    background-color: #b2a69b;
+    color: #32271e;
     cursor: pointer;
 }
 
@@ -337,6 +338,30 @@
     .roomImg{
         margin: 0 10px;
     }
+
+    .board_header {
+        grid-template-columns: 1fr 2fr 1fr 1fr;
+    }
+
+    .board_header > div:first-child,
+    .board_header > div:last-child {
+        display: none;
+    }
+
+    .board_row {
+        grid-template-columns: 1fr 2fr 1fr 1fr;
+    }
+
+    .board_row > div:first-child,
+    .board_row > div:last-child {
+        display: none;
+    }
+    :global(.swiper-button-next):after,
+    :global(.swiper-button-prev):after{
+        color: black;
+    }
+
+
 }
 
 
