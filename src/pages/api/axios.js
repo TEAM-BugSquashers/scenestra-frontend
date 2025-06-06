@@ -125,6 +125,24 @@ export const axiosMe = async () => {
     return await instance.get("/users/me");
 }
 
+export const axiosFindPw = async (username, name) => {
+    try {
+        const response = await instance.get("/users/findPw?username="+username+"&name="+name);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const axiosFindId = async (email, name) => {
+    try {
+        const response = await instance.get("/users/findId?email="+email+"&name="+name);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const axiosChkUsername = async (username) => {
     return await instance.get("/users/check-username?username=" + username);
 }
@@ -176,7 +194,7 @@ export const axiosAvailableDates = async (theaterId, movieId, yearMonth) => {
 }
 
 export const axiosTheaterReviews = async (theaterId) => {
-    return await instance.get(`/review/theater/${theaterId}`);
+    return await instance.get(`/reviews/theater/${theaterId}`);
 }
 
 export const axiosAvailableTimes = async (theaterId, movieId, date) => {
@@ -198,10 +216,20 @@ export const axiosOneReview = async (id) => {
 }
 
 export const axiosWriteReview = async (reviewData) => {
-    return await instance.post('/review', reviewData);
+    return await instance.post('/reviews', reviewData);
 }
 
 export const axiosReviewPopups = async (id) => {
-    return await instance.get(`/review/${id}`);
+    return await instance.get(`/reviews/${id}`);
 }
+
+export const axiosViewALlReservation = async () => {
+    return await instance.get("/admin/reservations");
+}
+
+export const axiosViewReservationDeteails = async (reservationId) => {
+    return await instance.get(`/admin/reservations/${reservationId}`);
+}
+
+
 

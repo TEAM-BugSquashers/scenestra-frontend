@@ -1,7 +1,6 @@
 .wrap{
     width: 1280px;
     margin: 60px auto 30px;
-
 }
 
 .section_header{
@@ -27,7 +26,7 @@
     padding: 0;
     margin: 0;
     display: inline-block;
-    font-family: 'Noto Sans KR', serif;
+    font-family: 'Noto Serif KR', serif;
     font-weight: normal;
     flex-shrink: 0;
 }
@@ -42,18 +41,18 @@
 }
 
 .simpleCard {
-    aspect-ratio: 4/3;
-    border-radius: 16px;
+    width: 800px;
+    border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
     position: relative;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: 0 auto;
 }
+
 
 .simpleCard:hover {
     transform: scale(1.03);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
 }
 
 .simpleCard img {
@@ -64,7 +63,7 @@
 
 .simpleOverlay {
     position: absolute;
-    bottom: 0;
+    bottom: 0px;
     left: 0;
     right: 0;
     /*transform: translateY(100%);*/
@@ -83,7 +82,7 @@
     font-size: 1.5rem;
     text-align: center;
     color: white;
-    font-family: 'Noto Sans KR', serif;
+    font-family: 'Noto Serif KR', serif;
 }
 
 @media screen and (max-width: 430px) {
@@ -96,3 +95,59 @@
     }
 }
 
+/*.swiper,*/
+/*.swiper-wrapper,*/
+/*.swiper-slide,*/
+/*.swiper-cards,*/
+/*.swiper-3d,*/
+/*.swiper-initialized,*/
+/*.swiper-horizontal ,*/
+/*.swiper-watch-progress,*/
+/*.swiper-slide-visible,*/
+/*.swiper-slide-fully-visible,*/
+/*.swiper-slide-active{*/
+/*    width: 0px !important;*/
+/*}*/
+
+/*#swiper-wrapper{*/
+/*    width: 0px !important;*/
+/*}*/
+
+/* Swiper 컨테이너 중앙 정렬 */
+.wrap .swiper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+/* Swiper 래퍼 중앙 정렬 */
+.wrap .swiper-wrapper {
+    justify-content: center;
+    align-items: center;
+}
+
+/* 카드 효과 그림자 영역 완전 제거 */
+.wrap .swiper-slide-shadow,
+.wrap .swiper-slide-shadow-left,
+.wrap .swiper-slide-shadow-right {
+    display: none !important;
+}
+
+/* 각 슬라이드 중앙 정렬 */
+.wrap .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+/* 카드 효과에서 중앙 정렬을 위한 추가 스타일 */
+.wrap .swiper-cards {
+    overflow: visible;
+}
+
+.wrap .swiper-cards .swiper-slide {
+    transform-origin: center;
+}
