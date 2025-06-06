@@ -63,7 +63,7 @@ const MovieSlide = ({ movieSrc, genre, isActive, currentMoviesData, onSelectMovi
                  onMouseEnter={handleMouseEnter}
                  onClick={(e) => e.stopPropagation()}
             >
-                <div className={classes.mobile} style={noneBlock}>여기를 클릭하면 영화가 나와욥</div>
+                <div className={classes.mobile} style={noneBlock}>클릭하여 영화 목록 보기</div>
                 <div className={classes.movieContent} style={contentStyle}>
                     <div className={classes.line1} />
                     <h1 className={classes.genreTitle}>{genre}</h1>

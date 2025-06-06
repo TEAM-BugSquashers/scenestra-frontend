@@ -156,9 +156,7 @@
 }
 
 @media screen and (max-width: 430px) {
-    .line1 {
-        width: 100%;
-    }
+    .line1 {width: 100%;}
     .postersContainer {
         width: 1280px;
         display: flex;
@@ -172,7 +170,5 @@
     .postersContainer::-webkit-scrollbar-track {
         background: transparent;
     }
-    .mobile {
-        display: block;
-    }
+    .mobile {display: block;}
 }
