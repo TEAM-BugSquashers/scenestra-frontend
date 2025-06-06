@@ -91,7 +91,7 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
         const slot23 = (23 - 11) * 2;
 
         if (userEndSlotIndex > slot23) {
-            setErrorMessage("23시 이후에 끝나는 상영은 불가능합니다");
+            setErrorMessage("23시 이후에 끝나는 상영시간은 선택할 수 없습니다");
             return;
         }
 
