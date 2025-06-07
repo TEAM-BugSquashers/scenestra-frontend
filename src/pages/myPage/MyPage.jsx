@@ -20,6 +20,7 @@ function MyPage() {
     const [pastRes, setPastRes] = useState([]);
     const [theaterImg, setTheaterImg] = useState([]);
     const [showWriteForm, setShowWriteForm] = useState(false);
+    const [isReviewWritten, setIsReviewWritten] = useState(false);
 
     // password states
     const [currentPassword, setCurrentPassword] = useState('********');
@@ -136,26 +137,33 @@ function MyPage() {
                 setAllGenres(allGenresData);
 
                 try {
-                    // fetch reservations and theater images
-                    const [currResResponse, allResResponse, theaterResponse] = await Promise.all([
-                        axiosResInProgress(),
-                        axiosResAll(),
-                        axiosTheaters(),
-                    ]);
+                    // fetch current reservations
+                    const currResResponse = await axiosResInProgress();
 
                     // set current reservations
                     const currResData = currResResponse.data.payload.map(curr => ({
-                            num: curr.reservationId,
-                            date: curr.date,
-                            startTime: curr.startTime,
-                            endTime: curr.endTime,
-                            room: curr.theaterName,
-                            movie: curr.movieTitle,
-                            name: curr.username,
-                            mobile: curr.mobile,
-                            id: curr.theaterId
+                        num: curr.reservationId,
+                        date: curr.date,
+                        startTime: curr.startTime,
+                        endTime: curr.endTime,
+                        room: curr.theaterName,
+                        movie: curr.movieTitle,
+                        name: curr.username,
+                        mobile: curr.mobile,
+                        id: curr.theaterId,
+                        review: curr.isReviewed
                     }));
                     setCurrRes(currResData);
+                } catch (currError) {
+                    console.error("currError:", currError);
+                }
+
+                try {
+                    // fetch all reservations and theater images
+                    const [allResResponse, theaterResponse] = await Promise.all([
+                        axiosResAll(),
+                        axiosTheaters(),
+                    ]);
 
                     // set all reservations
                     const allResData = allResResponse.data.payload.map(all => ({
@@ -167,12 +175,17 @@ function MyPage() {
                         movie: all.movieTitle,
                         id: all.theaterId,
                         status: all.statusString,
-                        code: all.status
+                        code: all.status,
+                        review: all.isReviewed
                     }));
-                    const currNums = currResData.map(curr => curr.num);
-                    // filter out current reservations to obtain past reservations
-                    const filteredRes = allResData.filter(all => !currNums.includes(all.num));
+                    const filteredRes = allResData.filter(all => all.code === "COMPLETED" || all.code === "CANCELLED");
                     setPastRes(filteredRes);
+                    console.log('bye:', pastRes);
+                    console.log('hey:', allResResponse.data.payload);
+
+                    // set review status
+                    // setIsReviewWritten(allResData.review);
+                    // console.log('hi:', allResData.review);
 
                     // set theater images
                     const theaterData = theaterResponse.data.payload.map(room => ({
@@ -190,8 +203,6 @@ function MyPage() {
             } finally {
                 setIsLoading(false);
             }
-
-
         };
 
         fetchMyData();
@@ -345,20 +356,25 @@ function MyPage() {
             return false;
         }
 
-        // email format validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email || '')) {
-            alert('올바른 이메일 주소를 입력해주세요.');
-            return false;
-        }
+        // // email format validation
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // if (!emailRegex.test(formData.email || '')) {
+        //     alert('올바른 이메일 주소를 입력해주세요.');
+        //     return false;
+        // }
+        //
+        // // mobile format validation
+        // const mobileRegex = /^\d{3}-\d{4}-\d{4}$/;
+        // if(!mobileRegex.test(formData.mobile || '')) {
+        //     alert('올바른 전화번호를 입력해주세요.');
+        //     return false;
+        // }
 
         return true;
     };
 
     // handle profile editing
     const handleEditProfile = async () => {
-
-        // setBtnIsTouched(null);
 
         if (!isEditMode) {
             // enter edit mode
@@ -391,10 +407,28 @@ function MyPage() {
                             alert('현재 비밀번호가 틀렸습니다.');
                             return;
                         } else {
-                            alert(pwError.response.data.payload || '비밀번호 변경 중 오류가 발생했습니다.');
+                            let message = '';
+                            for (const value of Object.values(pwError.response.data.payload)) {
+                                message += typeof value === 'object' ? JSON.stringify(value).replace(/"/g, '') : value;
+                            }
+                            alert(message);
                             return;
                         }
                     }
+                }
+
+                // email format validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(formData.email || '')) {
+                    alert('올바른 이메일 주소를 입력해주세요.');
+                    return false;
+                }
+
+                // mobile format validation
+                const mobileRegex = /^\d{3}-\d{4}-\d{4}$/;
+                if(!mobileRegex.test(formData.mobile || '')) {
+                    alert('올바른 전화번호를 입력해주세요.');
+                    return false;
                 }
 
                 // update preferred genres
@@ -414,8 +448,17 @@ function MyPage() {
                 alert('회원정보가 성공적으로 수정되었습니다.');
 
             } catch (error) {
-                console.error('Profile update error:', error);
-                alert('회원정보 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+                console.log('Profile update error:', error.response.data.payload);
+
+                let message = '';
+                for (const value of Object.values(error.response.data.payload)) {
+                    message += typeof value === 'object' ? JSON.stringify(value).replace(/"/g, '') : value;
+                }
+                alert(message);
+
+                setFormData(prev => ({ ...prev, id: ''}));
+
+                // alert('회원정보 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
             }
         }
     };
@@ -440,8 +483,6 @@ function MyPage() {
     if (error) {
         return <div className={classes["error"]}>{error}</div>;
     }
-
-    console.log('btnistouched:', btnIsTouched);
 
     return (
         <div className={classes["body"]}>
@@ -651,7 +692,7 @@ function MyPage() {
                                 {/* Mobile */}
                                 <div className={classes["formField"]}>
                                     <input
-                                        type="text"
+                                        type="tel"
                                         id="mobile"
                                         value={formData.mobile || ''}
                                         onChange={handleInputChange}
@@ -808,7 +849,7 @@ function MyPage() {
                                                 시간&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.startTime.slice(0, 5)} – {reservation.endTime.slice(0, 5)}</span>
                                             </div>
                                             <div className={classes["pastRoom"]}>
-                                                방&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
+                                                상영관&nbsp;<span style={{ color: '#b2a69b' }}>{reservation.room}</span>
                                             </div>
                                             <div className={classes["pastMovie"]}>
                                                 영화&nbsp;<span
@@ -847,12 +888,22 @@ function MyPage() {
                                                 name={reservation.num}
                                                 type="button"
                                                 className={`${classes["bigBtn"]} ${classes["reviewBtn"]}`}
-                                                onClick={() => handleWriteReview(reservation.num)}
+                                                onClick={
+                                                    reservation.review ?
+                                                        null : () => handleWriteReview(reservation.num)
+                                                }
                                                 onTouchStart={() => setBtnIsTouched(reservation.num)}
                                                 onTouchEnd={() => setBtnIsTouched(null)}
-                                                style={getReviewBtnStyle(reservation.num)}
+                                                style={
+                                                    reservation.review ?
+                                                        {backgroundColor: "white",
+                                                            color: '#b2a69b',
+                                                            border: '1px solid',
+                                                            pointerEvents: 'none'} :
+                                                        getReviewBtnStyle(reservation.num)
+                                                }
                                             >
-                                                LEAVE REVIEW
+                                                {reservation.review ? 'REVIEW COMPLETED' : 'LEAVE REVIEW'}
                                             </button>
                                         </div> :
                                         null
