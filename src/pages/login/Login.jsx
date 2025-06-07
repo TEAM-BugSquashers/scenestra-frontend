@@ -212,6 +212,7 @@ function Login() {
                         />
                         <div
                             className={`${classes["rmbrIdLbl"]} bMainLight`}
+                            onClick={() => setFormData(prev => ({...prev, rememberMe: !prev.rememberMe}))}
                         >
                             <input
                                 type="checkbox"
@@ -221,10 +222,7 @@ function Login() {
                                 onChange={handleChange}
                                 style={{ display: 'none' }}
                             />
-                            <div
-                                className={classes["chkBx"]}
-                                onClick={() => setFormData(prev => ({...prev, rememberMe: !prev.rememberMe}))}
-                            >
+                            <div className={classes["chkBx"]}>
                                 <div className={classes["chkMk"]} style={formData.rememberMe ? { display: 'block' } : { display: 'none' }}>L</div>
                             </div>
                             아이디 기억하기
