@@ -7,9 +7,11 @@ import WriteReview from "../components/writeReview/WriteReview.jsx";
 
 function Login() {
     // login form state
-    const [userId, setUserId] = useState('');
-    const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
+    const [formData, setFormData] = useState({
+        username: '',
+        password: '',
+        rememberMe:false
+    })
 
     // popup state
     const [showFind, setShowFind] = useState(false);
@@ -32,8 +34,18 @@ function Login() {
         'imgOne'
     ];
 
-    // theater image slideshow
     useEffect(() => {
+        // rememberMe
+        const savedUsername = localStorage.getItem('rememberedUsername');
+        if(savedUsername) {
+            setFormData(prev => ({
+                ...prev,
+                username: savedUsername,
+                rememberMe: true
+            }));
+        }
+
+        // theater image slideshow
         const interval = setInterval(() => {
             setCurrentIndex(prevIndex => (prevIndex + 1) % imageClasses.length);
         }, 5000);
@@ -64,12 +76,26 @@ function Login() {
         setIsTouched(false);
     }
 
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
     // login form submission handler
     const handleSubmit = () => {
-        // console.log('form submitted:', { userId, password, rememberMe });
-        axiosLogin(userId, password)
+
+        axiosLogin(formData.username, formData.password)
             .then(response => {
                 if (response.status === 200) {
+                    if (formData.rememberMe) {
+                        localStorage.setItem('rememberedUsername', formData.username);
+                    } else {
+                        localStorage.removeItem('rememberedUsername');
+                    }
+
                     navigate("/");
                 } else {
                     alert(`로그인에 성공했으나, 예상치 못한 응답입니다: ${response.status}`);
@@ -90,11 +116,6 @@ function Login() {
     // navigate to user registration page (in new tab)
     const goToJoin = () => {
         window.location.href = '/join';
-    };
-
-    // Toggle remember me checkbox, NOT YET CREATED
-    const toggleRememberMe = () => {
-        setRememberMe(!rememberMe);
     };
 
     return (
@@ -167,9 +188,10 @@ function Login() {
                     <div className={classes["rightContentWrapTop"]}>
                         <input
                             type="text"
+                            name="username"
                             placeholder="아이디"
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
+                            value={formData.username}
+                            onChange={handleChange}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmit();
@@ -178,9 +200,10 @@ function Login() {
                         />
                         <input
                             type="password"
+                            name="password"
                             placeholder="비밀번호"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={formData.password}
+                            onChange={handleChange}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleSubmit();
@@ -189,17 +212,20 @@ function Login() {
                         />
                         <div
                             className={`${classes["rmbrIdLbl"]} bMainLight`}
-                            onClick={toggleRememberMe}
                         >
                             <input
                                 type="checkbox"
+                                name="rememberMe"
                                 id="rmbrId"
-                                checked={rememberMe}
-                                onChange={toggleRememberMe}
+                                checked={formData.rememberMe}
+                                onChange={handleChange}
                                 style={{ display: 'none' }}
                             />
-                            <div className={classes["chkBx"]}>
-                                <div className={classes["chkMk"]} style={rememberMe ? { display: 'block' } : { display: 'none' }}>L</div>
+                            <div
+                                className={classes["chkBx"]}
+                                onClick={() => setFormData(prev => ({...prev, rememberMe: !prev.rememberMe}))}
+                            >
+                                <div className={classes["chkMk"]} style={formData.rememberMe ? { display: 'block' } : { display: 'none' }}>L</div>
                             </div>
                             아이디 기억하기
                         </div>
@@ -208,10 +234,6 @@ function Login() {
                             className={`bBg bPri ${ isTouched ? classes["loginTouched"] : classes["loginNotTouched"]}`}
                             onTouchStart={handleTouchStart}
                             onTouchEnd={handleTouchEnd}
-                            // style={{
-                            //     backgroundColor: isTouched ? '#b2a69b' : '#32271e',
-                            //     color: isTouched ? '#32271e' : '#b2a69b'
-                            // }}
                         >
                             LOGIN
                         </button>
