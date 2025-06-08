@@ -17,26 +17,28 @@ function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, ro
                 return `${year}-${month}-${day}`;
             };
 
-            // 시간 형식 변환 함수 추가
             const formatTimeForAPI = (timeStr) => {
-                if (timeStr.includes('시')) {
-                    // "11시" → "11:00:00"
-                    const hour = timeStr.replace('시', '').padStart(2, '0');
+                if (timeStr.includes('30분')) {
+                    const hour = timeStr.split('시')[0].padStart(2, '0');
+                    return `${hour}:30:00`;
+                } else if (timeStr.includes('시')) {
+                    const hour = timeStr.split('시')[0].padStart(2, '0');
                     return `${hour}:00:00`;
                 }
-                // 이미 올바른 형식이라면 그대로 사용
-                return timeStr.includes(':') ? timeStr + ':00' : timeStr;
+                return timeStr.includes(':') ? (timeStr.includes(':00:00') ? timeStr : timeStr + ':00') : timeStr;
             };
 
             const reservationPayload = {
                 "theaterId": Number(roomData?.theaterId),
                 "movieId": String(movieInfo?.id || movieInfo?.movieId), // id 필드 확인
                 "date": formatDateForAPI(reservationData),
-                "time": formatTimeForAPI(timeInfo?.startTime), // 시간 형식 변환
+                "time": formatTimeForAPI(timeInfo?.startTime), // 수정된 시간 형식 변환
                 "numPeople": Number(selectedPeople)
             };
 
             console.log('=== 수정된 전송 데이터 ===');
+            console.log('원본 시간:', timeInfo?.startTime);
+            console.log('변환된 시간:', formatTimeForAPI(timeInfo?.startTime));
             console.log('reservationPayload:', reservationPayload);
 
             const response = await axiosReservation(reservationPayload);
@@ -46,10 +48,10 @@ function ResultPopUp({ isOpen, onClose, reservationData, timeInfo, movieInfo, ro
                     state: {
                         reservationResult: response.data,
                         reservationInfo: reservationPayload,
-                        movieDetails: movieInfo,        // 영화 전체 정보 (제목, 감독, 장르 등)
-                        theaterDetails: roomData,       // 상영관 전체 정보 (이름, 가격 등)
-                        timeDetails: timeInfo,          // 시간 정보 (시작시간, 종료시간)
-                        peopleCount: selectedPeople,    // 인원수
+                        movieDetails: movieInfo,
+                        theaterDetails: roomData,
+                        timeDetails: timeInfo,
+                        peopleCount: selectedPeople,
                         totalPrice: totalPrice
                     }
                 });
