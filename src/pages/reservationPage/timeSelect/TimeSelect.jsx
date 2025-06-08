@@ -25,7 +25,21 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
 
     const convertTimeToSlotIndex = (timeString) => {
         const timePart = timeString.split('T')[1];
-        const [hour, minute] = timePart.split(':').map(Number);
+
+        let hour, minute;
+
+        if (timePart.includes('30분')) {
+            // "15 30분:00:00" 형식
+            const hourPart = timePart.split(' ')[0];
+            hour = parseInt(hourPart);
+            minute = 30;
+        } else {
+            // "15:00:00" 형식
+            const [hourStr, minuteStr] = timePart.split(':');
+            hour = parseInt(hourStr);
+            minute = parseInt(minuteStr);
+        }
+
         const baseIndex = (hour - 11) * 2;
 
         if (minute === 30) {
@@ -86,11 +100,11 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
             setErrorMessage('');
             return;
         }
+
         // 청소시간 30분 포함
         const userEndSlotIndex = index + slotsNeeded;
-        const slot23 = (23 - 11) * 2;
 
-        if (userEndSlotIndex > slot23) {
+        if (userEndSlotIndex > timeSlots.length) {
             setErrorMessage("23시 이후에 끝나는 상영시간은 선택할 수 없습니다");
             return;
         }
@@ -104,6 +118,7 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
 
         if (blockedSlots.includes(index)) {
             setErrorMessage("관람에 필요한 시간이 부족하거나 예약할 수 없는 시간입니다");
+            return;
         }
 
         setSelectedTime(index);
@@ -115,17 +130,10 @@ function TimeSelect({ timeUnit, selectedTime, setSelectedTime, availableTimes, o
 
             if (endIndex < timeSlots.length) {
                 endTime = timeSlots[endIndex];
+            } else if (endIndex === timeSlots.length) {
+                endTime = "23시";
             } else {
-                // 23시 이후 종료시간 계산
-                const extraSlots = endIndex - timeSlots.length;
-                if (extraSlots === 1) {
-                    endTime = "23시";
-                }
-                else if (extraSlots === 2) {
-                    endTime = "23시";
-                } else {
-                    endTime = "23시";
-                }
+                endTime = "23시";
             }
 
             onTimeSelect({
